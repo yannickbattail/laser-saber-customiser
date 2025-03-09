@@ -1,7 +1,7 @@
 import { ParameterSet } from "../openscadTypes";
 import fs from "node:fs";
-import { execBash } from "./execBash";
-import { ParameterKV } from "../validation";
+import { execBash } from "./execBash.js";
+import { ParameterKV } from "../validation.js";
 
 export function generateOpenscadImage(parameterSet: ParameterSet) {
   fs.writeFileSync(
