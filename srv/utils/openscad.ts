@@ -1,7 +1,7 @@
 import { ParameterSet } from "./openscadTypes.js";
 import fs from "node:fs";
 import { execOutput } from "./execBash.js";
-import { ParameterKV, IsParameterKvValid } from "./validation.js";
+import { IsParameterKvValid, ParameterKV } from "./validation.js";
 
 const parameterSetFile = "generatedImages/parameterSets.json";
 
