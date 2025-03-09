@@ -1,0 +1,9 @@
+{
+  "parameterSets": {
+    "model1": {
+      "zRot": "60",
+      "allColors": "orange"
+    }
+  },
+  "fileFormatVersion": "1"
+}

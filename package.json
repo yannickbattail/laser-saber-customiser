@@ -1,0 +1,7 @@
+{
+  "name": "laser-saber-customiser",
+  "workspaces": [
+    "src",
+    "srv"
+  ]
+}

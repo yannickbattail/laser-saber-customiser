@@ -1,0 +1,23 @@
+{
+  "name": "laser-saber-customiser-web",
+  "scripts": {
+    "clean": "rm ./*.js",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "start": "live-server --wait=1000 ./",
+    "lint": "eslint --fix ./*.ts",
+    "format": "stylelint ./*.css && prettier -w ."
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.22.0",
+    "eslint": "^9.22.0",
+    "globals": "^16.0.0",
+    "live-server": "^1.2.2",
+    "prettier": "^3.5.3",
+    "stylelint": "^16.15.0",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.26.0"
+  }
+}
