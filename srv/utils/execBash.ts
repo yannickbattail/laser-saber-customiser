@@ -31,3 +31,17 @@ export function execBash(
     throw error;
   }
 }
+
+/**
+ * Execute Bash commands synchronously and return output
+ * @param cmd\
+ * @returns
+ */
+export function execOutput(cmd: string) {
+  return execBash(cmd, {
+    encoding: "utf-8",
+    maxBuffer: 50 * 1024 * 1024,
+    stdio: ["ignore", "inherit", "inherit"],
+    neverFails: false,
+  });
+}

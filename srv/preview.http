@@ -1,4 +1,20 @@
+### preview
 POST http://localhost:3000/preview
+content-type: application/json
+
+[
+  {
+    "parameter": "zRot",
+    "value": "60"
+  },
+  {
+    "parameter": "allColors",
+    "value": "orange"
+  }
+]
+
+### animation
+POST http://localhost:3000/animation
 content-type: application/json
 
 [
