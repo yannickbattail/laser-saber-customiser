@@ -1,5 +1,10 @@
 {
   "name": "laser-saber-customiser-server",
+  "description": "",
+  "version": "1.0.0",
+  "main": "server.js",
+  "author": "",
+  "license": "",
   "type": "module",
   "scripts": {
     "clean": "rm ./*.js",
