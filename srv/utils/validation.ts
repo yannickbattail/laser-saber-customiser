@@ -1,5 +1,5 @@
 import Ajv, { JSONSchemaType } from "ajv";
-import { ParameterList } from "./utils/openscadTypes";
+import { ParameterList } from "./openscadTypes";
 
 const parameterKvSchema: JSONSchemaType<ParameterKV[]> = {
   $schema: "http://json-schema.org/draft-07/schema#",
@@ -21,6 +21,8 @@ const parameterKvSchema: JSONSchemaType<ParameterKV[]> = {
 };
 
 const parameterListSchema: JSONSchemaType<ParameterList> = {
+  anyOf: [],
+  oneOf: [],
   $schema: "http://json-schema.org/draft-07/schema#",
   title: "ParameterList",
   type: "object",
@@ -159,7 +161,7 @@ const parameterListSchema: JSONSchemaType<ParameterList> = {
 
 const ajv = new Ajv();
 const validateParameterKV = ajv.compile<ParameterKV[]>(parameterKvSchema);
-const validateParameterList = ajv.compile<ParameterList>(parameterListSchema);
+// const validateParameterList = ajv.compile<ParameterList>(parameterListSchema);
 
 export type ParameterKV = {
   parameter: string;
@@ -181,19 +183,19 @@ export function IsParameterKvValid<T>(data: unknown): T {
     throw { message: "Invalid JSON:", errors: error };
   }
 }
-
-export function IsParameterListValid<T>(data: unknown): T {
-  try {
-    if (validateParameterList(data)) {
-      return data as T;
-    } else {
-      throw {
-        message: "Validation errors:",
-        error: validateParameterList.errors,
-      };
-    }
-  } catch (error) {
-    console.error("Invalid JSON:", error);
-    throw { message: "Invalid JSON:", errors: error };
-  }
-}
+//
+// export function IsParameterListValid<T>(data: unknown): T {
+//   try {
+//     if (validateParameterList(data)) {
+//       return data as T;
+//     } else {
+//       throw {
+//         message: "Validation errors:",
+//         error: validateParameterList.errors,
+//       };
+//     }
+//   } catch (error) {
+//     console.error("Invalid JSON:", error);
+//     throw { message: "Invalid JSON:", errors: error };
+//   }
+// }

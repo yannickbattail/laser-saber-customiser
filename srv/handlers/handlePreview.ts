@@ -1,4 +1,4 @@
-import { ParameterKV, IsParameterKvValid } from "../validation.js";
+import { ParameterKV, IsParameterKvValid } from "../utils/validation.js";
 import { Request, Response } from "express";
 import { buildParameterSet, generateOpenscadImage } from "../utils/openscad.js";
 
