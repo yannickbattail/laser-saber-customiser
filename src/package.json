@@ -8,8 +8,7 @@
     "lint": "eslint --fix ./*.ts",
     "format": "stylelint ./*.css && prettier -w ."
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@eslint/js": "^9.22.0",
     "eslint": "^9.22.0",
