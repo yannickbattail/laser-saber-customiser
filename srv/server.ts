@@ -12,8 +12,8 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
 });
 
+app.get("/parameter", handleParameter);
 app.post("/preview", handlePreview);
-app.post("/parameter", handleParameter);
 app.post("/animation", handleAnimation);
 
 app.listen(port, () => {

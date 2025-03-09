@@ -1,9 +1,20 @@
-import { ParameterSet } from "../openscadTypes.js";
+import { ParameterSet } from "./openscadTypes.js";
 import fs from "node:fs";
 import { execOutput } from "./execBash.js";
-import { ParameterKV } from "../validation.js";
+import { ParameterKV, IsParameterKvValid } from "../validation.js";
 
 const parameterSetFile = "generatedImages/parameterSets.json";
+
+export function getOpenscadParameters() {
+  execOutput(
+    `openscad-nightly --export-format param -o generatedImages/model_pram.json openscadFiles/model.scad`,
+  );
+  const obj = JSON.parse(
+    fs.readFileSync("generatedImages/model_pram.json", "utf8"),
+  );
+  const input = IsParameterKvValid<ParameterKV[]>(obj);
+  return input;
+}
 
 export function generateOpenscadImage(parameterSet: ParameterSet) {
   fs.writeFileSync(parameterSetFile, JSON.stringify(parameterSet, null, 2));
@@ -29,7 +40,7 @@ export function generateOpenscadAnim(parameterSet: ParameterSet) {
   return "generatedImages/model.webp";
 }
 
-export function buildParameterSet(input: ParameterKV[]) {
+export function buildParameterSet(input: ParameterKV[]): ParameterSet {
   const parameterSet: ParameterSet = {
     parameterSets: {
       model: {},
@@ -40,4 +51,46 @@ export function buildParameterSet(input: ParameterKV[]) {
     parameterSet.parameterSets["model"][param.parameter] = param.value;
   }
   return parameterSet;
+}
+
+export interface OptionNumber {
+  name: string;
+  value: number;
+}
+
+export interface OptionString {
+  name: string;
+  value: string;
+}
+
+export interface ParameterBase {
+  name: string;
+  caption?: string;
+  group?: string;
+}
+
+export interface ParameterNumber extends ParameterBase {
+  type: "number";
+  initial: number | number[];
+  options?: OptionNumber[];
+  max?: number;
+  min?: number;
+  step?: number;
+}
+
+export interface ParameterString extends ParameterBase {
+  type: "string";
+  initial: string;
+  options?: OptionString[];
+  maxLength?: number;
+}
+
+export interface ParameterBoolean extends ParameterBase {
+  type: "boolean";
+  initial: boolean;
+}
+
+export interface ParameterList {
+  parameters: (ParameterNumber | ParameterString | ParameterBoolean)[];
+  title: string;
 }

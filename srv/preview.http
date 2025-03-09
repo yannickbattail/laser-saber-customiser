@@ -1,3 +1,6 @@
+### get parameter
+GET http://localhost:3000/parameter
+
 ### preview
 POST http://localhost:3000/preview
 content-type: application/json
