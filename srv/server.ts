@@ -11,8 +11,7 @@ const port = process.argv.length > 1 ? parseInt(process.argv[1]) : 3000;
 const app = express();
 
 app.use(express.json());
-
-const port = 3000;
+app.use(express.static("../src"));
 
 app.get("/api/", handleRoot);
 app.get("/api/parameter", handleParameter);
