@@ -1,21 +1,22 @@
-import express, { Request, Response } from "express";
-import { handlePreview } from "./handlers/handlePreview.js";
-import { handleAnimation } from "./handlers/handleAnimation.js";
-import { handleParameter } from "./handlers/handleParameter.js";
+import express from "express";
+import {
+  handleAnimation,
+  handleParameter,
+  handlePreview,
+  handleRoot,
+} from "./handlers/handlers.js";
+
+const port = process.argv.length > 1 ? parseInt(process.argv[1]) : 3000;
 
 const app = express();
+
 app.use(express.json());
 
 const port = 3000;
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello World!");
-});
+app.get("/api/", handleRoot);
+app.get("/api/parameter", handleParameter);
+app.post("/api/preview", handlePreview);
+app.post("/api/animation", handleAnimation);
 
-app.get("/parameter", handleParameter);
-app.post("/preview", handlePreview);
-app.post("/animation", handleAnimation);
-
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+app.listen(port, () => console.log(`Example app listening on port ${port}`));

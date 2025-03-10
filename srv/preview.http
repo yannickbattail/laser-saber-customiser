@@ -1,8 +1,8 @@
 ### get parameter
-GET http://localhost:3000/parameter
+GET http://localhost:3000/api/parameter
 
 ### preview
-POST http://localhost:3000/preview
+POST http://localhost:3000/api/preview
 content-type: application/json
 
 [
@@ -17,7 +17,7 @@ content-type: application/json
 ]
 
 ### animation
-POST http://localhost:3000/animation
+POST http://localhost:3000/api/animation
 content-type: application/json
 
 [
