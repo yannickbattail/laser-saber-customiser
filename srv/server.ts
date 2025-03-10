@@ -12,7 +12,7 @@ const port = process.argv.length >= 3 ? parseInt(process.argv[2]) : 3000;
 const app = express();
 
 app.use(express.json());
-app.use(express.static("../dist"));
+app.use(express.static("../src"));
 
 app.get("/api/", handleRoot);
 app.get("/api/parameter", handleParameter);
