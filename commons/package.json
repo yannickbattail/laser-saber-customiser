@@ -1,8 +1,8 @@
 {
-  "name": "laser-saber-customiser-server",
+  "name": "laser-saber-customiser-commons",
   "description": "",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "",
   "author": "",
   "license": "",
   "type": "module",
@@ -10,8 +10,7 @@
     "clean": "rm ./*.js",
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "start": "node ./server.js",
-    "lint": "eslint --fix ./*.ts",
+    "lint": "eslint --fix './**/*.ts'",
     "format": "prettier -w ."
   },
   "dependencies": {

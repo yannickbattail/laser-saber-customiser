@@ -9,7 +9,7 @@
     "clean": "rm ./*.js",
     "build": "mkdir -p ../dist && cp index.html ../dist && tsc",
     "build:watch": "mkdir -p ../dist && cp index.html ../dist && tsc --watch",
-    "lint": "eslint --fix ./*.ts",
+    "lint": "eslint --fix './**/*.ts'",
     "format": "stylelint ./*.css && prettier -w ."
   },
   "dependencies": {},

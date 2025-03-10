@@ -1,4 +1,5 @@
 import express from "express";
+import process from "node:process";
 import {
   handleAnimation,
   handleParameter,

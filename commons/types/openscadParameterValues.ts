@@ -1,4 +1,4 @@
 export type ParameterSet = {
-    parameterSets: Record<string, Record<string, string>>;
-    fileFormatVersion: "1";
+  parameterSets: Record<string, Record<string, string>>;
+  fileFormatVersion: "1";
 };

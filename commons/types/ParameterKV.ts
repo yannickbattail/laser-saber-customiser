@@ -1,4 +1,4 @@
 export type ParameterKV = {
-    parameter: string;
-    value: string;
+  parameter: string;
+  value: string;
 };
