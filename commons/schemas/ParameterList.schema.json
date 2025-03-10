@@ -21,7 +21,9 @@
               },
               "type": {
                 "type": "string",
-                "enum": ["number"]
+                "enum": [
+                  "number"
+                ]
               },
               "initial": {
                 "oneOf": [
@@ -48,7 +50,10 @@
                       "type": "number"
                     }
                   },
-                  "required": ["name", "value"]
+                  "required": [
+                    "name",
+                    "value"
+                  ]
                 }
               },
               "max": {
@@ -61,7 +66,11 @@
                 "type": "number"
               }
             },
-            "required": ["name", "type", "initial"]
+            "required": [
+              "name",
+              "type",
+              "initial"
+            ]
           },
           {
             "type": "object",
@@ -77,7 +86,9 @@
               },
               "type": {
                 "type": "string",
-                "enum": ["string"]
+                "enum": [
+                  "string"
+                ]
               },
               "initial": {
                 "type": "string"
@@ -94,14 +105,21 @@
                       "type": "string"
                     }
                   },
-                  "required": ["name", "value"]
+                  "required": [
+                    "name",
+                    "value"
+                  ]
                 }
               },
               "maxLength": {
                 "type": "number"
               }
             },
-            "required": ["name", "type", "initial"]
+            "required": [
+              "name",
+              "type",
+              "initial"
+            ]
           },
           {
             "type": "object",
@@ -117,13 +135,19 @@
               },
               "type": {
                 "type": "string",
-                "enum": ["boolean"]
+                "enum": [
+                  "boolean"
+                ]
               },
               "initial": {
                 "type": "boolean"
               }
             },
-            "required": ["name", "type", "initial"]
+            "required": [
+              "name",
+              "type",
+              "initial"
+            ]
           }
         ]
       }
@@ -132,5 +156,8 @@
       "type": "string"
     }
   },
-  "required": ["parameters", "title"]
+  "required": [
+    "parameters",
+    "title"
+  ]
 }

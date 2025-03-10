@@ -1,11 +1,13 @@
 import { Request, Response } from "express";
-import { IsParameterKvValid, ParameterKV } from "../utils/validation.js";
+import { IsParameterKvValid } from "../utils/validation.js";
 import {
   buildParameterSet,
   generateOpenscadAnim,
   generateOpenscadImage,
   getOpenscadParameters,
 } from "../utils/openscad.js";
+import { ParameterKV } from "../../commons/types/ParameterKV.js";
+
 // import { IsParameterListValid } from "../utils/validation.js";
 
 export function handleRoot(req: Request, res: Response): void {
