@@ -1,6 +1,5 @@
 import fs from "node:fs";
 import { execOutput } from "./execBash.js";
-import { IsParameterKvValid } from "./validation.js";
 import { ParameterSet } from "../../commons/types/openscadParameterValues.js";
 import { ParameterKV } from "../../commons/types/ParameterKV.js";
 
@@ -8,12 +7,13 @@ const ParameterSetFile = "generatedImages/ParameterSets.json";
 
 export function getOpenscadParameters() {
   execOutput(
-    `openscad-nightly --export-format param -o generatedImages/model_pram.json openscadFiles/model.scad`,
+    `openscad-nightly --export-format param -o generatedImages/model_param.json openscadFiles/model.scad`,
   );
   const obj = JSON.parse(
-    fs.readFileSync("generatedImages/model_pram.json", "utf8"),
+    fs.readFileSync("generatedImages/model_param.json", "utf8"),
   );
-  return IsParameterKvValid<ParameterKV[]>(obj);
+  return obj;
+  //return IsParameterListValid<ParameterKV[]>(obj);
 }
 
 export function generateOpenscadImage(ParameterSet: ParameterSet) {

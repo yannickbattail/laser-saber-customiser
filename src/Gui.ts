@@ -1,25 +1,29 @@
 import { NodeUpdate } from "./NodeUpdate.js";
-import { formParam } from "./formdata.js";
 import {
   ParameterBase,
   ParameterBoolean,
+  ParameterList,
   ParameterNumber,
   ParameterString,
 } from "./types";
 
 export class Gui {
   constructor() {
-    this.init();
-    window.setInterval(() => {
-      this.atInterval();
-    }, 100);
+    this.init().then(() => {
+      window.setInterval(() => {
+        this.atInterval();
+      }, 100);
+    });
   }
 
-  private init() {
-    NodeUpdate.updateElement("main", this.initForm());
+  private async init() {
+    NodeUpdate.updateElement("main", await this.initForm());
   }
 
-  private initForm(): string {
+  private async initForm(): Promise<string> {
+    const formParam: ParameterList = (await (
+      await fetch("/api/parameter")
+    ).json()) as ParameterList;
     return `
 <div>
 <form>
