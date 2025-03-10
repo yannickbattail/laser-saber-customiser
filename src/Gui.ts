@@ -2,10 +2,10 @@ import { NodeUpdate } from "./NodeUpdate.js";
 import {
   ParameterBase,
   ParameterBoolean,
-  ParameterList,
+  ParameterDefinition,
   ParameterNumber,
   ParameterString,
-} from "./types";
+} from "../commons/types/openscadParameterDefinition.js";
 
 export class Gui {
   constructor() {
@@ -21,16 +21,31 @@ export class Gui {
   }
 
   private async initForm(): Promise<string> {
-    const formParam: ParameterList = (await (
+    const formParam: ParameterDefinition = (await (
       await fetch("/api/parameter")
-    ).json()) as ParameterList;
+    ).json()) as ParameterDefinition;
+    const groupedFormParam = groupBy(
+      formParam.parameters,
+      (p) => p.group ?? "",
+    );
+    let html = "";
+    for (const groupedFormParamKey in groupedFormParam) {
+      if (groupedFormParamKey.includes("debug")) continue;
+      html += "<br>";
+      html += `
+<fieldset>
+  <legend>${groupedFormParamKey}</legend>
+  <table>
+  ${groupedFormParam[groupedFormParamKey].map((p) => this.generateFormParam(p)).join("\n")}
+  </table>
+</fieldset>
+`;
+    }
     return `
 <div>
-<form>
-<table>
-${formParam.parameters.map((p) => this.generateFormParam(p)).join("\n")}
-</table>
-</form>
+  <form>
+    ${html}
+  </form>
 </div>`;
   }
 
@@ -87,7 +102,7 @@ ${formParam.parameters.map((p) => this.generateFormParam(p)).join("\n")}
   private generateLine(p: ParameterBase, inside: string) {
     return `
 <tr>
-  <td><label for="${p.name}">${p.name}</label></td>
+  <td><label for="${p.name}">${p.caption ? `${p.caption} (<i>${p.name}</i>)` : p.name}</label></td>
   <td>${inside}</td>
 </tr>`;
   }
@@ -98,3 +113,12 @@ ${formParam.parameters.map((p) => this.generateFormParam(p)).join("\n")}
 
   private refresh() {}
 }
+
+const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>
+  arr.reduce(
+    (groups, item) => {
+      (groups[key(item)] ||= []).push(item);
+      return groups;
+    },
+    {} as Record<K, T[]>,
+  );
