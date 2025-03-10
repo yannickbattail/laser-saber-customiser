@@ -6,7 +6,7 @@ import {
   handleRoot,
 } from "./handlers/handlers.js";
 
-const port = process.argv.length > 1 ? parseInt(process.argv[1]) : 3000;
+const port = process.argv.length >= 3 ? parseInt(process.argv[2]) : 3000;
 
 const app = express();
 
@@ -18,4 +18,4 @@ app.get("/api/parameter", handleParameter);
 app.post("/api/preview", handlePreview);
 app.post("/api/animation", handleAnimation);
 
-app.listen(port, () => console.log(`Example app listening on port ${port}`));
+app.listen(port, () => console.log(`Listening on http://localhost:${port}/`));
