@@ -6,6 +6,7 @@ import {
   ParameterNumber,
   ParameterString,
 } from "../commons/types/openscadParameterDefinition.js";
+import { ParameterKV } from "../commons/types/ParameterKV.js";
 
 export class Gui {
   constructor() {
@@ -43,9 +44,11 @@ export class Gui {
     }
     return `
 <div>
-  <form>
+  <form id="form">
     ${html}
   </form>
+  <button onclick="gui.preview()">Preview</button>
+  <button onclick="gui.animation()">Animation</button>
 </div>`;
   }
 
@@ -68,7 +71,7 @@ export class Gui {
     }
     return this.generateLine(
       p,
-      `<input type="number" id="${p.name}" name="${p.name}" value="${p.initial}" min="${p.min}" max="${p.max}" step="${p.step}" >`,
+      `<input type="number" id="${p.name}" name="${p.name}" value="${p.initial}" min="${p.min}" max="${p.max}" step="${p.step}" />`,
     );
   }
 
@@ -78,7 +81,7 @@ export class Gui {
     }
     return this.generateLine(
       p,
-      `<input type="text" id="${p.name}" name="${p.name}" value="${p.initial}" maxlength="${p.maxLength}">`,
+      `<input type="text" id="${p.name}" name="${p.name}" value="${p.initial}" maxlength="${p.maxLength}" />`,
     );
   }
 
@@ -95,7 +98,7 @@ export class Gui {
   private generateBoolean(p: ParameterBoolean) {
     return this.generateLine(
       p,
-      `<input type="checkbox" id="${p.name}" name="${p.name}" ${p.initial ? 'checked="checked"' : ""}>`,
+      `<input type="checkbox" id="${p.name}" name="${p.name}" ${p.initial ? 'checked="checked"' : ""} value="true"/>`,
     );
   }
 
@@ -112,6 +115,54 @@ export class Gui {
   }
 
   private refresh() {}
+
+  public async preview() {
+    await this.getImage("preview");
+  }
+
+  public async animation() {
+    await this.getImage("animation");
+  }
+
+  public async getImage(type: "preview" | "animation") {
+    const data = this.getFormData();
+    const res = await fetch(`/api/${type}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const uri = await this.imageBlobToBase64(await res.blob());
+    NodeUpdate.updateElement(
+      "preview",
+      `<img src="${uri}" alt="${type}" title="${type}" />`,
+    );
+  }
+
+  private getFormData() {
+    const form = document.getElementById("form") as HTMLFormElement;
+    const formData = new FormData(form);
+    const data: ParameterKV[] = [];
+    formData.forEach((value, key) => {
+      data.push({ parameter: key, value: value as string });
+    });
+    return data;
+  }
+
+  private async imageBlobToBase64(blob: Blob) {
+    return new Promise((onSuccess, onError) => {
+      try {
+        const reader = new FileReader();
+        reader.onload = function () {
+          onSuccess(this.result);
+        };
+        reader.readAsDataURL(blob);
+      } catch (e) {
+        onError(e);
+      }
+    });
+  }
 }
 
 const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>
