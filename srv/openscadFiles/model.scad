@@ -1,5 +1,8 @@
+// part to display
 part = "all"; // [all, arm, saber, emitter, handle, pommel, ring, fundation]
+// type of handle
 handleType = "handleType1"; // [handleType1, handleType2, handleType3]
+// type of pommel
 pommelType = "pommelType1"; // [pommelType1, pommelType2, pommelType3]
 
 // arm stopper size
@@ -8,12 +11,36 @@ armStopperSize = 1; // [0.5:0.1:3]
 // looseCoef
 looseCoef = 0.6; // [0.1:0.1:2]
 
+/* [pommelType1] */
+// base color
+p1baseColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// diamond base color
+p1diamondBaseColor = "red"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// diamond top color
+p1diamondTopColor = "red"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+
+/* [handleType1] */
+// number of cylinders
+h1cylinderNumber = 6; // [3:1:20]
+// diameter of cylinders
+h1cylinderDiameter = 12; // [5:1:20]
+// top color
+h1topColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// 6 cylinders color
+h1cylinderColor = "#444"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// ring color
+h1ringColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// bottom color
+h1bottomColor = "#444"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+
 /* [display] */
 
 // ingnit, light up the blade
 ingnit = true;
 // show/display the blade
 showBlade = true;
+// color of the blade
+bladeColor = "red"; // [red:red, DeepSkyBlue:green, DodgerBlue:blue, yellow:yellow,  Magenta:purple, orange:orange, white:white]
 // cut the saber in quarter to see the inside
 cutInQuarter = false;
 
@@ -35,9 +62,9 @@ armAngle = animation_opening
     ?($t < 0.5 ? -60 * (1 - $t * 2) : 0)
     :(ingnit ? 0 : -60);
 
-$vpt = animation_rotation || animation_opening?[0, 0, 30]:[];
-$vpr = animation_rotation ?[70, 0, 365 * $t]: (animation_opening?[70, 0, 130]:[]);
-$vpd = animation_rotation || animation_opening?1200:[];
+$vpt = animation_rotation || animation_opening?[0, 0, 0]:[];
+$vpr = animation_rotation ?[70, 0, 365 * $t]: (animation_opening?[70, 0, 0]:[]);
+$vpd = animation_rotation || animation_opening?1100:[];
 
 if (part == "all") {
     wholeSaber();
@@ -71,7 +98,7 @@ module blade() {
     getIn = animation_opening
         ?($t > 0.5 ? -199 * (2 - $t * 2) : -199)
         :(ingnit ? 0 : -199);
-    color("#ff000060")
+    color(bladeColor, 0.6)
         translate([0, 0, getIn]) {
             cylinder(h = 205, d1 = 25, d2 = 24);
             translate([0, 0, 205]) sphere(7);
@@ -165,26 +192,25 @@ module handle() {
 }
 
 module handle1(length) {
-    nb = 6;
-    color("silver")
+    color(h1topColor)
         translate([0, 0, -length / 2])
             cylinder(h = length / 2, d = 29);
 
     distance = 11;
-    color("#444")
+    color(h1cylinderColor)
         translate([0, 0, -length / 2]) {
-            for (i = [0:nb]) {
-                rotate([0, 0, 360 / nb * i]) {
+            for (i = [0:h1cylinderNumber]) {
+                rotate([0, 0, 360 / h1cylinderNumber * i]) {
                     translate([distance, 0, 0])
-                        cylinder(h = length / 2, d = 12, center = false);
+                        cylinder(h = length / 2, d = h1cylinderDiameter, center = false);
                 }
             }
         }
     ringSize = 8;
-    color("silver")
+    color(h1ringColor)
         translate([0, 0, -length / 2])
             cylinder(h = ringSize, d = 34, center = true);
-    color("#444")
+    color(h1bottomColor)
         translate([0, 0, -length]) {
             linear_extrude(length / 2, center = false, twist = 360) {
                 octogone(30);
@@ -248,15 +274,15 @@ module pommel() {
 module pommel1() {
     nb = 6;
     translate([0, 0, -8]) {
-        color("silver")
+        color(p1baseColor)
             cylinder(h = 8, d = 33, center = false);
     }
-    color("red")
+    color(p1diamondBaseColor)
         translate([0, 0, -14])
             linear_extrude(6, convexity = 20, scale = 0.85/*,twist = 60*/) {
                 hexagone(18);
             }
-    color("red")
+    color(p1diamondTopColor)
         translate([0, 0, -14])
             rotate([180, 0, 0])
                 linear_extrude(35, convexity = 20, scale = 0/*,twist = 60*/) {
