@@ -34,12 +34,14 @@ export class Gui {
       if (groupedFormParamKey.includes("debug")) continue;
       html += "<br>";
       html += `
-<fieldset>
-  <legend>${groupedFormParamKey}</legend>
-  <table>
-  ${groupedFormParam[groupedFormParamKey].map((p) => this.generateFormParam(p)).join("\n")}
-  </table>
-</fieldset>
+<div class="toggleBlock">
+  <div class="toggleShow" onclick="toggle()">${groupedFormParamKey}</div>
+  <div>
+    <table>
+      ${groupedFormParam[groupedFormParamKey].map((p) => this.generateFormParam(p)).join("\n")}
+    </table>
+  </div>
+</div>
 `;
     }
     return `

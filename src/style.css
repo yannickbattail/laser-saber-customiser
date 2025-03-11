@@ -27,3 +27,42 @@ fieldset {
   border-radius: 15px;
   margin: 10px;
 }
+
+.toggleBlock {
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--text-color);
+  border-radius: 4px 4px 0 0;
+  padding: 3px;
+  margin: 4px;
+}
+
+.toggleShow,
+.toggleHide {
+  cursor: pointer;
+  font-weight: bold;
+  align-content: flex-end;
+  text-align: left;
+}
+
+.toggleShow {
+}
+
+.toggleShow::before {
+  content: '▼ ';
+}
+
+.toggleShow + div {
+  display: block;
+}
+
+.toggleHide {
+}
+
+.toggleHide::before {
+  content: '▶ ';
+}
+
+.toggleHide + div {
+  display: none;
+}
