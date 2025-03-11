@@ -65,6 +65,14 @@ export class Gui {
     }
   }
 
+  private generateLine(p: ParameterBase, inside: string) {
+    return `
+<tr>
+  <td><label for="${p.name}">${p.caption ? `${p.caption} (<i>${p.name}</i>)` : p.name}</label></td>
+  <td>${inside}</td>
+</tr>`;
+  }
+
   private generateNumber(p: ParameterNumber) {
     if (p.options) {
       return this.generateSelect(p);
@@ -102,14 +110,6 @@ export class Gui {
     );
   }
 
-  private generateLine(p: ParameterBase, inside: string) {
-    return `
-<tr>
-  <td><label for="${p.name}">${p.caption ? `${p.caption} (<i>${p.name}</i>)` : p.name}</label></td>
-  <td>${inside}</td>
-</tr>`;
-  }
-
   private atInterval() {
     this.refresh();
   }
@@ -125,19 +125,31 @@ export class Gui {
   }
 
   public async getImage(type: "preview" | "animation") {
-    const data = this.getFormData();
-    const res = await fetch(`/api/${type}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    const uri = await this.imageBlobToBase64(await res.blob());
-    NodeUpdate.updateElement(
-      "preview",
-      `<img src="${uri}" alt="${type}" title="${type}" />`,
-    );
+    try {
+      NodeUpdate.updateElement(
+        "preview",
+        `<img src="img/loading.webp" alt="loading" title="loading" />`,
+      );
+      const data = this.getFormData();
+      const res = await fetch(`/api/${type}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const uri = await this.imageBlobToBase64(await res.blob());
+      NodeUpdate.updateElement(
+        "preview",
+        `<img src="${uri}" alt="${type}" title="${type}" />`,
+      );
+    } catch (e) {
+      console.error(e);
+      NodeUpdate.updateElement(
+        "preview",
+        `<img src="img/saber_none.jpg" alt="no preview" title="no preview" />`,
+      );
+    }
   }
 
   private getFormData() {
