@@ -3,41 +3,98 @@ import { execOutput } from "./execBash.js";
 import { ParameterSet } from "../../commons/types/openscadParameterValues.js";
 import { ParameterKV } from "../../commons/types/ParameterKV.js";
 
-const ParameterSetFile = "generatedImages/ParameterSets.json";
+class Configuration {
+  constructor(cfg: Cfg) {
+    Object.assign(this, cfg);
+  }
+  aminImgNumber: number;
+  animDelay: number;
+  animSize: number[];
+  colorscheme: string;
+  imgSize: number[];
+  modelPrefix: string;
+  modelDir: string;
+  generationDir: string;
+  getParamFile() {
+    return `${this.generationDir}/${this.modelPrefix}.param.json`;
+  }
+  getParamSetFile() {
+    return `${this.generationDir}/${this.modelPrefix}.json`;
+  }
+  getScadFile() {
+    return `${this.modelDir}/${this.modelPrefix}.scad`;
+  }
+  getImgFile() {
+    return `${this.generationDir}/${this.modelPrefix}.png`;
+  }
+  getAnimFile() {
+    return `${this.generationDir}/${this.modelPrefix}.webp`;
+  }
+  getAnimFiles() {
+    return `${this.generationDir}/${this.modelPrefix}_anim.png`;
+  }
+  getAnimPattern() {
+    return `${this.generationDir}/${this.modelPrefix}_anim*.png`;
+  }
+}
+
+interface Cfg {
+  modelPrefix: string;
+  modelDir: string;
+  generationDir: string;
+  aminImgNumber: number;
+  animDelay: number;
+  animSize: number[];
+  colorscheme: string;
+  imgSize: number[];
+}
+
+const cfg: Cfg = {
+  modelPrefix: "model",
+  modelDir: "openscadFiles",
+  generationDir: "generatedImages",
+  imgSize: [256, 512],
+  animSize: [256, 512],
+  aminImgNumber: 50,
+  animDelay: 100,
+  colorscheme: "DeepOcean",
+};
+
+const config: Configuration = new Configuration(cfg);
 
 export function getOpenscadParameters() {
   execOutput(
-    `openscad-nightly --export-format param -o generatedImages/model_param.json openscadFiles/model.scad`,
+    `openscad-nightly --export-format param -o ${config.getParamFile()} ${config.getScadFile()}`,
   );
-  const obj = JSON.parse(
-    fs.readFileSync("generatedImages/model_param.json", "utf8"),
-  );
+  const obj = JSON.parse(fs.readFileSync(config.getParamFile(), "utf8"));
   return obj;
   //return IsParameterListValid<ParameterKV[]>(obj);
 }
 
-export function generateOpenscadImage(ParameterSet: ParameterSet) {
-  fs.writeFileSync(ParameterSetFile, JSON.stringify(ParameterSet, null, 2));
-  const imgSize = "512,512";
-  execOutput(
-    `openscad-nightly -p ./${ParameterSetFile} -P model -o generatedImages/model.png --imgsize "${imgSize}" --view axes openscadFiles/model.scad`,
+export function generateOpenscadImage(parameterSet: ParameterSet) {
+  fs.writeFileSync(
+    config.getParamSetFile(),
+    JSON.stringify(parameterSet, null, 2),
   );
-  return "generatedImages/model.png";
+  execOutput(
+    `openscad-nightly -p ./${config.getParamSetFile()} -P model -o ${config.getImgFile()} --imgsize "${config.imgSize.join(",")}" --colorscheme ${config.colorscheme} ${config.getScadFile()}`,
+  );
+  return config.getImgFile();
 }
 
 export function generateOpenscadAnim(ParameterSet: ParameterSet) {
-  fs.writeFileSync(ParameterSetFile, JSON.stringify(ParameterSet, null, 2));
-  const imgNumber = 20;
-  const imgDelay = 20;
-  const imgSize = "512,512";
-  execOutput(
-    `openscad-nightly -p ./${ParameterSetFile} -P model -o generatedImages/model_anim.png -D "animation_rotation=true" --animate ${imgNumber} --imgsize "${imgSize}" --view axes openscadFiles/model.scad`,
+  fs.writeFileSync(
+    config.getParamSetFile(),
+    JSON.stringify(ParameterSet, null, 2),
   );
   execOutput(
-    `img2webp -o "generatedImages/model.webp" -d "${imgDelay}0" generatedImages/model_anim*.png`,
+    `openscad-nightly -p ./${config.getParamSetFile()} -P model -o ${config.getAnimFiles()} -D "animation_rotation=true" --animate ${config.aminImgNumber} --imgsize "${config.animSize.join(",")}" --colorscheme ${config.colorscheme} ${config.getScadFile()}`,
   );
-  execOutput(`rm generatedImages/model_anim*.png`);
-  return "generatedImages/model.webp";
+  execOutput(
+    `img2webp -o "${config.getAnimFile()}" -d "${config.animDelay}" ${config.getAnimPattern()}`,
+  );
+  execOutput(`rm ${config.getAnimPattern()}`);
+  return config.getAnimFile();
 }
 
 export function buildParameterSet(input: ParameterKV[]): ParameterSet {
