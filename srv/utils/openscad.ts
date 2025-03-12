@@ -7,6 +7,7 @@ class Configuration {
   constructor(cfg: Cfg) {
     Object.assign(this, cfg);
   }
+  openScadCmd: string;
   aminImgNumber: number;
   animDelay: number;
   animSize: number[];
@@ -39,6 +40,7 @@ class Configuration {
 }
 
 interface Cfg {
+  openScadCmd: string;
   modelPrefix: string;
   modelDir: string;
   generationDir: string;
@@ -50,6 +52,7 @@ interface Cfg {
 }
 
 const cfg: Cfg = {
+  openScadCmd: "openscad", //openscad-nightly
   modelPrefix: "model",
   modelDir: "openscadFiles",
   generationDir: "generatedImages",
@@ -64,7 +67,7 @@ const config: Configuration = new Configuration(cfg);
 
 export function getOpenscadParameters() {
   execOutput(
-    `openscad-nightly --export-format param -o ${config.getParamFile()} ${config.getScadFile()}`,
+    `${config.openScadCmd} --export-format param -o ${config.getParamFile()} ${config.getScadFile()}`,
   );
   const obj = JSON.parse(fs.readFileSync(config.getParamFile(), "utf8"));
   return obj;
@@ -77,7 +80,7 @@ export function generateOpenscadImage(parameterSet: ParameterSet) {
     JSON.stringify(parameterSet, null, 2),
   );
   execOutput(
-    `openscad-nightly -p ./${config.getParamSetFile()} -P model -o ${config.getImgFile()} --imgsize "${config.imgSize.join(",")}" --colorscheme ${config.colorscheme} ${config.getScadFile()}`,
+    `${config.openScadCmd} -p ./${config.getParamSetFile()} -P model -o ${config.getImgFile()} --imgsize "${config.imgSize.join(",")}" --colorscheme ${config.colorscheme} ${config.getScadFile()}`,
   );
   return config.getImgFile();
 }
@@ -88,7 +91,7 @@ export function generateOpenscadAnim(ParameterSet: ParameterSet) {
     JSON.stringify(ParameterSet, null, 2),
   );
   execOutput(
-    `openscad-nightly -p ./${config.getParamSetFile()} -P model -o ${config.getAnimFiles()} -D "animation_rotation=true" --animate ${config.aminImgNumber} --imgsize "${config.animSize.join(",")}" --colorscheme ${config.colorscheme} ${config.getScadFile()}`,
+    `${config.openScadCmd} -p ./${config.getParamSetFile()} -P model -o ${config.getAnimFiles()} -D "animation_rotation=true" --animate ${config.aminImgNumber} --imgsize "${config.animSize.join(",")}" --colorscheme ${config.colorscheme} ${config.getScadFile()}`,
   );
   execOutput(
     `img2webp -o "${config.getAnimFile()}" -d "${config.animDelay}" ${config.getAnimPattern()}`,
