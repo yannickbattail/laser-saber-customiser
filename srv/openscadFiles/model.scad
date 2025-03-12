@@ -11,36 +11,43 @@ armStopperSize = 1; // [0.5:0.1:3]
 // looseCoef
 looseCoef = 0.6; // [0.1:0.1:2]
 
-/* [pommelType1] */
-// base color
-p1baseColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
-// diamond base color
-p1diamondBaseColor = "red"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
-// diamond top color
-p1diamondTopColor = "red"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
-
 /* [handleType1] */
 // number of cylinders
 h1cylinderNumber = 6; // [3:1:20]
 // diameter of cylinders
 h1cylinderDiameter = 12; // [5:1:20]
 // top color
-h1topColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+h1topColor = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // 6 cylinders color
-h1cylinderColor = "#444"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+h1cylinderColor = "#444";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // ring color
-h1ringColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+h1ringColor = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // bottom color
-h1bottomColor = "#444"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+h1bottomColor = "#444";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+
+/* [pommelType1] */
+// base color
+p1baseColor = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// diamond base color
+p1diamondBaseColor = "red";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// diamond top color
+p1diamondTopColor = "red";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// twist angle in degrees
+p1twistAngle = 0; // [0:5:360]
+// diamond length
+p1height = 18; // [5:1:50]
+// diamond width
+p1width = 35; // [5:1:60]
+// number of sides in the diamond
+p1sides = 6; // [3:1:12]
 
 /* [display] */
-
 // ingnit, light up the blade
 ingnit = true;
 // show/display the blade
 showBlade = true;
 // color of the blade
-bladeColor = "red"; // [red:red, Chartreuse:green, DodgerBlue:blue, yellow:yellow,  Magenta:purple, orange:orange, white:white]
+bladeColor = "red";// [red:red, Chartreuse:green, DodgerBlue:blue, yellow:yellow,  Magenta:purple, orange:orange, white:white]
 // cut the saber in quarter to see the inside
 cutInQuarter = false;
 
@@ -95,13 +102,17 @@ module wholeSaber() {
 }
 
 module blade() {
+    bladeLength = 200;
     getIn = animation_opening
         ?($t > 0.5 ? -199 * (2 - $t * 2) : -199)
         :(ingnit ? 0 : -199);
-    color(bladeColor, 0.6)
         translate([0, 0, getIn]) {
-            cylinder(h = 205, d1 = 25, d2 = 24);
-            translate([0, 0, 205]) sphere(7);
+            color(bladeColor, 0.6) {
+                union() {
+                    cylinder(h = bladeLength, d = 25);
+                    color(bladeColor, 0.6) translate([0, 0, bladeLength]) sphere(d = 25);
+                }
+            }
         }
 }
 
@@ -192,21 +203,20 @@ module handle() {
 }
 
 module handle1(length) {
+    ringSize = 8;
     color(h1topColor)
         translate([0, 0, -length / 2])
             cylinder(h = length / 2, d = 29);
-
     distance = 11;
     color(h1cylinderColor)
-        translate([0, 0, -length / 2]) {
+        translate([0, 0, -length / 2+ringSize/2]) {
             for (i = [0:h1cylinderNumber]) {
                 rotate([0, 0, 360 / h1cylinderNumber * i]) {
                     translate([distance, 0, 0])
-                        cylinder(h = length / 2, d = h1cylinderDiameter, center = false);
+                        cylinder(h = length / 2-ringSize/2, d = h1cylinderDiameter, center = false);
                 }
             }
         }
-    ringSize = 8;
     color(h1ringColor)
         translate([0, 0, -length / 2])
             cylinder(h = ringSize, d = 34, center = true);
@@ -258,7 +268,6 @@ module handle3(lenght) {
 module pommel() {
     difference() {
         translate([0, 0, -194]) {
-
             if (pommelType == "pommelType1") {
                 pommel1();
             } else if (pommelType == "pommelType2") {
@@ -272,21 +281,20 @@ module pommel() {
 }
 
 module pommel1() {
-    nb = 6;
     translate([0, 0, -8]) {
         color(p1baseColor)
-            cylinder(h = 8, d = 33, center = false);
+            cylinder(h = 8, d = 33);
     }
     color(p1diamondBaseColor)
         translate([0, 0, -14])
-            linear_extrude(6, convexity = 20, scale = 0.85/*,twist = 60*/) {
-                hexagone(18);
+            linear_extrude(6, convexity = 20, scale = 0.85) {
+                circle(p1height, $fn = p1sides);
             }
     color(p1diamondTopColor)
         translate([0, 0, -14])
             rotate([180, 0, 0])
-                linear_extrude(35, convexity = 20, scale = 0/*,twist = 60*/) {
-                    hexagone(18);
+                linear_extrude(p1width, convexity = 20, scale = 0, twist = p1twistAngle) {
+                    circle(p1height, $fn = p1sides);
                 }
 }
 
