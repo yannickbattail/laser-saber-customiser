@@ -46,7 +46,7 @@ export class Gui {
     }
     return `
 <div>
-  <form id="form">
+  <form id="form" onchange="gui.formChanged()">
     ${html}
   </form>
 </div>`;
@@ -113,8 +113,21 @@ export class Gui {
   private atInterval() {
     this.refresh();
   }
-
   private refresh() {}
+
+  private lastFormChanged = 0;
+  private changeTimeout = 2000;
+
+  public formChanged() {
+    this.lastFormChanged = Date.now();
+    window.setTimeout(() => this.applyChanges(), this.changeTimeout + 50);
+  }
+
+  private async applyChanges() {
+    if (Date.now() - this.lastFormChanged > this.changeTimeout) {
+      await this.preview();
+    }
+  }
 
   public async preview() {
     await this.getImage("preview");

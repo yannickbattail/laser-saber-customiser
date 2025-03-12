@@ -40,7 +40,7 @@ ingnit = true;
 // show/display the blade
 showBlade = true;
 // color of the blade
-bladeColor = "red"; // [red:red, DeepSkyBlue:green, DodgerBlue:blue, yellow:yellow,  Magenta:purple, orange:orange, white:white]
+bladeColor = "red"; // [red:red, Chartreuse:green, DodgerBlue:blue, yellow:yellow,  Magenta:purple, orange:orange, white:white]
 // cut the saber in quarter to see the inside
 cutInQuarter = false;
 
