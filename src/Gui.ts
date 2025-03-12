@@ -35,7 +35,7 @@ export class Gui {
       html += "<br>";
       html += `
 <div class="toggleBlock">
-  <div class="toggleShow" onclick="toggle()">${groupedFormParamKey}</div>
+  <div class="toggleShow" onclick="toggle(event)">${groupedFormParamKey}</div>
   <div>
     <table>
       ${groupedFormParam[groupedFormParamKey].map((p) => this.generateFormParam(p)).join("\n")}
@@ -49,8 +49,6 @@ export class Gui {
   <form id="form">
     ${html}
   </form>
-  <button onclick="gui.preview()">Preview</button>
-  <button onclick="gui.animation()">Animation</button>
 </div>`;
   }
 
