@@ -27,7 +27,7 @@ export class Gui {
     ).json()) as ParameterDefinition;
     const groupedFormParam = groupBy(
       formParam.parameters,
-      (p) => p.group ?? "",
+      (p) => p.group ?? "Global",
     );
     let html = "";
     for (const groupedFormParamKey in groupedFormParam) {

@@ -2,8 +2,6 @@
 
 ### prod
 ```bash
-npm ci
-npm run --workspaces build
 docker-compose up --build
 ```
 
