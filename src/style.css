@@ -49,7 +49,7 @@ fieldset {
 }
 
 .toggleShow::before {
-  content: '▼ ';
+  content: "▼ ";
 }
 
 .toggleShow + div {
@@ -60,7 +60,7 @@ fieldset {
 }
 
 .toggleHide::before {
-  content: '▶ ';
+  content: "▶ ";
 }
 
 .toggleHide + div {
@@ -72,6 +72,7 @@ fieldset {
   border-width: 1px;
   border-radius: 10px;
 }
+
 #preview img {
   width: 256px;
   height: 512px;

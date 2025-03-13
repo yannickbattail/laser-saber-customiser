@@ -4,9 +4,6 @@ import { ParameterSet } from "../../commons/types/openscadParameterValues.js";
 import { ParameterKV } from "../../commons/types/ParameterKV.js";
 
 class Configuration {
-  constructor(cfg: Cfg) {
-    Object.assign(this, cfg);
-  }
   openScadCmd: string;
   aminImgNumber: number;
   animDelay: number;
@@ -16,24 +13,35 @@ class Configuration {
   modelPrefix: string;
   modelDir: string;
   generationDir: string;
+
+  constructor(cfg: Cfg) {
+    Object.assign(this, cfg);
+  }
+
   getParamFile() {
     return `${this.generationDir}/${this.modelPrefix}.param.json`;
   }
+
   getParamSetFile() {
     return `${this.generationDir}/${this.modelPrefix}.json`;
   }
+
   getScadFile() {
     return `${this.modelDir}/${this.modelPrefix}.scad`;
   }
+
   getImgFile() {
     return `${this.generationDir}/${this.modelPrefix}.png`;
   }
+
   getAnimFile() {
     return `${this.generationDir}/${this.modelPrefix}.webp`;
   }
+
   getAnimFiles() {
     return `${this.generationDir}/${this.modelPrefix}_anim.png`;
   }
+
   getAnimPattern() {
     return `${this.generationDir}/${this.modelPrefix}_anim*.png`;
   }

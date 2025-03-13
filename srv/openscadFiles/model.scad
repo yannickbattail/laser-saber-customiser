@@ -106,14 +106,14 @@ module blade() {
     getIn = animation_opening
         ?($t > 0.5 ? -199 * (2 - $t * 2) : -199)
         :(ingnit ? 0 : -199);
-        translate([0, 0, getIn]) {
-            color(bladeColor, 0.6) {
-                union() {
-                    cylinder(h = bladeLength, d = 25);
-                    color(bladeColor, 0.6) translate([0, 0, bladeLength]) sphere(d = 25);
-                }
+    translate([0, 0, getIn]) {
+        color(bladeColor, 0.6) {
+            union() {
+                cylinder(h = bladeLength, d = 25);
+                color(bladeColor, 0.6) translate([0, 0, bladeLength]) sphere(d = 25);
             }
         }
+    }
 }
 
 module saber() {
@@ -209,11 +209,11 @@ module handle1(length) {
             cylinder(h = length / 2, d = 29);
     distance = 11;
     color(h1cylinderColor)
-        translate([0, 0, -length / 2+ringSize/2]) {
+        translate([0, 0, -length / 2 + ringSize / 2]) {
             for (i = [0:h1cylinderNumber]) {
                 rotate([0, 0, 360 / h1cylinderNumber * i]) {
                     translate([distance, 0, 0])
-                        cylinder(h = length / 2-ringSize/2, d = h1cylinderDiameter, center = false);
+                        cylinder(h = length / 2 - ringSize / 2, d = h1cylinderDiameter, center = false);
                 }
             }
         }
