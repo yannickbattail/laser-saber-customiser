@@ -150,7 +150,8 @@ export class Gui {
   private generateBoolean(p: ParameterBoolean) {
     return this.generateLine(
       p,
-      `<input type="checkbox" id="${p.name}" name="${p.name}" ${p.initial ? 'checked="checked"' : ""} value="true"/>`,
+      `<input type="radio" id="${p.name}" name="${p.name}" ${p.initial ? 'checked="checked"' : ""} value="true"/>✅
+       <input type="radio" id="${p.name}" name="${p.name}" ${p.initial ? "" : 'checked="checked"'} value="false"/>❌`,
     );
   }
 
@@ -190,6 +191,7 @@ export class Gui {
     });
   }
 }
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>
   arr.reduce(
