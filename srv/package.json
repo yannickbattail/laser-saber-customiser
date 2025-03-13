@@ -7,7 +7,7 @@
   "license": "",
   "type": "module",
   "scripts": {
-    "clean": "rm ./*.js",
+    "clean": "rm ./*.js ./*/*.js ./generatedImages/*",
     "build": "tsc",
     "build:watch": "tsc --watch",
     "start": "node ./server.js",
