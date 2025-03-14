@@ -1,7 +1,7 @@
 // part to display
-part = "all"; // [all, arm, saber, emitter, handle, pommel, ring, fundation]
+part = "all"; // [all, arm, saber, emitter, handle, pommel, fundation]
 // type of emitter
-emitterType = "emitterType1"; // [emitterType1, emitterType2]
+emitterType = "emitterType1"; // [emitterType1:emitter1, emitterType2:armEmitter, emitterType3:oblicEmitter]
 // type of handle
 handleType = "handleType1"; // [handleType1, handleType2, handleType3]
 // type of pommel
@@ -22,6 +22,18 @@ e1color = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:
 e2color = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // color of the arms
 e2armColor = "red";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+
+/* [emitterType3] */
+// color
+e3color = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// max height
+e3maxHeigh = 50; // [2:1:100]
+// emitter diameter
+e3diameter = 35; // [30:1:50]
+// emitter cut height
+e3cutHeight = 20; // [0:1:100]
+// emitter angle
+e3angle = 45; // [0:5:60]
 
 /* [handleType1] */
 // number of cylinders
@@ -97,8 +109,6 @@ if (part == "all") {
     pommel();
 } else if (part == "arm") {
     armPos([19, 0, 30], false);
-} else if (part == "ring") {
-    stopRing();
 } else if (part == "fundation") {
     fundation();
 }
@@ -132,7 +142,6 @@ module saber() {
         union() {
             fundation();
             emitter();
-            stopRing();
             handle();
             pommel();
         }
@@ -149,7 +158,7 @@ module emitter() {
     } else if (emitterType == "emitterType2") {
         emitter2();
     } else if (emitterType == "emitterType3") {
-        emitter1();
+        emitter3();
     }
 }
 
@@ -166,10 +175,20 @@ module emitter1() {
 module emitter2() {
     color(e2armColor)
         arms();
-    color(e1color) {
+    color(e2color) {
         difference() {
             emitterBlock();
             armHoles();
+            fundationHole();
+            bladeHole();
+        }
+    }
+}
+
+module emitter3() {
+    color(e3color) {
+        difference() {
+            oblicEmitter();
             fundationHole();
             bladeHole();
         }
@@ -191,6 +210,17 @@ module emitterBlock() {
             translate([0, 0, 6]) {
                 pipe(50, 50 - ringDiameter + ringThickness - looseCoef, 17);
             }
+        }
+    }
+}
+
+module oblicEmitter() {
+    translate([0, 0, -6]) {
+        difference() {
+            cylinder(h = e3maxHeigh, d = e3diameter);
+            rotate([0,e3angle,0])
+                translate([0,0,100+e3cutHeight])
+                    cube(200, center = true);
         }
     }
 }
@@ -378,15 +408,6 @@ module pommel3() {
                 }
             }
     }
-}
-
-module stopRing() {
-    up = ingnit?0:10;
-    color("#444")
-        translate([0, 0, up])
-            difference() {
-                pipe(ringDiameter, ringThickness, 7);
-            }
 }
 
 module armHoles() {
