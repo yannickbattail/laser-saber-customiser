@@ -56,7 +56,7 @@ export class Gui {
       console.error(e);
       NodeUpdate.updateElement(
         "preview",
-        `<img src="img/saber_none.jpg" alt="no preview" title="no preview" />`,
+        `<img src="img/saber_empty.webp" alt="no preview" title="no preview" />`,
       );
     }
   }

@@ -71,10 +71,12 @@ fieldset {
   border-style: solid;
   border-width: 1px;
   border-radius: 10px;
+  width: 256px;
+  height: 512px;
+  background-color: #333333;
 }
 
 #preview img {
-  width: 256px;
   height: 512px;
   border-radius: 10px;
 }
