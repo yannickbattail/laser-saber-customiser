@@ -1,5 +1,7 @@
 // part to display
 part = "all"; // [all, arm, saber, emitter, handle, pommel, ring, fundation]
+// type of emitter
+emitterType = "emitterType1"; // [emitterType1, emitterType2]
 // type of handle
 handleType = "handleType1"; // [handleType1, handleType2, handleType3]
 // type of pommel
@@ -10,6 +12,16 @@ armStopperSize = 1; // [0.5:0.1:3]
 
 // looseCoef
 looseCoef = 0.6; // [0.1:0.1:2]
+
+/* [emitterType1] */
+// color
+e1color = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+
+/* [emitterType2] */
+// color
+e2color = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// color of the arms
+e2armColor = "red";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 
 /* [handleType1] */
 // number of cylinders
@@ -35,9 +47,9 @@ p1diamondTopColor = "red";// [silver:silver, orange:gold, #444:black, white:whit
 // twist angle in degrees
 p1twistAngle = 0; // [0:5:360]
 // diamond length
-p1height = 18; // [5:1:50]
+p1height = 35; // [5:1:50]
 // diamond width
-p1width = 35; // [5:1:60]
+p1width = 18; // [5:1:60]
 // number of sides in the diamond
 p1sides = 6; // [3:1:12]
 
@@ -94,7 +106,6 @@ if (part == "all") {
 module wholeSaber() {
     debugCollision(debug){
         saber();
-        arms();
     }
     if (showBlade) {
         blade();
@@ -133,13 +144,36 @@ module saber() {
 }
 
 module emitter() {
-    color("silver")
+    if (emitterType == "emitterType1") {
+        emitter1();
+    } else if (emitterType == "emitterType2") {
+        emitter2();
+    } else if (emitterType == "emitterType3") {
+        emitter1();
+    }
+}
+
+module emitter1() {
+    color(e1color) {
+        difference() {
+            emitterBlock();
+            fundationHole();
+            bladeHole();
+        }
+    }
+}
+
+module emitter2() {
+    color(e2armColor)
+        arms();
+    color(e1color) {
         difference() {
             emitterBlock();
             armHoles();
             fundationHole();
             bladeHole();
         }
+    }
 }
 
 module emitterBlock() {
@@ -288,13 +322,13 @@ module pommel1() {
     color(p1diamondBaseColor)
         translate([0, 0, -14])
             linear_extrude(6, convexity = 20, scale = 0.85) {
-                circle(p1height, $fn = p1sides);
+                circle(p1width, $fn = p1sides);
             }
     color(p1diamondTopColor)
         translate([0, 0, -14])
             rotate([180, 0, 0])
-                linear_extrude(p1width, convexity = 20, scale = 0, twist = p1twistAngle) {
-                    circle(p1height, $fn = p1sides);
+                linear_extrude(p1height, convexity = 20, scale = 0, twist = p1twistAngle) {
+                    circle(p1width, $fn = p1sides);
                 }
 }
 
