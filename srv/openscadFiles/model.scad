@@ -1,5 +1,4 @@
-// part to display
-part = "all"; // [all, arm, saber, emitter, handle, pommel, fundation]
+
 // type of emitter
 emitterType = "emitterType1"; // [emitterType1:emitter1, emitterType2:armEmitter, emitterType3:oblicEmitter]
 // type of handle
@@ -7,11 +6,6 @@ handleType = "handleType1"; // [handleType1, handleType2, handleType3]
 // type of pommel
 pommelType = "pommelType1"; // [pommelType1, pommelType2, pommelType3]
 
-// arm stopper size
-armStopperSize = 1; // [0.5:0.1:3]
-
-// looseCoef
-looseCoef = 0.6; // [0.1:0.1:2]
 
 /* [emitterType1] */
 // color
@@ -76,6 +70,15 @@ bladeColor = "red";// [red:red, Chartreuse:green, DodgerBlue:blue, yellow:yellow
 cutInQuarter = false;
 
 /* [Internal debug] */
+// part to display
+part = "all"; // [all, arm, saber, emitter, handle, pommel, fundation]
+
+// arm stopper size
+armStopperSize = 1; // [0.5:0.1:3]
+
+// looseCoef
+looseCoef = 0.6; // [0.1:0.1:2]
+
 // rotating animation
 animation_rotation = false;
 // opening animation
