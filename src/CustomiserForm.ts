@@ -8,6 +8,7 @@ import {
 
 export class CustomiserForm {
   public constructor() {}
+  private defaultGroup = "Parameters";
   public async initForm(formParam: ParameterDefinition): Promise<string> {
     const groupedFormParam = groupBy(
       formParam.parameters,
@@ -15,18 +16,9 @@ export class CustomiserForm {
     );
     let html = "";
     for (const groupedFormParamKey in groupedFormParam) {
-      if (groupedFormParamKey.includes("debug")) continue;
-      html += "<br>";
-      html += `
-<div class="toggleBlock">
-  <div class="toggleShow" onclick="toggle(event)">${groupedFormParamKey}</div>
-  <div>
-    <table>
-      ${groupedFormParam[groupedFormParamKey].map((p) => this.generateFormParam(p)).join("\n")}
-    </table>
-  </div>
-</div>
-`;
+      if (!groupedFormParamKey.includes("debug")) {
+        html += this.displayGroup(groupedFormParamKey, groupedFormParam);
+      }
     }
     return `
 <div>
@@ -36,9 +28,34 @@ export class CustomiserForm {
 </div>`;
   }
 
+  private displayGroup(
+    groupedFormParamKey: string,
+    groupedFormParam: Record<
+      string,
+      (ParameterNumber | ParameterString | ParameterBoolean)[]
+    >,
+  ) {
+    let html = "<br>";
+    html += `
+<div id="group_${groupedFormParamKey}" class="toggleBlock">
+  <div id="toggleTitle_${groupedFormParamKey}"  class="toggleShow" onclick="toggle(event)">${groupedFormParamKey}</div>
+  <div>
+    <table>
+      ${groupedFormParam[groupedFormParamKey].map((p) => this.generateFormParam(p, groupedFormParamKey === this.defaultGroup)).join("\n")}
+    </table>
+  </div>
+</div>
+`;
+    return html;
+  }
+
   private generateFormParam(
     p: ParameterNumber | ParameterString | ParameterBoolean,
+    mainGroup: boolean,
   ) {
+    if ((p.type === "number" || p.type === "string") && p.options) {
+      return this.generateSelect(p, mainGroup);
+    }
     switch (p.type) {
       case "number":
         return this.generateNumber(p);
@@ -58,9 +75,6 @@ export class CustomiserForm {
   }
 
   private generateNumber(p: ParameterNumber) {
-    if (p.options) {
-      return this.generateSelect(p);
-    }
     return this.generateLine(
       p,
       `<input type="number" id="${p.name}" name="${p.name}" value="${p.initial}" min="${p.min}" max="${p.max}" step="${p.step}" />`,
@@ -68,16 +82,16 @@ export class CustomiserForm {
   }
 
   private generateString(p: ParameterString) {
-    if (p.options) {
-      return this.generateSelect(p);
-    }
     return this.generateLine(
       p,
       `<input type="text" id="${p.name}" name="${p.name}" value="${p.initial}" maxlength="${p.maxLength}" />`,
     );
   }
 
-  private generateSelect(p: ParameterString | ParameterNumber) {
+  private generateSelect(
+    p: ParameterString | ParameterNumber,
+    mainGroup?: boolean,
+  ) {
     return this.generateLine(
       p,
       `

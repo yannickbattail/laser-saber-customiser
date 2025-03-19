@@ -24,11 +24,8 @@
     <script>
       function toggle(event) {
         const element = event.target;
-        if (element.className === "toggleShow") {
-          element.className = "toggleHide";
-        } else {
-          element.className = "toggleShow";
-        }
+        element.classList.toggle("toggleShow");
+        element.classList.toggle("toggleHide");
       }
     </script>
     <script type="module">
