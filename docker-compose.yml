@@ -1,11 +1,11 @@
 services:
-  laser-saber-customiser:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
-    volumes:
-      - generatedImages:/home/openscad/srv/generatedImages
+    laser-saber-customiser:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "8080:8080"
+        volumes:
+            - generatedImages:/home/openscad/srv/generatedImages
 volumes:
-  generatedImages:
+    generatedImages:

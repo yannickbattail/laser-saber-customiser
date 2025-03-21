@@ -152,9 +152,7 @@ if (part == "all") {
 }
 
 module wholeSaber() {
-    debugCollision(debug){
-        saber();
-    }
+    saber();
     if (showBlade) {
         blade();
     }

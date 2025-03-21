@@ -41,11 +41,15 @@ export class Gui {
     await this.getImage("preview");
   }
 
+  public async renderedImage() {
+    await this.getImage("renderedImage");
+  }
+
   public async animation() {
     await this.getImage("animation");
   }
 
-  public async getImage(type: "preview" | "animation") {
+  public async getImage(type: "preview" | "animation" | "renderedImage") {
     try {
       NodeUpdate.updateElement(
         "preview",
