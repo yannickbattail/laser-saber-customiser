@@ -20,6 +20,23 @@ export class Gui {
     window.setTimeout(() => this.applyChanges(), this.changeTimeout + 50);
   }
 
+  public changePart(me: HTMLSelectElement | null) {
+    if (!me) return;
+    const group = `${me.id} : ${me.value}`;
+    document
+      .querySelectorAll(`[id^="toggleTitle_${me.id} : "]`)
+      .forEach((e) => {
+        e.classList.add("toggleHide");
+        e.classList.remove("toggleShow");
+      });
+    document
+      .getElementById(`toggleTitle_${group}`)
+      ?.classList?.add("toggleShow");
+    document
+      .getElementById(`toggleTitle_${group}`)
+      ?.classList?.remove("toggleHide");
+  }
+
   public async preview() {
     await this.getImage("preview");
   }
@@ -62,7 +79,13 @@ export class Gui {
     ).json()) as ParameterDefinition;
     const customiserForm = new CustomiserForm();
     NodeUpdate.updateElement("main", await customiserForm.initForm(formParam));
+    this.changePart(
+      document.getElementById("emitterType") as HTMLSelectElement,
+    );
+    this.changePart(document.getElementById("handleType") as HTMLSelectElement);
+    this.changePart(document.getElementById("pommelType") as HTMLSelectElement);
   }
+
   private atInterval() {
     this.refresh();
   }

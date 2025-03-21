@@ -92,10 +92,11 @@ export class CustomiserForm {
     p: ParameterString | ParameterNumber,
     mainGroup?: boolean,
   ) {
+    const onChange = mainGroup ? `onchange="gui.changePart(this)"` : "";
     return this.generateLine(
       p,
       `
-<select id="${p.name}" name="${p.name}">
+<select id="${p.name}" name="${p.name}" ${onChange}>
     ${p.options?.map((o) => `<option value="${o.value}" ${o.value === p.initial ? 'selected="selected"' : ""}>${o.name}</option>`).join("\n")}
 </select>`,
     );
