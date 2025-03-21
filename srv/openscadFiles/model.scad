@@ -1,23 +1,23 @@
 
 // type of emitter
-emitterType = "emitterType1"; // [emitterType1:emitter1, emitterType2:armEmitter, emitterType3:oblicEmitter]
+emitterType = "coneEmitter"; // [coneEmitter:cone emitter, armEmitter:arms emitter, oblicEmitter:oblic emitter]
 // type of handle
 handleType = "handleType1"; // [handleType1, handleType2, handleType3]
 // type of pommel
 pommelType = "pommelType1"; // [pommelType1, pommelType2, pommelType3]
 
 
-/* [emitterType1] */
+/* [emitterType : coneEmitter] */
 // color
 e1color = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 
-/* [emitterType2] */
+/* [emitterType : armEmitter] */
 // color
 e2color = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // color of the arms
 e2armColor = "red";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 
-/* [emitterType3] */
+/* [emitterType : oblicEmitter] */
 // color
 e3color = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // max height
@@ -29,7 +29,7 @@ e3cutHeight = 20; // [0:1:100]
 // emitter angle
 e3angle = 45; // [0:5:60]
 
-/* [handleType1] */
+/* [handleType : handleType1] */
 // number of cylinders
 h1cylinderNumber = 6; // [3:1:20]
 // diameter of cylinders
@@ -43,7 +43,17 @@ h1ringColor = "silver";// [silver:silver, orange:gold, #444:black, white:white, 
 // bottom color
 h1bottomColor = "#444";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 
-/* [pommelType1] */
+/* [handleType : handleType2] */
+// ring color
+h2ringColor = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// top color
+h2Color = "#444";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+
+/* [handleType : handleType3] */
+// top color
+h3Color = "#444";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+
+/* [pommelType : pommelType1] */
 // base color
 p1baseColor = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // diamond base color
@@ -58,6 +68,32 @@ p1height = 35; // [5:1:50]
 p1width = 18; // [5:1:60]
 // number of sides in the diamond
 p1sides = 6; // [3:1:12]
+
+/* [pommelType : pommelType2] */
+// base color
+p2baseColor = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// diamond base color
+p2diamondBaseColor = "red";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// diamond top color
+p2diamondTopColor = "red";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// diamond length
+p2height = 35; // [5:1:50]
+// diamond width
+p2width = 18; // [5:1:60]
+// number of sides in the diamond
+p2sides = 6; // [3:1:12]
+// color of spikes
+p2SpikeColor = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// length of spikes
+p2SpikeLenght = 14; // [5:1:20]
+
+/* [pommelType : pommelType3] */
+// base color
+p3baseColor = "red";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// color of spikes
+p3SpikeColor = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// nomber of spikes
+p3sides = 6; // [3:1:12]
 
 /* [display] */
 // ingnit, light up the blade
@@ -156,11 +192,11 @@ module saber() {
 }
 
 module emitter() {
-    if (emitterType == "emitterType1") {
+    if (emitterType == "coneEmitter") {
         emitter1();
-    } else if (emitterType == "emitterType2") {
+    } else if (emitterType == "armEmitter") {
         emitter2();
-    } else if (emitterType == "emitterType3") {
+    } else if (emitterType == "oblicEmitter") {
         emitter3();
     }
 }
@@ -306,21 +342,21 @@ module handle2(length) {
 
     for (i = [0:ceil(length / 4)]) {
         translate([0, 0, i * -4 - 2]) {
-            color("#444") torus(14, 5);
+            color(h2Color) torus(14, 5);
         }
     }
     // middle ring
-    color("silver")
+    color(h2ringColor)
         translate([0, 0, -length / 2])
             cylinder(h = 8, d = 34);
 }
 
 module handle3(lenght) {
-    color("#444")
+    color(h3Color)
         translate([0, 0, -lenght])
             cylinder(h = lenght, d = 31);
 
-    color("#444")
+    color(h3Color)
         translate([0, 0, -lenght / 2]) {
             linear_extrude(lenght, center = true, convexity = 10, twist = -720) {
                 square(25, center = true);
@@ -366,43 +402,41 @@ module pommel1() {
 }
 
 module pommel2() {
-    nb = 6;
     translate([0, 0, -8]) {
-        color("silver")
-            cylinder(h = 8, d = 33, center = false);
+        color(p2baseColor)
+            cylinder(h = 8, d = 33);
     }
     translate([0, 0, -3]) {
-        color("silver")
-            for (i = [0:nb]) {
-                rotate([0, 0, 360 / nb * i]) {
+        color(p2SpikeColor)
+            for (i = [0:p2sides]) {
+                rotate([0, 0, 360 / p2sides * i]) {
                     translate([14, 0, 0])
                         rotate([0, 140, 0])
-                            cylinder(h = 14, d1 = 7, d2 = 0, center = false);
+                            cylinder(h = p2SpikeLenght, d1 = 7, d2 = 0, center = false);
                 }
             }
     }
-    color("red")
+    color(p2diamondBaseColor)
         translate([0, 0, -14])
-            linear_extrude(6, convexity = 20, scale = 0.9/*,twist = 60*/) {
-                hexagone(16);
+            linear_extrude(6, convexity = 20, scale = 0.85) {
+                circle(p2width, $fn = p2sides);
             }
-    color("red")
+    color(p2diamondTopColor)
         translate([0, 0, -14])
             rotate([180, 0, 0])
-                linear_extrude(10, convexity = 20, scale = 0/*,twist = 60*/) {
-                    hexagone(16);
+                linear_extrude(p2height, convexity = 20, scale = 0) {
+                    circle(p2width, $fn = p2sides);
                 }
 }
 
 module pommel3() {
     translate([0, 0, -10])
-        color("darkred")
+        color(p3baseColor)
             sphere(18);
-    nb = 6;
     translate([0, 0, -14]) {
-        color("silver")
-            for (i = [0:nb]) {
-                rotate([0, 0, 360 / nb * i]) {
+        color(p3SpikeColor)
+            for (i = [0:p3sides]) {
+                rotate([0, 0, 360 / p3sides * i]) {
                     translate([17, 0, 0])
                         sphere(4);
                     translate([18, 0, 0])
