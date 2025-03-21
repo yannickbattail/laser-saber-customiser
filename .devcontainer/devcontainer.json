@@ -24,8 +24,16 @@
         "com.intellij:app:BaseRefactoringSettings.rename_search_for_references_for_directory": false
       },
       "backend": "WebStorm"
+    },
+    "vscode": {
+      "settings": {},
+      "extensions": [
+        "streetsidesoftware.code-spell-checker",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ]
     }
-  },
+  }
   // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
   // "remoteUser": "root"
 }
