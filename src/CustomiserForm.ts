@@ -7,8 +7,10 @@ import {
 } from "../commons/types/openscadParameterDefinition.js";
 
 export class CustomiserForm {
-  public constructor() {}
   private defaultGroup = "Parameters";
+
+  public constructor() {}
+
   public async initForm(formParam: ParameterDefinition): Promise<string> {
     const groupedFormParam = groupBy(
       formParam.parameters,

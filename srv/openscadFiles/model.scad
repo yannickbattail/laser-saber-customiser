@@ -1,4 +1,3 @@
-
 // type of emitter
 emitterType = "coneEmitter"; // [coneEmitter:cone emitter, armEmitter:arms emitter, oblicEmitter:oblic emitter]
 // type of handle
@@ -257,8 +256,8 @@ module oblicEmitter() {
     translate([0, 0, -6]) {
         difference() {
             cylinder(h = e3maxHeigh, d = e3diameter);
-            rotate([0,e3angle,0])
-                translate([0,0,100+e3cutHeight])
+            rotate([0, e3angle, 0])
+                translate([0, 0, 100 + e3cutHeight])
                     cube(200, center = true);
         }
     }
