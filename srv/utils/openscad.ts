@@ -84,8 +84,7 @@ export function getOpenscadParameters() {
   execOutput(
     `${config.openScadCmd} --export-format param -o ${config.getParamFile()} ${config.getScadFile()}`,
   );
-  const obj = JSON.parse(fs.readFileSync(config.getParamFile(), "utf8"));
-  return obj;
+  return JSON.parse(fs.readFileSync(config.getParamFile(), "utf8"));
   //return IsParameterListValid<ParameterKV[]>(obj);
 }
 
@@ -131,18 +130,18 @@ export function generateOpenscad3DModel(parameterSet: ParameterSet) {
     color: "",
     unit: "millimeter",
     decimal_precision: "6",
-    add_meta_data: "false",
+    add_meta_data: "true",
     meta_data_title: "light saber",
     meta_data_description: "Customisable light saber",
     meta_data_copyright: "Xcinnay",
     meta_data_designer: "Xcinnay",
-    meta_data_license_terms: "",
-    meta_data_rating: "",
+    meta_data_license_terms: "CC BY-NC-ND",
+    meta_data_rating: "1",
   };
   const str3mf = Object.entries(opt3mf)
     .map(
       ([key, value]) =>
-        `-O 'export-3mf/${key.replace("_", "-")}=${value.replace("'", "\\'")}'`,
+        `-O 'export-3mf/${key.replaceAll("_", "-")}=${value.replaceAll("'", "\\'")}'`,
     )
     .join(" ");
   execOutput(
