@@ -16,6 +16,7 @@
         <td>
           <button onclick="gui.animation()">Animate</button>
           <button onclick="gui.renderedImage()">Render Image</button>
+          <button onclick="gui.display3DModel()">3D</button>
           <div id="preview">
             <img
               alt="no preview"
@@ -35,8 +36,8 @@
     </script>
     <script type="module">
       import { Gui } from "./Gui.js";
-
       window.gui = new Gui();
     </script>
+    <script src="lib/stl_viewer/stl_viewer.min.js"></script>
   </body>
 </html>

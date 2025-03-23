@@ -36,7 +36,7 @@ class Configuration {
   }
 
   get3DFile() {
-    return `${this.generationDir}/${this.modelPrefix}.3mf`;
+    return `../src/gen/${this.modelPrefix}.3mf`;
   }
 
   getAnimFile() {
@@ -95,23 +95,23 @@ type Option3mf = {
   color: string;
   material_type: "color" | "basematerial";
   decimal_precision:
-    | 1
-    | 2
-    | 3
-    | 4
-    | 5
-    | 6
-    | 7
-    | 8
-    | 9
-    | 10
-    | 11
-    | 12
-    | 13
-    | 14
-    | 15
-    | 16;
-  add_meta_data: boolean;
+    | "1"
+    | "2"
+    | "3"
+    | "4"
+    | "5"
+    | "6"
+    | "7"
+    | "8"
+    | "9"
+    | "10"
+    | "11"
+    | "12"
+    | "13"
+    | "14"
+    | "15"
+    | "16";
+  add_meta_data: "true" | "false";
   meta_data_title: string;
   meta_data_designer: string;
   meta_data_description: string;
@@ -130,8 +130,8 @@ export function generateOpenscad3DModel(parameterSet: ParameterSet) {
     material_type: "color",
     color: "",
     unit: "millimeter",
-    decimal_precision: 6,
-    add_meta_data: false,
+    decimal_precision: "6",
+    add_meta_data: "false",
     meta_data_title: "light saber",
     meta_data_description: "Customisable light saber",
     meta_data_copyright: "Xcinnay",
@@ -140,7 +140,10 @@ export function generateOpenscad3DModel(parameterSet: ParameterSet) {
     meta_data_rating: "",
   };
   const str3mf = Object.entries(opt3mf)
-    .map(([key, value]) => `-O 'export-3mf/${key.replace("_", "-")}=${value}'`)
+    .map(
+      ([key, value]) =>
+        `-O 'export-3mf/${key.replace("_", "-")}=${value.replace("'", "\\'")}'`,
+    )
     .join(" ");
   execOutput(
     `${config.openScadCmd} -p ./${config.getParamSetFile()} -P model ${str3mf} --enable all --backend Manifold -o ${config.get3DFile()} ${config.getScadFile()}`,
@@ -160,7 +163,7 @@ export function generateOpenscadImage(parameterSet: ParameterSet) {
 }
 
 export function generateF3dImage(parameterSet: ParameterSet) {
-  generateOpenscad3DModel(parameterSet);
+  const model3d = generateOpenscad3DModel(parameterSet);
   fs.writeFileSync(
     config.getParamSetFile(),
     JSON.stringify(parameterSet, null, 2),
@@ -174,7 +177,7 @@ export function generateF3dImage(parameterSet: ParameterSet) {
   const f3d_debug = ""; // {debug, info, warning, error, quiet}
   // const f3d_debug="--verbose=info"
   execOutput(
-    `${config.f3dCmd} ${f3d_debug} --resolution ${config.imgSize.join(",")} ${f3d_colors} -q -a -t --axis=false --grid=false --filename=false ${f3d_material} ${f3d_hdri} --output ${config.getImgFile()} ${config.get3DFile()}`,
+    `${config.f3dCmd} ${f3d_debug} --resolution ${config.imgSize.join(",")} ${f3d_colors} -q -a -t --axis=false --grid=false --filename=false ${f3d_material} ${f3d_hdri} --output ${config.getImgFile()} ${model3d}`,
   );
   return config.getImgFile();
 }

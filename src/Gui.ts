@@ -49,6 +49,46 @@ export class Gui {
     await this.getImage("animation");
   }
 
+  public async display3DModel() {
+    try {
+      NodeUpdate.updateElement(
+        "preview",
+        `<img src="img/loading.webp" alt="loading" title="loading" />`,
+      );
+      const data = this.getFormData();
+      const res = await fetch(`/api/3DModel`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const divPreview = document.getElementById("preview");
+      if (divPreview) divPreview.innerHTML = "";
+      const uri = await res.json();
+      // @ts-expect-error in js
+      new StlViewer(divPreview, {
+        models: [
+          {
+            id: 0,
+            filename: uri,
+            rotationx: Math.PI / -2,
+          },
+        ],
+        auto_rotate: true,
+        zoom: 600,
+        allow_drag_and_drop: false,
+        jszip_path: "../../lib/jszip/jszip.min.js",
+      });
+    } catch (e) {
+      console.error(e);
+      NodeUpdate.updateElement(
+        "preview",
+        `<img src="img/saber_empty.webp" alt="no preview" title="no preview" />`,
+      );
+    }
+  }
+
   public async getImage(type: "preview" | "animation" | "renderedImage") {
     try {
       NodeUpdate.updateElement(
