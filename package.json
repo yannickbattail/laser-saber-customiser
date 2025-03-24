@@ -1,11 +1,9 @@
 {
   "name": "laser-saber-customiser",
   "scripts": {
-    "build": "tsc",
     "build:watch": "./start_dev.sh",
-    "start": "npm run -w srv start",
-    "lint": "eslint --fix './**/*.ts'",
-    "format": "prettier -w ."
+    "format:all": "npm run -ws format && npm run -ws lint",
+    "start": "npm run -w srv start"
   },
   "workspaces": [
     "commons",

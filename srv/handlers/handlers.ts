@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { IsParameterKvValid } from "../utils/validation.js";
 import {
   buildParameterSet,
+  generateF3dImage,
+  generateOpenscad3DModel,
   generateOpenscadAnim,
   generateOpenscadImage,
   getOpenscadParameters,
@@ -20,16 +22,30 @@ export function handleParameter(req: Request, res: Response): void {
   res.json(ret);
 }
 
-export function handleAnimation(req: Request, res: Response): void {
+export function handle3DModel(req: Request, res: Response): void {
   const input = IsParameterKvValid<ParameterKV[]>(req.body);
   const parameterSet = buildParameterSet(input);
-  const ret = generateOpenscadAnim(parameterSet);
-  res.sendFile(ret, { root: "./" });
+  const ret = generateOpenscad3DModel(parameterSet);
+  res.json(ret.replace("../src", ""));
 }
 
 export function handlePreview(req: Request, res: Response): void {
   const input = IsParameterKvValid<ParameterKV[]>(req.body);
   const parameterSet = buildParameterSet(input);
   const ret = generateOpenscadImage(parameterSet);
+  res.sendFile(ret, { root: "./" });
+}
+
+export function handleRenderedImage(req: Request, res: Response): void {
+  const input = IsParameterKvValid<ParameterKV[]>(req.body);
+  const parameterSet = buildParameterSet(input);
+  const ret = generateF3dImage(parameterSet);
+  res.sendFile(ret, { root: "./" });
+}
+
+export function handleAnimation(req: Request, res: Response): void {
+  const input = IsParameterKvValid<ParameterKV[]>(req.body);
+  const parameterSet = buildParameterSet(input);
+  const ret = generateOpenscadAnim(parameterSet);
   res.sendFile(ret, { root: "./" });
 }

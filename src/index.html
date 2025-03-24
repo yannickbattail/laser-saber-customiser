@@ -3,26 +3,41 @@
   <head>
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     <meta charset="utf-8" />
-<!--    <link href="images/light-sabers-couleur.svg" rel="icon" type="image/svg+xml" />-->
+    <!--    <link href="images/light-sabers-couleur.svg" rel="icon" type="image/svg+xml" />-->
     <link href="style.css" rel="stylesheet" />
     <title>Laser Saber Customiser</title>
   </head>
   <body class="dark">
-    <div id="main"></div>
-    <div id="preview"><img src="img/saber_none.jpg" alt="no preview" title="no preview" /></div>
+    <table>
+      <tr>
+        <td>
+          <div id="main"></div>
+        </td>
+        <td>
+<!--          <button onclick="gui.animation()">Animate</button>-->
+<!--          <button onclick="gui.renderedImage()">Render Image</button>-->
+          <button onclick="gui.display3DModel()">3D</button>
+          <div id="preview">
+            <img
+              alt="no preview"
+              src="img/saber_empty.webp"
+              title="no preview"
+            />
+          </div>
+        </td>
+      </tr>
+    </table>
     <script>
-      function toggle() {
-        event.srcElement;
-        if (event.srcElement.className == 'toggleShow') {
-          event.srcElement.className = 'toggleHide';
-        } else {
-          event.srcElement.className = 'toggleShow';
-        }
+      function toggle(event) {
+        const element = event.target;
+        element.classList.toggle("toggleShow");
+        element.classList.toggle("toggleHide");
       }
     </script>
     <script type="module">
       import { Gui } from "./Gui.js";
       window.gui = new Gui();
     </script>
+    <script src="lib/stl_viewer/stl_viewer.min.js"></script>
   </body>
 </html>

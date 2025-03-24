@@ -1,14 +1,12 @@
 import { NodeUpdate } from "./NodeUpdate.js";
-import {
-  ParameterBase,
-  ParameterBoolean,
-  ParameterDefinition,
-  ParameterNumber,
-  ParameterString,
-} from "../commons/types/openscadParameterDefinition.js";
 import { ParameterKV } from "../commons/types/ParameterKV.js";
+import { ParameterDefinition } from "laser-saber-customiser-commons/types/openscadParameterDefinition.js";
+import { CustomiserForm } from "./CustomiserForm.js";
 
 export class Gui {
+  private lastFormChanged = 0;
+  private changeTimeout = 2000;
+
   constructor() {
     this.init().then(() => {
       window.setInterval(() => {
@@ -17,116 +15,81 @@ export class Gui {
     });
   }
 
-  private async init() {
-    NodeUpdate.updateElement("main", await this.initForm());
+  public formChanged() {
+    this.lastFormChanged = Date.now();
+    window.setTimeout(() => this.applyChanges(), this.changeTimeout + 50);
   }
 
-  private async initForm(): Promise<string> {
-    const formParam: ParameterDefinition = (await (
-      await fetch("/api/parameter")
-    ).json()) as ParameterDefinition;
-    const groupedFormParam = groupBy(
-      formParam.parameters,
-      (p) => p.group ?? "",
-    );
-    let html = "";
-    for (const groupedFormParamKey in groupedFormParam) {
-      if (groupedFormParamKey.includes("debug")) continue;
-      html += "<br>";
-      html += `
-<div class="toggleBlock">
-  <div class="toggleShow" onclick="toggle()">${groupedFormParamKey}</div>
-  <div>
-    <table>
-      ${groupedFormParam[groupedFormParamKey].map((p) => this.generateFormParam(p)).join("\n")}
-    </table>
-  </div>
-</div>
-`;
-    }
-    return `
-<div>
-  <form id="form">
-    ${html}
-  </form>
-  <button onclick="gui.preview()">Preview</button>
-  <button onclick="gui.animation()">Animation</button>
-</div>`;
+  public changePart(me: HTMLSelectElement | null) {
+    if (!me) return;
+    const group = `${me.id} : ${me.value}`;
+    document
+      .querySelectorAll(`[id^="toggleTitle_${me.id} : "]`)
+      .forEach((e) => {
+        e.classList.add("toggleHide");
+        e.classList.remove("toggleShow");
+      });
+    document
+      .getElementById(`toggleTitle_${group}`)
+      ?.classList?.add("toggleShow");
+    document
+      .getElementById(`toggleTitle_${group}`)
+      ?.classList?.remove("toggleHide");
   }
-
-  private generateFormParam(
-    p: ParameterNumber | ParameterString | ParameterBoolean,
-  ) {
-    switch (p.type) {
-      case "number":
-        return this.generateNumber(p);
-      case "string":
-        return this.generateString(p);
-      case "boolean":
-        return this.generateBoolean(p);
-    }
-  }
-
-  private generateLine(p: ParameterBase, inside: string) {
-    return `
-<tr>
-  <td><label for="${p.name}">${p.caption ? `${p.caption} (<i>${p.name}</i>)` : p.name}</label></td>
-  <td>${inside}</td>
-</tr>`;
-  }
-
-  private generateNumber(p: ParameterNumber) {
-    if (p.options) {
-      return this.generateSelect(p);
-    }
-    return this.generateLine(
-      p,
-      `<input type="number" id="${p.name}" name="${p.name}" value="${p.initial}" min="${p.min}" max="${p.max}" step="${p.step}" />`,
-    );
-  }
-
-  private generateString(p: ParameterString) {
-    if (p.options) {
-      return this.generateSelect(p);
-    }
-    return this.generateLine(
-      p,
-      `<input type="text" id="${p.name}" name="${p.name}" value="${p.initial}" maxlength="${p.maxLength}" />`,
-    );
-  }
-
-  private generateSelect(p: ParameterString | ParameterNumber) {
-    return this.generateLine(
-      p,
-      `
-<select id="${p.name}" name="${p.name}">
-    ${p.options?.map((o) => `<option value="${o.value}" ${o.value === p.initial ? 'selected="selected"' : ""}>${o.name}</option>`).join("\n")}
-</select>`,
-    );
-  }
-
-  private generateBoolean(p: ParameterBoolean) {
-    return this.generateLine(
-      p,
-      `<input type="checkbox" id="${p.name}" name="${p.name}" ${p.initial ? 'checked="checked"' : ""} value="true"/>`,
-    );
-  }
-
-  private atInterval() {
-    this.refresh();
-  }
-
-  private refresh() {}
 
   public async preview() {
     await this.getImage("preview");
+  }
+
+  public async renderedImage() {
+    await this.getImage("renderedImage");
   }
 
   public async animation() {
     await this.getImage("animation");
   }
 
-  public async getImage(type: "preview" | "animation") {
+  public async display3DModel() {
+    try {
+      NodeUpdate.updateElement(
+        "preview",
+        `<img src="img/loading.webp" alt="loading" title="loading" />`,
+      );
+      const data = this.getFormData();
+      const res = await fetch(`/api/3DModel`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const divPreview = document.getElementById("preview");
+      if (divPreview) divPreview.innerHTML = "";
+      const uri = await res.json();
+      // @ts-expect-error in js
+      new StlViewer(divPreview, {
+        models: [
+          {
+            id: 0,
+            filename: uri,
+            rotationx: Math.PI / -2,
+          },
+        ],
+        auto_rotate: true,
+        zoom: 600,
+        allow_drag_and_drop: false,
+        jszip_path: "../../lib/jszip/jszip.min.js",
+      });
+    } catch (e) {
+      console.error(e);
+      NodeUpdate.updateElement(
+        "preview",
+        `<img src="img/saber_empty.webp" alt="no preview" title="no preview" />`,
+      );
+    }
+  }
+
+  public async getImage(type: "preview" | "animation" | "renderedImage") {
     try {
       NodeUpdate.updateElement(
         "preview",
@@ -149,8 +112,33 @@ export class Gui {
       console.error(e);
       NodeUpdate.updateElement(
         "preview",
-        `<img src="img/saber_none.jpg" alt="no preview" title="no preview" />`,
+        `<img src="img/saber_empty.webp" alt="no preview" title="no preview" />`,
       );
+    }
+  }
+
+  private async init() {
+    const formParam: ParameterDefinition = (await (
+      await fetch("/api/parameter")
+    ).json()) as ParameterDefinition;
+    const customiserForm = new CustomiserForm();
+    NodeUpdate.updateElement("main", await customiserForm.initForm(formParam));
+    this.changePart(
+      document.getElementById("emitterType") as HTMLSelectElement,
+    );
+    this.changePart(document.getElementById("handleType") as HTMLSelectElement);
+    this.changePart(document.getElementById("pommelType") as HTMLSelectElement);
+  }
+
+  private atInterval() {
+    this.refresh();
+  }
+
+  private refresh() {}
+
+  private async applyChanges() {
+    if (Date.now() - this.lastFormChanged > this.changeTimeout) {
+      await this.preview();
     }
   }
 
@@ -178,12 +166,3 @@ export class Gui {
     });
   }
 }
-
-const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>
-  arr.reduce(
-    (groups, item) => {
-      (groups[key(item)] ||= []).push(item);
-      return groups;
-    },
-    {} as Record<K, T[]>,
-  );
