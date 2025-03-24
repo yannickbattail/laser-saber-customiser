@@ -34,10 +34,10 @@ export function execBash(
 
 /**
  * Execute Bash commands synchronously and return output
- * @param cmd\
  * @returns
+ * @param cmd
  */
-export function execOutput(cmd: string) {
+export function execOutput(cmd: string): string {
   return execBash(cmd, {
     encoding: "utf-8",
     maxBuffer: 50 * 1024 * 1024,

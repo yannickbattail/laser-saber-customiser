@@ -1,7 +1,10 @@
 import { NodeUpdate } from "./NodeUpdate.js";
-import { ParameterKV } from "../commons/types/ParameterKV.js";
-import { ParameterDefinition } from "laser-saber-customiser-commons/types/openscadParameterDefinition.js";
 import { CustomiserForm } from "./CustomiserForm.js";
+import {
+  OpenScadOutputWithParameterDefinition,
+  OpenScadOutputWithSummary,
+} from "../commons/openscad/OpenScadOutput.js";
+import { ParameterKV } from "laser-saber-customiser-commons/openscad/ParameterSet.js";
 
 export class Gui {
   private lastFormChanged = 0;
@@ -65,13 +68,13 @@ export class Gui {
       });
       const divPreview = document.getElementById("preview");
       if (divPreview) divPreview.innerHTML = "";
-      const uri = await res.json();
+      const uri = (await res.json()) as OpenScadOutputWithSummary;
       // @ts-expect-error in js
       new StlViewer(divPreview, {
         models: [
           {
             id: 0,
-            filename: uri,
+            filename: "../../" + uri.file.replace("./src/", "/"),
             rotationx: Math.PI / -2,
           },
         ],
@@ -103,7 +106,7 @@ export class Gui {
         },
         body: JSON.stringify(data),
       });
-      const uri = await res.json();
+      const uri = (await res.json()) as OpenScadOutputWithSummary;
       NodeUpdate.updateElement(
         "preview",
         `
@@ -112,7 +115,7 @@ export class Gui {
             <img src="img/3D.svg" alt="display in 3D" title="display in 3D"/>
         </button>
     </div>
-    <img class="previewImage" src="${uri}" alt="${type}" title="${type}" />`,
+    <img src="${uri.file.replace("./src/", "/")}" alt="${type}" title="${type}" />`,
       );
     } catch (e) {
       console.error(e);
@@ -124,11 +127,14 @@ export class Gui {
   }
 
   private async init() {
-    const formParam: ParameterDefinition = (await (
+    const formParam: OpenScadOutputWithParameterDefinition = (await (
       await fetch("/api/parameter")
-    ).json()) as ParameterDefinition;
+    ).json()) as OpenScadOutputWithParameterDefinition;
     const customiserForm = new CustomiserForm();
-    NodeUpdate.updateElement("main", await customiserForm.initForm(formParam));
+    NodeUpdate.updateElement(
+      "main",
+      await customiserForm.initForm(formParam.parameterDefinition),
+    );
     this.changePart(
       document.getElementById("emitterType") as HTMLSelectElement,
     );

@@ -9,5 +9,8 @@
     "commons",
     "src",
     "srv"
-  ]
+  ],
+  "dependencies": {
+    "glob": "^11.0.1"
+  }
 }
