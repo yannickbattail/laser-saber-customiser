@@ -6,25 +6,27 @@ import { ParameterKV } from "../../commons/types/ParameterKV.js";
 class Configuration {
   openScadCmd: string;
   f3dCmd: string;
+  modelPrefix: string;
+  modelDir: string;
+  generationDir: string;
+  timestamp: number;
   aminImgNumber: number;
   animDelay: number;
   animSize: number[];
   colorscheme: string;
   imgSize: number[];
-  modelPrefix: string;
-  modelDir: string;
-  generationDir: string;
 
   constructor(cfg: Cfg) {
     Object.assign(this, cfg);
+    this.timestamp = new Date().getTime();
   }
 
   getParamFile() {
-    return `${this.generationDir}/${this.modelPrefix}.param.json`;
+    return `${this.generationDir}/${this.modelPrefix}_${this.timestamp}.param.json`;
   }
 
   getParamSetFile() {
-    return `${this.generationDir}/${this.modelPrefix}.json`;
+    return `${this.generationDir}/${this.modelPrefix}_${this.timestamp}.json`;
   }
 
   getScadFile() {
@@ -32,23 +34,23 @@ class Configuration {
   }
 
   getImgFile() {
-    return `${this.generationDir}/${this.modelPrefix}.png`;
+    return `${this.generationDir}/${this.modelPrefix}_${this.timestamp}.png`;
   }
 
   get3DFile() {
-    return `${this.generationDir}/${this.modelPrefix}.3mf`;
+    return `${this.generationDir}/${this.modelPrefix}_${this.timestamp}.3mf`;
   }
 
   getAnimFile() {
-    return `${this.generationDir}/${this.modelPrefix}.webp`;
+    return `${this.generationDir}/${this.modelPrefix}_${this.timestamp}.webp`;
   }
 
   getAnimFiles() {
-    return `${this.generationDir}/${this.modelPrefix}_anim.png`;
+    return `${this.generationDir}/${this.modelPrefix}_${this.timestamp}_anim.png`;
   }
 
   getAnimPattern() {
-    return `${this.generationDir}/${this.modelPrefix}_anim*.png`;
+    return `${this.generationDir}/${this.modelPrefix}_${this.timestamp}_anim*.png`;
   }
 }
 
@@ -58,6 +60,7 @@ interface Cfg {
   modelPrefix: string;
   modelDir: string;
   generationDir: string;
+  timestamp: number;
   aminImgNumber: number;
   animDelay: number;
   animSize: number[];
@@ -71,6 +74,7 @@ const cfg: Cfg = {
   modelPrefix: "model",
   modelDir: "openscadFiles",
   generationDir: "../src/gen",
+  timestamp: 0,
   imgSize: [256, 512],
   animSize: [256, 512],
   aminImgNumber: 50,
@@ -78,9 +82,8 @@ const cfg: Cfg = {
   colorscheme: "DeepOcean",
 };
 
-const config: Configuration = new Configuration(cfg);
-
 export function getOpenscadParameters() {
+  const config: Configuration = new Configuration(cfg);
   execOutput(
     `${config.openScadCmd} --export-format param -o ${config.getParamFile()} ${config.getScadFile()}`,
   );
@@ -120,6 +123,7 @@ type Option3mf = {
 };
 
 export function generateOpenscad3DModel(parameterSet: ParameterSet) {
+  const config: Configuration = new Configuration(cfg);
   fs.writeFileSync(
     config.getParamSetFile(),
     JSON.stringify(parameterSet, null, 2),
@@ -151,6 +155,7 @@ export function generateOpenscad3DModel(parameterSet: ParameterSet) {
 }
 
 export function generateOpenscadImage(parameterSet: ParameterSet) {
+  const config: Configuration = new Configuration(cfg);
   fs.writeFileSync(
     config.getParamSetFile(),
     JSON.stringify(parameterSet, null, 2),
@@ -162,6 +167,7 @@ export function generateOpenscadImage(parameterSet: ParameterSet) {
 }
 
 export function generateF3dImage(parameterSet: ParameterSet) {
+  const config: Configuration = new Configuration(cfg);
   const model3d = generateOpenscad3DModel(parameterSet);
   fs.writeFileSync(
     config.getParamSetFile(),
@@ -182,6 +188,7 @@ export function generateF3dImage(parameterSet: ParameterSet) {
 }
 
 export function generateOpenscadAnim(ParameterSet: ParameterSet) {
+  const config: Configuration = new Configuration(cfg);
   fs.writeFileSync(
     config.getParamSetFile(),
     JSON.stringify(ParameterSet, null, 2),
