@@ -128,6 +128,7 @@ export class Gui {
     );
     this.changePart(document.getElementById("handleType") as HTMLSelectElement);
     this.changePart(document.getElementById("pommelType") as HTMLSelectElement);
+    this.formChanged();
   }
 
   private atInterval() {
