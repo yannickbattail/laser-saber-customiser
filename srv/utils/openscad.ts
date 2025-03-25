@@ -36,7 +36,7 @@ class Configuration {
   }
 
   get3DFile() {
-    return `../src/gen/${this.modelPrefix}.3mf`;
+    return `${this.generationDir}/${this.modelPrefix}.3mf`;
   }
 
   getAnimFile() {
@@ -70,7 +70,7 @@ const cfg: Cfg = {
   f3dCmd: "f3d", //openscad-nightly
   modelPrefix: "model",
   modelDir: "openscadFiles",
-  generationDir: "generatedImages",
+  generationDir: "../src/gen",
   imgSize: [256, 512],
   animSize: [256, 512],
   aminImgNumber: 50,

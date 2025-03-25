@@ -44,10 +44,10 @@ FROM prod
 WORKDIR /home/openscad
 COPY --chmod=555 entrypoint.sh /entrypoint.sh
 COPY --from=build /app/ /home/openscad/
-RUN chown -R 1000:1000 /home/openscad/srv/generatedImages
+RUN chown -R 1000:1000 /home/openscad/src/gen/
 RUN npm --workspaces clean-install --omit=dev
 
 USER 1000:1000
-VOLUME /home/openscad/srv/generatedImages
+VOLUME /home/openscad/src/gen/
 EXPOSE 8080
 ENTRYPOINT ["/entrypoint.sh"]

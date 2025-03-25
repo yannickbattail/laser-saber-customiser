@@ -33,19 +33,19 @@ export function handlePreview(req: Request, res: Response): void {
   const input = IsParameterKvValid<ParameterKV[]>(req.body);
   const parameterSet = buildParameterSet(input);
   const ret = generateOpenscadImage(parameterSet);
-  res.sendFile(ret, { root: "./" });
+  res.json(ret.replace("../src", ""));
 }
 
 export function handleRenderedImage(req: Request, res: Response): void {
   const input = IsParameterKvValid<ParameterKV[]>(req.body);
   const parameterSet = buildParameterSet(input);
   const ret = generateF3dImage(parameterSet);
-  res.sendFile(ret, { root: "./" });
+  res.json(ret.replace("../src", ""));
 }
 
 export function handleAnimation(req: Request, res: Response): void {
   const input = IsParameterKvValid<ParameterKV[]>(req.body);
   const parameterSet = buildParameterSet(input);
   const ret = generateOpenscadAnim(parameterSet);
-  res.sendFile(ret, { root: "./" });
+  res.json(ret.replace("../src", ""));
 }
