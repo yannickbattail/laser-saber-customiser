@@ -103,7 +103,7 @@ export class Gui {
         },
         body: JSON.stringify(data),
       });
-      const uri = await this.imageBlobToBase64(await res.blob());
+      const uri = await res.json();
       NodeUpdate.updateElement(
         "preview",
         `<img src="${uri}" alt="${type}" title="${type}" />`,
