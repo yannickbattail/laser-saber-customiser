@@ -84,7 +84,7 @@ p2sides = 6; // [3:1:12]
 // color of spikes
 p2SpikeColor = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // length of spikes
-p2SpikeLenght = 14; // [5:1:20]
+p2SpikeLength = 14; // [5:1:20]
 
 /* [pommelType : pommelType3] */
 // base color
@@ -348,18 +348,18 @@ module handle2(length) {
             cylinder(h = 8, d = 34);
 }
 
-module handle3(lenght) {
+module handle3(length) {
     color(h3Color)
-        translate([0, 0, -lenght])
-            cylinder(h = lenght, d = 31);
+        translate([0, 0, -length])
+            cylinder(h = length, d = 31);
 
     color(h3Color)
-        translate([0, 0, -lenght / 2]) {
-            linear_extrude(lenght, center = true, convexity = 10, twist = -720) {
+        translate([0, 0, -length / 2]) {
+            linear_extrude(length, center = true, convexity = 10, twist = -720) {
                 square(25, center = true);
             }
-            rotate([0, 0, lenght / 4])
-                linear_extrude(lenght, center = true, convexity = 10, twist = 720) {
+            rotate([0, 0, length / 4])
+                linear_extrude(length, center = true, convexity = 10, twist = 720) {
                     square(25, center = true);
                 }
         }
@@ -409,7 +409,7 @@ module pommel2() {
                 rotate([0, 0, 360 / p2sides * i]) {
                     translate([14, 0, 0])
                         rotate([0, 140, 0])
-                            cylinder(h = p2SpikeLenght, d1 = 7, d2 = 0, center = false);
+                            cylinder(h = p2SpikeLength, d1 = 7, d2 = 0, center = false);
                 }
             }
     }
