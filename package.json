@@ -2,7 +2,7 @@
   "name": "laser-saber-customiser",
   "scripts": {
     "build:watch": "./start_dev.sh",
-    "format:all": "npm run -ws format && npm run -ws lint",
+    "format:all": "npm run --ws format && npm run --ws lint",
     "start": "npm run -w srv start"
   },
   "workspaces": [

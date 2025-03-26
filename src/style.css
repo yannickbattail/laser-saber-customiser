@@ -74,9 +74,31 @@ fieldset {
   width: 256px;
   height: 512px;
   background-color: #333333;
+  position: relative;
 }
 
-#preview img {
-  height: 512px;
+.previewImage {
   border-radius: 10px;
+}
+
+.loadingImage {
+  height: 512px;
+}
+
+.btn3d {
+  position: absolute;
+  top: 20px;
+  left: 180px;
+  z-index: 10;
+}
+
+.btn3d button {
+  border-style: none;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.btn3d img {
+  width: 32px;
+  height: 32px;
+  position: relative;
 }

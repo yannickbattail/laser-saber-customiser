@@ -53,7 +53,7 @@ export class Gui {
     try {
       NodeUpdate.updateElement(
         "preview",
-        `<img src="img/loading.webp" alt="loading" title="loading" />`,
+        `<img class="previewImage loadingImage" src="img/loading.webp" alt="loading" title="loading" />`,
       );
       const data = this.getFormData();
       const res = await fetch(`/api/3DModel`, {
@@ -93,7 +93,7 @@ export class Gui {
     try {
       NodeUpdate.updateElement(
         "preview",
-        `<img src="img/loading.webp" alt="loading" title="loading" />`,
+        `<img class="previewImage loadingImage" src="img/loading.webp" alt="loading" title="loading" />`,
       );
       const data = this.getFormData();
       const res = await fetch(`/api/${type}`, {
@@ -106,13 +106,19 @@ export class Gui {
       const uri = await res.json();
       NodeUpdate.updateElement(
         "preview",
-        `<img src="${uri}" alt="${type}" title="${type}" />`,
+        `
+    <div class="btn3d">
+        <button onclick="gui.display3DModel()">
+            <img src="img/3D.svg" alt="display in 3D" title="display in 3D"/>
+        </button>
+    </div>
+    <img class="previewImage" src="${uri}" alt="${type}" title="${type}" />`,
       );
     } catch (e) {
       console.error(e);
       NodeUpdate.updateElement(
         "preview",
-        `<img src="img/saber_empty.webp" alt="no preview" title="no preview" />`,
+        `<img class="previewImage" src="img/saber_empty.webp" alt="no preview" title="no preview" />`,
       );
     }
   }
