@@ -298,7 +298,18 @@ module handle() {
                 handle3(length);
             }
         }
+        copyright();
         fundationHole();
+    }
+}
+
+module copyright() {
+    translate([0,0,-40]) {
+        rotate([0, 90, 0]) {
+            linear_extrude(30) {
+                text("© Copyright Yannick Battail", size = 4, valign = "center", font = "Arial");
+            }
+        }
     }
 }
 

@@ -135,10 +135,10 @@ export function generateOpenscad3DModel(parameterSet: ParameterSet) {
     unit: "millimeter",
     decimal_precision: "6",
     add_meta_data: "true",
-    meta_data_title: "light saber",
+    meta_data_title: "Light saber",
     meta_data_description: "Customisable light saber",
-    meta_data_copyright: "Xcinnay",
-    meta_data_designer: "Xcinnay",
+    meta_data_copyright: "© Copyright Yannick Battail",
+    meta_data_designer: "Yannick",
     meta_data_license_terms: "CC BY-NC-ND",
     meta_data_rating: "1",
   };
