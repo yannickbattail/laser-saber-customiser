@@ -8,6 +8,8 @@ import {
 } from "./OpenScadOptions.js";
 
 export const modelFile = "openscadFiles/model.scad";
+export const retentionTime = 1000 * 60 * 10; // 10 min
+
 const scadOptions = new OpenScadOptions({
   outputDir: "../src/gen",
   backend: "Manifold",
