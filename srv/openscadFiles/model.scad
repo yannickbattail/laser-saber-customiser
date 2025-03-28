@@ -1,24 +1,24 @@
 // type of emitter
 emitterType = "coneEmitter"; // [coneEmitter:cone emitter, armEmitter:arms emitter, oblicEmitter:oblic emitter]
 // type of handle
-handleType = "handleType1"; // [handleType1, handleType2, handleType3]
+handleType = "cylindersHandle"; // [ cylindersHandle:2 parts cylinders, ringsHandle:rings, spiralGripHandle:spiral grip, homeyCombHandle:homey comb]
 // type of pommel
 pommelType = "pommelType1"; // [pommelType1, pommelType2, pommelType3]
 
 
 /* [emitterType : coneEmitter] */
 // color
-e1color = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+e1color = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 
 /* [emitterType : armEmitter] */
 // color
-e2color = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+e2color = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // color of the arms
-e2armColor = "red";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+e2armColor = "red"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 
 /* [emitterType : oblicEmitter] */
 // color
-e3color = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+e3color = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // max height
 e3maxHeigh = 50; // [2:1:100]
 // emitter diameter
@@ -28,37 +28,52 @@ e3cutHeight = 20; // [0:1:100]
 // emitter angle
 e3angle = 45; // [0:5:60]
 
-/* [handleType : handleType1] */
+/* [handleType : cylindersHandle] */
 // number of cylinders
 h1cylinderNumber = 6; // [3:1:20]
 // diameter of cylinders
 h1cylinderDiameter = 12; // [5:1:20]
 // top color
-h1topColor = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+h1topColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // 6 cylinders color
-h1cylinderColor = "#444";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+h1cylinderColor = "#444"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // ring color
-h1ringColor = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+h1ringColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // bottom color
-h1bottomColor = "#444";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+h1bottomColor = "#444"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 
-/* [handleType : handleType2] */
+/* [handleType : ringsHandle] */
 // ring color
-h2ringColor = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+h2ringColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // top color
-h2Color = "#444";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+h2Color = "#444"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 
-/* [handleType : handleType3] */
+/* [handleType : spiralGripHandle] */
 // top color
-h3Color = "#444";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+h3Color = "#444"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+
+/* [handleType : homeyCombHandle] */
+// top color
+h4Color = "#444"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// honey comb color
+h4HoneyCombColor = "orange"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// honey comb radius (small values will take more time to render)
+h4outer_radius = 16; // [16:0.1:18]
+// honey comb hole diameter
+h4hole_diameter = 16; // [5:0.5:30]
+// honey comb walls
+h4hex_walls = 1; // [0.1:0.1:10]
+// invert honey comb (holes/border)
+h4Invert = false;
+
 
 /* [pommelType : pommelType1] */
 // base color
-p1baseColor = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+p1baseColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // diamond base color
-p1diamondBaseColor = "red";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+p1diamondBaseColor = "red"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // diamond top color
-p1diamondTopColor = "red";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+p1diamondTopColor = "red"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // twist angle in degrees
 p1twistAngle = 0; // [0:5:360]
 // diamond length
@@ -70,11 +85,11 @@ p1sides = 6; // [3:1:12]
 
 /* [pommelType : pommelType2] */
 // base color
-p2baseColor = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+p2baseColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // diamond base color
-p2diamondBaseColor = "red";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+p2diamondBaseColor = "red"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // diamond top color
-p2diamondTopColor = "red";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+p2diamondTopColor = "red"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // diamond length
 p2height = 35; // [5:1:50]
 // diamond width
@@ -82,15 +97,15 @@ p2width = 18; // [5:1:60]
 // number of sides in the diamond
 p2sides = 6; // [3:1:12]
 // color of spikes
-p2SpikeColor = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+p2SpikeColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // length of spikes
 p2SpikeLength = 14; // [5:1:20]
 
 /* [pommelType : pommelType3] */
 // base color
-p3baseColor = "red";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+p3baseColor = "red"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // color of spikes
-p3SpikeColor = "silver";// [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+p3SpikeColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // nomber of spikes
 p3sides = 6; // [3:1:12]
 
@@ -100,7 +115,7 @@ ingnit = true;
 // show/display the blade
 showBlade = true;
 // color of the blade
-bladeColor = "red";// [red:red, Chartreuse:green, DodgerBlue:blue, yellow:yellow,  Magenta:purple, orange:orange, white:white]
+bladeColor = "red"; // [red:red, Chartreuse:green, DodgerBlue:blue, yellow:yellow,  Magenta:purple, orange:orange, white:white]
 // cut the saber in quarter to see the inside
 cutInQuarter = false;
 
@@ -120,11 +135,15 @@ animation_rotation = false;
 animation_opening = false;
 // Debug collision between arms and emitter
 debug = false;
+// add copyright
+addCopyright=true;
 $fn = 40;
 
 /* [Hidden] */
 ringDiameter = 36;
 ringThickness = 2;
+
+use <honey_comb.scad>;
 
 //armAngle = 0; // [-60:1:0]
 armAngle = animation_opening
@@ -290,15 +309,18 @@ module handle() {
     difference() {
         translate([0, 0, -6]) {
             length = 206 - 18;
-            if (handleType == "handleType1") {
-                handle1(length);
-            } else if (handleType == "handleType2") {
-                handle2(length);
-            } else if (handleType == "handleType3") {
-                handle3(length);
+            if (handleType ==  "cylindersHandle") {
+                 cylindersHandle(length);
+            } else if (handleType == "ringsHandle") {
+                 ringsHandle(length);
+            } else if (handleType == "spiralGripHandle") {
+                spiralGripHandle(length);
+            } else if (handleType == "homeyCombHandle") {
+                honey_comb_handle(length);
             }
         }
-        copyright();
+        if (addCopyright)
+            copyright();
         fundationHole();
     }
 }
@@ -313,7 +335,7 @@ module copyright() {
     }
 }
 
-module handle1(length) {
+module cylindersHandle(length) {
     ringSize = 8;
     color(h1topColor)
         translate([0, 0, -length / 2])
@@ -342,7 +364,7 @@ module handle1(length) {
         }
 }
 
-module handle2(length) {
+module ringsHandle(length) {
     // cylinder that join rings
     color("pink")
         translate([0, 0, -length])
@@ -359,9 +381,8 @@ module handle2(length) {
             cylinder(h = 8, d = 34);
 }
 
-module handle3(length) {
+module spiralGripHandle(length) {
     color(h3Color)
-        translate([0, 0, -length])
             cylinder(h = length, d = 31);
 
     color(h3Color)
@@ -374,6 +395,26 @@ module handle3(length) {
                     square(25, center = true);
                 }
         }
+}
+
+module honey_comb_handle(length) {
+    if (h4Invert) {
+        difference() {
+            color(h4Color)
+                translate([0, 0, -length])
+                    cylinder(h = length, d = 31);
+            color(h4HoneyCombColor)
+                translate([0, 0, -length])
+                    honey_comb_cylinder(length, h4outer_radius, 1, h4hole_diameter, h4hex_walls);
+        }
+    } else {
+        color(h4Color)
+            translate([0, 0, -length])
+                cylinder(h = length, d = 31);
+        color(h4HoneyCombColor)
+            translate([0, 0, -length])
+                honey_comb_cylinder(length, h4outer_radius, 1, h4hole_diameter, h4hex_walls);
+    }
 }
 
 module pommel() {
