@@ -1,8 +1,38 @@
 ### get parameter
-GET http://localhost:3000/api/parameter
+GET http://localhost:8080/api/parameter
+
+### 3DModel
+POST http://localhost:8080/api/3DModel
+content-type: application/json
+
+[
+    {
+        "parameter": "zRot",
+        "value": "60"
+    },
+    {
+        "parameter": "allColors",
+        "value": "orange"
+    }
+]
+
+### renderedImage
+POST http://localhost:8080/api/renderedImage
+content-type: application/json
+
+[
+    {
+        "parameter": "zRot",
+        "value": "60"
+    },
+    {
+        "parameter": "allColors",
+        "value": "orange"
+    }
+]
 
 ### preview
-POST http://localhost:3000/api/preview
+POST http://localhost:8080/api/preview
 content-type: application/json
 
 [
@@ -17,7 +47,7 @@ content-type: application/json
 ]
 
 ### animation
-POST http://localhost:3000/api/animation
+POST http://localhost:8080/api/animation
 content-type: application/json
 
 [

@@ -3,8 +3,10 @@ import {
   ParameterBoolean,
   ParameterDefinition,
   ParameterNumber,
+  ParameterNumberOption,
   ParameterString,
-} from "../commons/types/openscadParameterDefinition.js";
+  ParameterStringOption,
+} from "../commons/openscad/ParameterDefinition.js";
 
 export class CustomiserForm {
   private defaultGroup = "Parameters";
@@ -52,10 +54,15 @@ export class CustomiserForm {
   }
 
   private generateFormParam(
-    p: ParameterNumber | ParameterString | ParameterBoolean,
+    p:
+      | ParameterNumber
+      | ParameterString
+      | ParameterBoolean
+      | ParameterStringOption
+      | ParameterNumberOption,
     mainGroup: boolean,
   ) {
-    if ((p.type === "number" || p.type === "string") && p.options) {
+    if ("options" in p) {
       return this.generateSelect(p, mainGroup);
     }
     switch (p.type) {
@@ -91,7 +98,7 @@ export class CustomiserForm {
   }
 
   private generateSelect(
-    p: ParameterString | ParameterNumber,
+    p: ParameterStringOption | ParameterNumberOption,
     mainGroup?: boolean,
   ) {
     const onChange = mainGroup ? `onchange="gui.changePart(this)"` : "";

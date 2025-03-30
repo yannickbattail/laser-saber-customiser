@@ -17,7 +17,15 @@ export interface ParameterBase {
 export interface ParameterNumber extends ParameterBase {
   type: "number";
   initial: number | number[];
-  options?: OptionNumber[];
+  max?: number;
+  min?: number;
+  step?: number;
+}
+
+export interface ParameterNumberOption extends ParameterBase {
+  type: "number";
+  initial: number | number[];
+  options: OptionNumber[];
   max?: number;
   min?: number;
   step?: number;
@@ -26,8 +34,13 @@ export interface ParameterNumber extends ParameterBase {
 export interface ParameterString extends ParameterBase {
   type: "string";
   initial: string;
-  options?: OptionString[];
   maxLength?: number;
+}
+
+export interface ParameterStringOption extends ParameterBase {
+  type: "string";
+  initial: string;
+  options: OptionString[];
 }
 
 export interface ParameterBoolean extends ParameterBase {
@@ -36,6 +49,12 @@ export interface ParameterBoolean extends ParameterBase {
 }
 
 export interface ParameterDefinition {
-  parameters: (ParameterNumber | ParameterString | ParameterBoolean)[];
+  parameters: (
+    | ParameterNumber
+    | ParameterNumberOption
+    | ParameterString
+    | ParameterStringOption
+    | ParameterBoolean
+  )[];
   title: string;
 }

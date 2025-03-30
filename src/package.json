@@ -6,7 +6,8 @@
   "author": "",
   "license": "",
   "scripts": {
-    "clean": "rm ./*.js",
+    "clean": "rm ./*.js ./gen/*",
+    "clean_gen": "rm ./gen/*",
     "build": "tsc",
     "build:watch": "tsc --watch",
     "lint": "eslint --fix './**/*.ts'",
