@@ -39,7 +39,9 @@ const imgOpt = {
     height: 512,
   },
   animate: 50,
+  animDelay: 100,
 };
+
 export const imageOptions = new ImageOptions(imgOpt);
 export const animOptions = new AnimOptions(imgOpt);
 

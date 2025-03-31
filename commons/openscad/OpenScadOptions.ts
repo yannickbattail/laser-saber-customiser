@@ -205,7 +205,11 @@ export class AnimOptions extends ImageOptions {
   /**
    * export N animated frames
    */
-  public animate: number | null = null;
+  public animate: number = 50;
+  /**
+   * export N animated frames
+   */
+  public animDelay: number = 100;
   /**
    * Parameter <shard>/<num_shards> - Divide work into <num_shards> and only output frames for <shard>. E.g. 2/5 only outputs the second 1/5 of frames. Use to parallelize work on multiple cores or machines.
    */
