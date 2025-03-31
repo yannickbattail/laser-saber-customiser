@@ -1,6 +1,9 @@
 node_modules
-gen/*
 /CustomiserForm.js
 /Gui.js
 /NodeUpdate.js
 /throw.js
+
+gen/*.json
+gen/*.webp
+gen/*.3mf
