@@ -16,21 +16,6 @@ content-type: application/json
     }
 ]
 
-### renderedImage
-POST http://localhost:8080/api/renderedImage
-content-type: application/json
-
-[
-    {
-        "parameter": "zRot",
-        "value": "60"
-    },
-    {
-        "parameter": "allColors",
-        "value": "orange"
-    }
-]
-
 ### preview
 POST http://localhost:8080/api/preview
 content-type: application/json
