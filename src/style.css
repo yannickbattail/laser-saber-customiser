@@ -81,6 +81,11 @@ fieldset {
   border-radius: 10px;
 }
 
+.stlViewer {
+  width: 256px;
+  height: 512px;
+}
+
 .loadingImage {
   height: 512px;
 }

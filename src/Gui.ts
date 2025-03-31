@@ -66,15 +66,27 @@ export class Gui {
         },
         body: JSON.stringify(data),
       });
+
       const divPreview = document.getElementById("preview");
       if (divPreview) divPreview.innerHTML = "";
-      const uri = (await res.json()) as OpenScadOutputWithSummary;
+      const out = (await res.json()) as OpenScadOutputWithSummary;
+      const uri = "../../" + out.file.replace("./src/", "/");
+      NodeUpdate.updateElement(
+        "preview",
+        `
+   <div class="btn3d">
+        <a href="${uri}">
+            <img src="img/download.svg" alt="Download" title="Download"/>
+        </a>
+    </div>
+    <div id="stlViewer" class="stlViewer"></div>`,
+      );
       // @ts-expect-error in js
-      new StlViewer(divPreview, {
+      new StlViewer(document.getElementById("stlViewer"), {
         models: [
           {
             id: 0,
-            filename: "../../" + uri.file.replace("./src/", "/"),
+            filename: uri,
             rotationx: Math.PI / -2,
           },
         ],
