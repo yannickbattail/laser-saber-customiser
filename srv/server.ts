@@ -5,7 +5,6 @@ import {
   handleAnimation,
   handleParameter,
   handlePreview,
-  handleRenderedImage,
   handleRoot,
 } from "./handlers/handlers.js";
 
@@ -20,7 +19,6 @@ app.get("/api/", handleRoot);
 app.get("/api/parameter", handleParameter);
 app.post("/api/3DModel", handle3DModel);
 app.post("/api/preview", handlePreview);
-app.post("/api/renderedImage", handleRenderedImage);
 app.post("/api/animation", handleAnimation);
 
 app.listen(port, () => console.log(`Listening on http://localhost:${port}/`));

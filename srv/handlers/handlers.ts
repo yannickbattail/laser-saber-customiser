@@ -46,14 +46,6 @@ export function handlePreview(req: Request, res: Response): void {
   cleanOldGenFiles();
 }
 
-export function handleRenderedImage(req: Request, res: Response): void {
-  const input = IsParameterKvValid<ParameterKV[]>(req.body);
-  const openscad = new OpenScad(modelFile, getOptions(), execOutput);
-  const param = openscad.generateImage(input, imageOptions);
-  res.json(param);
-  cleanOldGenFiles();
-}
-
 export function handleAnimation(req: Request, res: Response): void {
   const input = IsParameterKvValid<ParameterKV[]>(req.body);
   input.push({
