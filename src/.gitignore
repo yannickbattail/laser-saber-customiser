@@ -6,4 +6,5 @@ node_modules
 
 gen/*.json
 gen/*.webp
+gen/*.png
 gen/*.3mf
