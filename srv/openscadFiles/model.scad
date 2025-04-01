@@ -309,10 +309,10 @@ module handle() {
     difference() {
         translate([0, 0, -6]) {
             length = 206 - 18;
-            if (handleType ==  "cylindersHandle") {
-                 cylindersHandle(length);
+            if (handleType == "cylindersHandle") {
+                cylindersHandle(length);
             } else if (handleType == "ringsHandle") {
-                 ringsHandle(length);
+                ringsHandle(length);
             } else if (handleType == "spiralGripHandle") {
                 spiralGripHandle(length);
             } else if (handleType == "homeyCombHandle") {
@@ -383,7 +383,7 @@ module ringsHandle(length) {
 
 module spiralGripHandle(length) {
     color(h3Color)
-            cylinder(h = length, d = 31);
+        cylinder(h = length, d = 31);
 
     color(h3Color)
         translate([0, 0, -length / 2]) {

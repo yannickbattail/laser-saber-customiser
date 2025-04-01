@@ -1,4 +1,3 @@
-
 module honey_comb_cylinder(height = 60, outer_radius = 20, cyl_wall_thickness = 3, hole_diameter = 4, hex_walls = 1) {
     hole_side = hole_diameter * sin(30);
     hole_hspacing = hole_diameter + hole_side + hex_walls;
@@ -13,7 +12,7 @@ module honey_comb_cylinder(height = 60, outer_radius = 20, cyl_wall_thickness = 
         translate([0, 0, -1])
             cylinder(height + 2, r = outer_radius - cyl_wall_thickness, $fn = 128);
         for (zn = [0:hole_layers])
-            let(z = zn * hole_zspacing, aoffset = zn % 2 == 0 ? 0 : angle_step / 2)
+        let(z = zn * hole_zspacing, aoffset = zn % 2 == 0 ? 0 : angle_step / 2)
         for (a = [0:angle_step:359.9]) {
             translate([0, 0, z])
                 rotate([0, 0, a + aoffset]) punch();
