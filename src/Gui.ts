@@ -55,7 +55,7 @@ export class Gui {
         `<img class="previewImage loadingImage" src="img/loading.webp" alt="loading" title="loading" />`,
       );
       const data = this.getFormData();
-      const res = await fetch(`/api/3DModel`, {
+      const res = await fetch(`/api/openscad/3DModel`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -107,7 +107,7 @@ export class Gui {
         `<img class="previewImage loadingImage" src="img/loading.webp" alt="loading" title="loading" />`,
       );
       const data = this.getFormData();
-      const res = await fetch(`/api/${type}`, {
+      const res = await fetch(`/api/openscad/${type}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -136,7 +136,7 @@ export class Gui {
 
   private async init() {
     const formParam: OpenScadOutputWithParameterDefinition = (await (
-      await fetch("/api/parameter")
+      await fetch("/api/openscad/parameter")
     ).json()) as OpenScadOutputWithParameterDefinition;
     const customiserForm = new CustomiserForm();
     NodeUpdate.updateElement(

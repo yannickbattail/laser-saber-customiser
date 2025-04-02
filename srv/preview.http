@@ -1,8 +1,8 @@
 ### get parameter
-GET http://localhost:8080/api/parameter
+GET http://localhost:8080/api/openscad/parameter
 
 ### 3DModel
-POST http://localhost:8080/api/3DModel
+POST http://localhost:8080/api/openscad/3DModel
 content-type: application/json
 
 [
@@ -17,7 +17,7 @@ content-type: application/json
 ]
 
 ### preview
-POST http://localhost:8080/api/preview
+POST http://localhost:8080/api/openscad/preview
 content-type: application/json
 
 [
@@ -32,7 +32,7 @@ content-type: application/json
 ]
 
 ### animation
-POST http://localhost:8080/api/animation
+POST http://localhost:8080/api/openscad/animation
 content-type: application/json
 
 [
