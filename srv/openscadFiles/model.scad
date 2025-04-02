@@ -1,7 +1,7 @@
 // type of emitter
 emitterType = "coneEmitter"; // [coneEmitter:cone emitter, armEmitter:arms emitter, oblicEmitter:oblic emitter]
 // type of handle
-handleType = "cylindersHandle"; // [ cylindersHandle:2 parts cylinders, ringsHandle:rings, spiralGripHandle:spiral grip, homeyCombHandle:homey comb]
+handleType = "cylindersHandle"; // [ cylindersHandle:2 parts cylinders, ringsHandle:rings, spiralGripHandle:spiral grip, homeyCombHandle:homey comb, curveHandle:curved handle]
 // type of pommel
 pommelType = "pommelType1"; // [pommelType1, pommelType2, pommelType3]
 
@@ -66,6 +66,13 @@ h4hex_walls = 1; // [0.1:0.1:10]
 // invert honey comb (holes/border)
 h4Invert = false;
 
+/* [handleType : curveHandle] */
+// top color
+h5Color = "#444"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// handle radius of the curve
+h5Curve = 1000;
+// handle diameter
+h5diameter = 29;
 
 /* [pommelType : pommelType1] */
 // base color
@@ -136,7 +143,7 @@ animation_opening = false;
 // Debug collision between arms and emitter
 debug = false;
 // add copyright
-addCopyright=true;
+addCopyright = true;
 $fn = 40;
 
 /* [Hidden] */
@@ -317,10 +324,12 @@ module handle() {
                 spiralGripHandle(length);
             } else if (handleType == "homeyCombHandle") {
                 honey_comb_handle(length);
+            } else if (handleType == "curveHandle") {
+                curveHandle(length);
             }
         }
         if (addCopyright)
-            copyright();
+        copyright();
         fundationHole();
     }
 }
@@ -415,6 +424,17 @@ module honey_comb_handle(length) {
             translate([0, 0, -length])
                 honey_comb_cylinder(length, h4outer_radius, 1, h4hole_diameter, h4hex_walls);
     }
+}
+
+module curveHandle(length) {
+    color(h4Color)
+        translate([0, 0, -length])
+            difference() {
+                cylinder(h = length, d = 36);
+                $fn = 200;
+                translate([0, 0, length / 2])
+                    torus(h5Curve, h5Curve * 2 - h5diameter);
+            }
 }
 
 module pommel() {
