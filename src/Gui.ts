@@ -5,12 +5,14 @@ import {
   OpenScadOutputWithSummary,
 } from "../commons/openscad/OpenScadOutput.js";
 import { ParameterKV } from "laser-saber-customiser-commons/openscad/ParameterSet.js";
+import { IPresetRepository } from "./IPresetRepository.js";
 
 export class Gui {
   private lastFormChanged = 0;
   private changeTimeout = 2000;
 
-  constructor() {
+  constructor(private presetRepository: IPresetRepository) {
+    this.presetRepository = presetRepository;
     this.init().then(() => {
       window.setInterval(() => {
         this.atInterval();
@@ -38,6 +40,13 @@ export class Gui {
     document
       .getElementById(`toggleTitle_${group}`)
       ?.classList?.remove("toggleHide");
+  }
+
+  public async savePreset() {
+    const parameterSetName = window.prompt("Enter preset name");
+    if (parameterSetName) {
+      this.presetRepository.savePreset(parameterSetName, this.getFormData());
+    }
   }
 
   public async preview() {
@@ -163,7 +172,7 @@ export class Gui {
     }
   }
 
-  private getFormData() {
+  private getFormData(): ParameterKV[] {
     const form = document.getElementById("form") as HTMLFormElement;
     const formData = new FormData(form);
     const data: ParameterKV[] = [];
@@ -171,19 +180,5 @@ export class Gui {
       data.push({ parameter: key, value: value as string });
     });
     return data;
-  }
-
-  private async imageBlobToBase64(blob: Blob) {
-    return new Promise((onSuccess, onError) => {
-      try {
-        const reader = new FileReader();
-        reader.onload = function () {
-          onSuccess(this.result);
-        };
-        reader.readAsDataURL(blob);
-      } catch (e) {
-        onError(e);
-      }
-    });
   }
 }

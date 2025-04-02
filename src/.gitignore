@@ -3,6 +3,8 @@ node_modules
 /Gui.js
 /NodeUpdate.js
 /throw.js
+/PresetRepository.js
+/IPresetRepository.js
 
 gen/*.json
 gen/*.webp

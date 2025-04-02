@@ -3,12 +3,28 @@
   <head>
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     <meta charset="utf-8" />
-    <!--    <link href="images/light-sabers-couleur.svg" rel="icon" type="image/svg+xml" />-->
+    <link href="img/icon.png" rel="icon" type="image/png" />
     <link href="style.css" rel="stylesheet" />
     <title>Laser Saber Customiser</title>
   </head>
   <body class="dark">
     <table>
+      <tr>
+        <td>
+          <div>
+            <label for="my_sabers">My sabers</label>
+            <select id="my_sabers" name="my_sabers">
+              <option value="XXXX">XXXX</option>
+            </select>
+            <button onclick="gui.savePreset()"><img
+              alt="save"
+              class="save"
+              src="img/save.svg"
+              title="no preview"
+            /></button>
+          </div>
+        </td>
+      </tr>
       <tr>
         <td>
           <div id="main"></div>
@@ -35,8 +51,9 @@
     </script>
     <script type="module">
       import { Gui } from "./Gui.js";
+      import {PresetRepository} from "./PresetRepository";
 
-      window.gui = new Gui();
+      window.gui = new Gui(new PresetRepository());
     </script>
     <script src="lib/stl_viewer/stl_viewer.min.js"></script>
   </body>
