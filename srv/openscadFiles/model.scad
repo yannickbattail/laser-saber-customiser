@@ -392,10 +392,11 @@ module ringsHandle(length) {
 
 module spiralGripHandle(length) {
     color(h3Color)
+      translate([0, 0, -length])
         cylinder(h = length, d = 31);
 
     color(h3Color)
-        translate([0, 0, -length / 2]) {
+      translate([0, 0, -length / 2]) {
             linear_extrude(length, center = true, convexity = 10, twist = -720) {
                 square(25, center = true);
             }
