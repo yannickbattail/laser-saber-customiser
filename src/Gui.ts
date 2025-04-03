@@ -46,8 +46,10 @@ export class Gui {
   public async savePreset() {
     const parameterSetName = window.prompt("Enter preset name");
     if (parameterSetName) {
-      this.presetRepository.savePreset(parameterSetName, this.getFormData());
-      this.initPresets();
+      if (parameterSetName !== "" && parameterSetName !== "<Default>") {
+        this.presetRepository.savePreset(parameterSetName, this.getFormData());
+        this.initPresets();
+      }
     }
   }
 
@@ -61,7 +63,12 @@ export class Gui {
   }
 
   public async changePreset() {
-    await this.initForm();
+    await this.initForm(this.getSelectedPreset());
+    this.formChanged();
+  }
+
+  public async reset() {
+    await this.initForm(null);
     this.formChanged();
   }
 
@@ -160,17 +167,16 @@ export class Gui {
   }
 
   private async init() {
-    await this.initForm();
+    await this.initForm(this.getSelectedPreset());
     this.formChanged();
     this.initPresets();
   }
 
-  private async initForm() {
+  private async initForm(selectedPreset: Record<string, string> | null) {
     const formParam: OpenScadOutputWithParameterDefinition = (await (
       await fetch("/api/openscad/parameter")
     ).json()) as OpenScadOutputWithParameterDefinition;
     const customiserForm = new CustomiserForm();
-    const selectedPreset = this.getSelectedPreset();
     NodeUpdate.updateElement(
       "main",
       await customiserForm.initForm(
@@ -187,6 +193,7 @@ export class Gui {
 
   private initPresets() {
     const presets = this.presetRepository.getPresets();
+    presets.add("<Default>", []);
     const presetSelect =
       (document.getElementById("presetSelect") as HTMLSelectElement) ||
       _throw(new Error("'presetSelect' ID not found"));

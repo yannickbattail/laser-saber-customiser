@@ -18,7 +18,7 @@
               name="presetSelect"
               onchange="gui.changePreset()"
             >
-              <option value="___">___</option>
+              <option value="&lt;Default&gt;">&lt;Default&gt;</option>
             </select>
             <button onclick="gui.savePreset()">
               <img
@@ -26,6 +26,14 @@
                 src="img/save.svg"
                 alt="save preset"
                 title="save preset"
+              />
+            </button>
+            <button onclick="gui.reset()">
+              <img
+                class="save"
+                src="img/reset.svg"
+                alt="reset"
+                title="reset"
               />
             </button>
             <button onclick="gui.delPreset()">
