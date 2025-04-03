@@ -6,6 +6,7 @@ import {
 } from "../commons/openscad/OpenScadOutput.js";
 import { ParameterKV } from "laser-saber-customiser-commons/openscad/ParameterSet.js";
 import { IPresetRepository } from "./IPresetRepository.js";
+import { _throw } from "./utils.js";
 
 export class Gui {
   private lastFormChanged = 0;
@@ -46,7 +47,22 @@ export class Gui {
     const parameterSetName = window.prompt("Enter preset name");
     if (parameterSetName) {
       this.presetRepository.savePreset(parameterSetName, this.getFormData());
+      this.initPresets();
     }
+  }
+
+  public async delPreset() {
+    const presetSelect =
+      (document.getElementById("presetSelect") as HTMLSelectElement) ||
+      _throw(new Error("'presetSelect' ID not found"));
+    this.presetRepository.delPresets(presetSelect.value);
+    this.initPresets();
+    await this.changePreset();
+  }
+
+  public async changePreset() {
+    await this.initForm();
+    this.formChanged();
   }
 
   public async preview() {
@@ -144,20 +160,56 @@ export class Gui {
   }
 
   private async init() {
+    await this.initForm();
+    this.formChanged();
+    this.initPresets();
+  }
+
+  private async initForm() {
     const formParam: OpenScadOutputWithParameterDefinition = (await (
       await fetch("/api/openscad/parameter")
     ).json()) as OpenScadOutputWithParameterDefinition;
     const customiserForm = new CustomiserForm();
+    const selectedPreset = this.getSelectedPreset();
     NodeUpdate.updateElement(
       "main",
-      await customiserForm.initForm(formParam.parameterDefinition),
+      await customiserForm.initForm(
+        formParam.parameterDefinition,
+        selectedPreset,
+      ),
     );
     this.changePart(
       document.getElementById("emitterType") as HTMLSelectElement,
     );
     this.changePart(document.getElementById("handleType") as HTMLSelectElement);
     this.changePart(document.getElementById("pommelType") as HTMLSelectElement);
-    this.formChanged();
+  }
+
+  private initPresets() {
+    const presets = this.presetRepository.getPresets();
+    const presetSelect =
+      (document.getElementById("presetSelect") as HTMLSelectElement) ||
+      _throw(new Error("'presetSelect' ID not found"));
+    const presetNames = Object.keys(presets.parameterSets);
+    presetSelect.innerHTML = "";
+    presetNames.forEach((name) => {
+      const option = document.createElement("option");
+      option.value = name;
+      option.textContent = name;
+      presetSelect.appendChild(option);
+    });
+  }
+
+  private getSelectedPreset(): Record<string, string> | null {
+    const presetSelect =
+      (document.getElementById("presetSelect") as HTMLSelectElement) ||
+      _throw(new Error("'presetSelect' ID not found"));
+    const presets = this.presetRepository.getPresets();
+    const presetName = presetSelect.value;
+    if (presetName && presetName in presets.parameterSets) {
+      return presets.parameterSets[presetName];
+    }
+    return null;
   }
 
   private atInterval() {

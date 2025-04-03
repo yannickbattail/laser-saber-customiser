@@ -14,6 +14,10 @@ export class ParameterSet {
     }
   }
 
+  public del(name: string) {
+    delete this.parameterSets[name];
+  }
+
   public static toParameterSet(
     paramKV: ParameterKV[],
     name: string = "model",

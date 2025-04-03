@@ -12,15 +12,21 @@
       <tr>
         <td>
           <div>
-            <label for="my_sabers">My sabers</label>
-            <select id="my_sabers" name="my_sabers">
-              <option value="XXXX">XXXX</option>
+            <label for="presetSelect">My sabers</label>
+            <select id="presetSelect" name="presetSelect" onchange="gui.changePreset()">
+              <option value="___">___</option>
             </select>
             <button onclick="gui.savePreset()"><img
-              alt="save"
               class="save"
               src="img/save.svg"
-              title="no preview"
+              alt="save preset"
+              title="save preset"
+            /></button>
+            <button onclick="gui.delPreset()"><img
+              class="save"
+              src="img/del.svg"
+              alt="delete preset"
+              title="delete preset"
             /></button>
           </div>
         </td>
@@ -51,7 +57,7 @@
     </script>
     <script type="module">
       import { Gui } from "./Gui.js";
-      import {PresetRepository} from "./PresetRepository";
+      import {PresetRepository} from "./PresetRepository.js";
 
       window.gui = new Gui(new PresetRepository());
     </script>

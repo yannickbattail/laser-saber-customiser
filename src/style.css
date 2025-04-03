@@ -108,7 +108,7 @@ fieldset {
   position: relative;
 }
 
-.save img {
-  width: 32px;
-  height: 32px;
+.save {
+  width: 20px;
+  height: 20px;
 }

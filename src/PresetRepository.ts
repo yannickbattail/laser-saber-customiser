@@ -1,7 +1,4 @@
-import {
-  ParameterKV,
-  ParameterSet,
-} from "laser-saber-customiser-commons/openscad/ParameterSet.js";
+import { ParameterKV, ParameterSet } from "./commons/openscad/ParameterSet.js";
 import { IPresetRepository } from "./IPresetRepository.js";
 
 export class PresetRepository implements IPresetRepository {
@@ -14,6 +11,16 @@ export class PresetRepository implements IPresetRepository {
     const pSet = JSON.parse(window.localStorage.getItem("preset") ?? "{}");
     const parameterSet = new ParameterSet(pSet);
     parameterSet.add(name, paramKV);
+    this.saveAllPreset(parameterSet);
+  }
+
+  saveAllPreset(parameterSet: ParameterSet) {
     window.localStorage.setItem("preset", JSON.stringify(parameterSet));
+  }
+
+  delPresets(value: string): void {
+    const parameterSet = this.getPresets();
+    parameterSet.del(value);
+    this.saveAllPreset(parameterSet);
   }
 }

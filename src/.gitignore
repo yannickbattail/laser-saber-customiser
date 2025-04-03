@@ -2,7 +2,7 @@ node_modules
 /CustomiserForm.js
 /Gui.js
 /NodeUpdate.js
-/throw.js
+/utils.js
 /PresetRepository.js
 /IPresetRepository.js
 
