@@ -3,12 +3,42 @@
   <head>
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     <meta charset="utf-8" />
-    <!--    <link href="images/light-sabers-couleur.svg" rel="icon" type="image/svg+xml" />-->
+    <link href="img/icon.png" rel="icon" type="image/png" />
     <link href="style.css" rel="stylesheet" />
     <title>Laser Saber Customiser</title>
   </head>
   <body class="dark">
     <table>
+      <tr>
+        <td>
+          <div>
+            <label for="presetSelect">My sabers</label>
+            <select
+              id="presetSelect"
+              name="presetSelect"
+              onchange="gui.changePreset()"
+            >
+              <option value="___">___</option>
+            </select>
+            <button onclick="gui.savePreset()">
+              <img
+                class="save"
+                src="img/save.svg"
+                alt="save preset"
+                title="save preset"
+              />
+            </button>
+            <button onclick="gui.delPreset()">
+              <img
+                class="save"
+                src="img/del.svg"
+                alt="delete preset"
+                title="delete preset"
+              />
+            </button>
+          </div>
+        </td>
+      </tr>
       <tr>
         <td>
           <div id="main"></div>
@@ -35,8 +65,9 @@
     </script>
     <script type="module">
       import { Gui } from "./Gui.js";
+      import { PresetRepository } from "./PresetRepository.js";
 
-      window.gui = new Gui();
+      window.gui = new Gui(new PresetRepository());
     </script>
     <script src="lib/stl_viewer/stl_viewer.min.js"></script>
   </body>

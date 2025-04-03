@@ -7,13 +7,21 @@ import {
   ParameterString,
   ParameterStringOption,
 } from "../commons/openscad/ParameterDefinition.js";
+import { clone } from "./utils.js";
 
 export class CustomiserForm {
   private defaultGroup = "Parameters";
 
   public constructor() {}
 
-  public async initForm(formParam: ParameterDefinition): Promise<string> {
+  public async initForm(
+    param: ParameterDefinition,
+    formValue: Record<string, string> | null,
+  ): Promise<string> {
+    const formParam = clone(param);
+    if (formValue) {
+      this.setValues(formParam, formValue);
+    }
     const groupedFormParam = groupBy(
       formParam.parameters,
       (p) => p.group ?? "Global",
@@ -30,6 +38,15 @@ export class CustomiserForm {
     ${html}
   </form>
 </div>`;
+  }
+
+  private setValues(
+    param: ParameterDefinition,
+    formValue: Record<string, string>,
+  ) {
+    param.parameters.forEach(
+      (p) => (p.initial = p.name in formValue ? formValue[p.name] : p.initial),
+    );
   }
 
   private displayGroup(

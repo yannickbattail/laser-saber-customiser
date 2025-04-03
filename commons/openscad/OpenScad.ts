@@ -148,17 +148,11 @@ export class OpenScad {
         parameterName: params.parameterName,
       };
     } else {
-      const parameterSet: ParameterSet = {
-        parameterSets: {
-          model: {},
-        },
-        fileFormatVersion: "1",
-      };
-      for (const p of params) {
-        parameterSet.parameterSets["model"][p.parameter] = p.value;
-      }
       const file = this.getFileByFormat(ExportTextFormat.paramSet);
-      fs.writeFileSync(file, JSON.stringify(parameterSet));
+      fs.writeFileSync(
+        file,
+        JSON.stringify(ParameterSet.toParameterSet(params)),
+      );
       return {
         parameterFile: file,
         parameterName: "model",

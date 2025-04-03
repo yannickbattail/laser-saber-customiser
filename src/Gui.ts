@@ -5,12 +5,15 @@ import {
   OpenScadOutputWithSummary,
 } from "../commons/openscad/OpenScadOutput.js";
 import { ParameterKV } from "laser-saber-customiser-commons/openscad/ParameterSet.js";
+import { IPresetRepository } from "./IPresetRepository.js";
+import { _throw } from "./utils.js";
 
 export class Gui {
   private lastFormChanged = 0;
   private changeTimeout = 2000;
 
-  constructor() {
+  constructor(private presetRepository: IPresetRepository) {
+    this.presetRepository = presetRepository;
     this.init().then(() => {
       window.setInterval(() => {
         this.atInterval();
@@ -40,6 +43,28 @@ export class Gui {
       ?.classList?.remove("toggleHide");
   }
 
+  public async savePreset() {
+    const parameterSetName = window.prompt("Enter preset name");
+    if (parameterSetName) {
+      this.presetRepository.savePreset(parameterSetName, this.getFormData());
+      this.initPresets();
+    }
+  }
+
+  public async delPreset() {
+    const presetSelect =
+      (document.getElementById("presetSelect") as HTMLSelectElement) ||
+      _throw(new Error("'presetSelect' ID not found"));
+    this.presetRepository.delPresets(presetSelect.value);
+    this.initPresets();
+    await this.changePreset();
+  }
+
+  public async changePreset() {
+    await this.initForm();
+    this.formChanged();
+  }
+
   public async preview() {
     await this.getImage("preview");
   }
@@ -55,7 +80,7 @@ export class Gui {
         `<img class="previewImage loadingImage" src="img/loading.webp" alt="loading" title="loading" />`,
       );
       const data = this.getFormData();
-      const res = await fetch(`/api/3DModel`, {
+      const res = await fetch(`/api/openscad/3DModel`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -107,7 +132,7 @@ export class Gui {
         `<img class="previewImage loadingImage" src="img/loading.webp" alt="loading" title="loading" />`,
       );
       const data = this.getFormData();
-      const res = await fetch(`/api/${type}`, {
+      const res = await fetch(`/api/openscad/${type}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -135,20 +160,56 @@ export class Gui {
   }
 
   private async init() {
+    await this.initForm();
+    this.formChanged();
+    this.initPresets();
+  }
+
+  private async initForm() {
     const formParam: OpenScadOutputWithParameterDefinition = (await (
-      await fetch("/api/parameter")
+      await fetch("/api/openscad/parameter")
     ).json()) as OpenScadOutputWithParameterDefinition;
     const customiserForm = new CustomiserForm();
+    const selectedPreset = this.getSelectedPreset();
     NodeUpdate.updateElement(
       "main",
-      await customiserForm.initForm(formParam.parameterDefinition),
+      await customiserForm.initForm(
+        formParam.parameterDefinition,
+        selectedPreset,
+      ),
     );
     this.changePart(
       document.getElementById("emitterType") as HTMLSelectElement,
     );
     this.changePart(document.getElementById("handleType") as HTMLSelectElement);
     this.changePart(document.getElementById("pommelType") as HTMLSelectElement);
-    this.formChanged();
+  }
+
+  private initPresets() {
+    const presets = this.presetRepository.getPresets();
+    const presetSelect =
+      (document.getElementById("presetSelect") as HTMLSelectElement) ||
+      _throw(new Error("'presetSelect' ID not found"));
+    const presetNames = Object.keys(presets.parameterSets);
+    presetSelect.innerHTML = "";
+    presetNames.forEach((name) => {
+      const option = document.createElement("option");
+      option.value = name;
+      option.textContent = name;
+      presetSelect.appendChild(option);
+    });
+  }
+
+  private getSelectedPreset(): Record<string, string> | null {
+    const presetSelect =
+      (document.getElementById("presetSelect") as HTMLSelectElement) ||
+      _throw(new Error("'presetSelect' ID not found"));
+    const presets = this.presetRepository.getPresets();
+    const presetName = presetSelect.value;
+    if (presetName && presetName in presets.parameterSets) {
+      return presets.parameterSets[presetName];
+    }
+    return null;
   }
 
   private atInterval() {
@@ -163,7 +224,7 @@ export class Gui {
     }
   }
 
-  private getFormData() {
+  private getFormData(): ParameterKV[] {
     const form = document.getElementById("form") as HTMLFormElement;
     const formData = new FormData(form);
     const data: ParameterKV[] = [];
@@ -171,19 +232,5 @@ export class Gui {
       data.push({ parameter: key, value: value as string });
     });
     return data;
-  }
-
-  private async imageBlobToBase64(blob: Blob) {
-    return new Promise((onSuccess, onError) => {
-      try {
-        const reader = new FileReader();
-        reader.onload = function () {
-          onSuccess(this.result);
-        };
-        reader.readAsDataURL(blob);
-      } catch (e) {
-        onError(e);
-      }
-    });
   }
 }
