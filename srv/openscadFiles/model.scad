@@ -20,7 +20,7 @@ e2armColor = "red"; // [silver:silver, orange:gold, #444:black, white:white, red
 // color
 e3color = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // max height
-e3maxHeigh = 50; // [2:1:100]
+e3maxHeight = 50; // [2:1:100]
 // emitter diameter
 e3diameter = 35; // [30:1:50]
 // emitter cut height
@@ -279,7 +279,7 @@ module emitterBlock() {
 module oblicEmitter() {
     translate([0, 0, -6]) {
         difference() {
-            cylinder(h = e3maxHeigh, d = e3diameter);
+            cylinder(h = e3maxHeight, d = e3diameter);
             rotate([0, e3angle, 0])
                 translate([0, 0, 100 + e3cutHeight])
                     cube(200, center = true);
