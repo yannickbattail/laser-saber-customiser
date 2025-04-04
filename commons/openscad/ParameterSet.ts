@@ -1,10 +1,25 @@
-export class ParameterSet {
-  public parameterSets: Record<string, Record<string, string>> = {};
-  public fileFormatVersion: "1" = "1" as const;
+export type IParameterSet = {
+  parameterSets: Record<string, Record<string, string>>;
+  fileFormatVersion: "1";
+};
+
+export class ParameterSet implements IParameterSet {
+  parameterSets: Record<string, Record<string, string>> = {};
+  fileFormatVersion: "1" = "1" as const;
+
   constructor(p?: object | null) {
     if (p) {
       Object.assign(this, p);
     }
+  }
+
+  public static toParameterSet(
+    paramKV: ParameterKV[],
+    name: string = "model",
+  ): ParameterSet {
+    const parameterSet = new ParameterSet();
+    parameterSet.add(name, paramKV);
+    return parameterSet;
   }
 
   public add(name: string, paramKV: ParameterKV[]) {
@@ -16,15 +31,6 @@ export class ParameterSet {
 
   public del(name: string) {
     delete this.parameterSets[name];
-  }
-
-  public static toParameterSet(
-    paramKV: ParameterKV[],
-    name: string = "model",
-  ): ParameterSet {
-    const parameterSet = new ParameterSet();
-    parameterSet.add(name, paramKV);
-    return parameterSet;
   }
 }
 

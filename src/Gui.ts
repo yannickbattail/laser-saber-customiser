@@ -67,11 +67,6 @@ export class Gui {
     this.formChanged();
   }
 
-  public async reset() {
-    await this.initForm(null);
-    this.formChanged();
-  }
-
   public async preview() {
     await this.getImage("preview");
   }
