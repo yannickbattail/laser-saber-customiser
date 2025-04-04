@@ -58,7 +58,7 @@ vi.mock("../../utils/validation.js", () => ({
   IsParameterKvValid: vi.fn().mockImplementation((data: unknown) => data),
 }));
 
-import { handleRoot, handleParameter, handle3DModel, handlePreview, handleAnimation } from "../../handlers/handlers.js";
+import { handleParameter, handle3DModel, handlePreview, handleAnimation } from "../../handlers/openscadHandlers.js";
 import { OpenScad } from "openscad-cli-wrapper";
 import { IsParameterKvValid } from "../../utils/validation.js";
 
@@ -76,27 +76,19 @@ describe("handlers", () => {
     vi.useFakeTimers();
   });
 
-  describe("handleRoot", () => {
-    it("should return API home message", () => {
-      const { req, res } = createMockReqRes();
-      handleRoot(req, res);
-      expect(res.json as Mock).toHaveBeenCalledWith({ message: "API home!" });
-    });
-  });
-
   describe("handleParameter", () => {
-    it("should call OpenScad.getParameterDefinition and return result", () => {
+    it("should call OpenScad.getParameterDefinition and return result", async () => {
       const { req, res } = createMockReqRes();
-      handleParameter(req, res);
+      await handleParameter(req, res);
 
       expect(OpenScad).toHaveBeenCalledWith("test-model.scad", "./test-gen", "execOutput");
       expect(mockGetParameterDefinition).toHaveBeenCalled();
       expect(res.json as Mock).toHaveBeenCalledWith({ params: "definition" });
     });
 
-    it("should schedule cleanGenFiles after timeout", () => {
+    it("should schedule cleanGenFiles after timeout", async () => {
       const { req, res } = createMockReqRes();
-      handleParameter(req, res);
+      await handleParameter(req, res);
 
       expect(mockCleanGenFiles).not.toHaveBeenCalled();
       vi.advanceTimersByTime(1000);
@@ -105,10 +97,10 @@ describe("handlers", () => {
   });
 
   describe("handle3DModel", () => {
-    it("should validate input, generate model and return result", () => {
+    it("should validate input, generate model and return result", async () => {
       const body = [{ parameter: "height", value: "10" }];
       const { req, res } = createMockReqRes(body);
-      handle3DModel(req, res);
+      await handle3DModel(req, res);
 
       expect(IsParameterKvValid).toHaveBeenCalledWith(body);
       expect(OpenScad).toHaveBeenCalledWith("test-model.scad", "./test-gen", "execOutput");
@@ -116,9 +108,9 @@ describe("handlers", () => {
       expect(res.json as Mock).toHaveBeenCalledWith({ file: "model.3mf" });
     });
 
-    it("should schedule cleanGenFiles after timeout", () => {
+    it("should schedule cleanGenFiles after timeout", async () => {
       const { req, res } = createMockReqRes([]);
-      handle3DModel(req, res);
+      await handle3DModel(req, res);
 
       vi.advanceTimersByTime(1000);
       expect(mockCleanGenFiles).toHaveBeenCalledWith("./test-gen");
@@ -126,10 +118,10 @@ describe("handlers", () => {
   });
 
   describe("handlePreview", () => {
-    it("should validate input, generate image and return result", () => {
+    it("should validate input, generate image and return result", async () => {
       const body = [{ parameter: "width", value: "5" }];
       const { req, res } = createMockReqRes(body);
-      handlePreview(req, res);
+      await handlePreview(req, res);
 
       expect(IsParameterKvValid).toHaveBeenCalledWith(body);
       expect(OpenScad).toHaveBeenCalledWith("test-model.scad", "./test-gen", "execOutput");
@@ -137,9 +129,9 @@ describe("handlers", () => {
       expect(res.json as Mock).toHaveBeenCalledWith({ file: "image.png" });
     });
 
-    it("should schedule cleanGenFiles after timeout", () => {
+    it("should schedule cleanGenFiles after timeout", async () => {
       const { req, res } = createMockReqRes([]);
-      handlePreview(req, res);
+      await handlePreview(req, res);
 
       vi.advanceTimersByTime(1000);
       expect(mockCleanGenFiles).toHaveBeenCalledWith("./test-gen");

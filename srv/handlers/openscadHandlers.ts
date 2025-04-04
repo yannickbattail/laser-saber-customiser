@@ -8,10 +8,6 @@ const options = getDefaultOpenscadOptions();
 const modelFile = options.fileName;
 const execOutput = createFctExecCommand(false, false);
 
-export function handleRoot(req: Request, res: Response): void {
-  res.json({ message: "API home!" });
-}
-
 const cleanOldGenFiles = () => {
   setTimeout(() => cleanGenFiles(options.outputDir), 1000);
 };

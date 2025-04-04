@@ -25,13 +25,16 @@
               <option value="&lt;Default&gt;">&lt;Default&gt;</option>
             </select>
             <button onclick="gui.savePreset()">
-              <img class="save" src="img/save.svg" alt="save preset" title="save preset" />
+              <img alt="save preset" class="save" src="img/save.svg" title="save preset" />
             </button>
-            <button onclick="gui.reset()">
-              <img class="save" src="img/reset.svg" alt="reset" title="reset" />
+            <button onclick="gui.export()">
+              <img alt="export preset" class="save" src="img/export.svg" title="export preset" />
+            </button>
+            <button onclick="gui.import()">
+              <img alt="import preset" class="save" src="img/import.svg" title="import preset" />
             </button>
             <button onclick="gui.delPreset()">
-              <img class="save" src="img/del.svg" alt="delete preset" title="delete preset" />
+              <img alt="delete preset" class="save" src="img/del.svg" title="delete preset" />
             </button>
           </div>
         </td>
@@ -58,8 +61,9 @@
     <script type="module">
       import { Gui } from "./dist/Gui.js";
       import { PresetRepository } from "./dist/PresetRepository.js";
+      import { BackendApi } from "./dist/BackendApi.js";
 
-      window.gui = new Gui(new PresetRepository());
+      window.gui = new Gui(new PresetRepository(), new BackendApi());
     </script>
     <script src="lib/stl_viewer/stl_viewer.min.js"></script>
   </body>

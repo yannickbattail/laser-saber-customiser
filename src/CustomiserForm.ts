@@ -1,4 +1,4 @@
-import { clone } from "./utils.js";
+import { clone, groupBy } from "./utils.js";
 import {
   ParameterBase,
   ParameterBoolean,
@@ -8,17 +8,19 @@ import {
   ParameterString,
   ParameterStringOption,
 } from "openscad-cli-wrapper/dist/src/types/ParameterDefinition.js";
+import { ParameterKV } from "openscad-cli-wrapper/dist/src/types/ParameterSet.js";
 
 export class CustomiserForm {
   private defaultGroup = "Parameters";
 
-  public constructor() {}
+  public constructor(
+    private id: string,
+    private param: ParameterDefinition,
+  ) {}
 
-  public async initForm(param: ParameterDefinition, formValue: Record<string, string> | null): Promise<string> {
-    const formParam = clone(param);
-    if (formValue) {
-      this.setValues(formParam, formValue);
-    }
+  public async initForm(formValue: Record<string, string> | null): Promise<string> {
+    const formParam = clone(this.param);
+    this.setValues(formParam, formValue ?? {});
     const groupedFormParam = groupBy(formParam.parameters, (p) => p.group ?? "Global");
     let html = "";
     for (const groupedFormParamKey in groupedFormParam) {
@@ -28,10 +30,27 @@ export class CustomiserForm {
     }
     return `
 <div>
-  <form id="form" onchange="gui.formChanged()">
+  <form id="${this.id}" onchange="gui.formChanged()">
     ${html}
   </form>
 </div>`;
+  }
+
+  public getFormData(): Record<string, string> {
+    const form = document.getElementById(this.id) as HTMLFormElement;
+    const formData = new FormData(form);
+    const data: Record<string, string> = {};
+    formData.forEach((value, key) => {
+      data[key] = value.toString();
+    });
+    return data;
+  }
+  public toKV(formData: Record<string, string>): ParameterKV[] {
+    const data: ParameterKV[] = [];
+    Object.entries(formData).forEach((e) => {
+      data.push({ parameter: e[0], value: e[1] as string });
+    });
+    return data;
   }
 
   private setValues(param: ParameterDefinition, formValue: Record<string, string>) {
@@ -114,13 +133,3 @@ export class CustomiserForm {
     );
   }
 }
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>
-  arr.reduce(
-    (groups, item) => {
-      (groups[key(item)] ||= []).push(item);
-      return groups;
-    },
-    {} as Record<K, T[]>,
-  );
