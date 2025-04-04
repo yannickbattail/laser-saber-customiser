@@ -15,9 +15,12 @@
     "format": "prettier -w ."
   },
   "dependencies": {
+    "@types/lowdb": "^1.0.15",
     "@types/node": "^22.13.9",
     "ajv": "^8.17.1",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "lowdb": "^7.0.1",
+    "nanoid": "^5.1.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",

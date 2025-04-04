@@ -15,10 +15,6 @@ import {
 import { cleanGenFiles } from "../utils/cleanGenFiles.js";
 import { GenerateAnimation } from "../utils/AnimationGeneration.js";
 
-export function handleRoot(req: Request, res: Response): void {
-  res.json({ message: "API home!" });
-}
-
 const cleanOldGenFiles = () => {
   setTimeout(() => cleanGenFiles(getOptions().outputDir, retentionTime), 1000);
 };
