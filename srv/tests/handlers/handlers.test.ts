@@ -1,5 +1,8 @@
-import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
+import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import { Request, Response } from "express";
+import { handle3DModel, handleAnimation, handleParameter, handlePreview, handleRoot } from "../../handlers/handlers.js";
+import { OpenScad } from "openscad-cli-wrapper";
+import { IsParameterKvValid } from "../../utils/validation.js";
 
 const {
   mockGetParameterDefinition,
@@ -57,10 +60,6 @@ vi.mock("../../utils/configuration.js", () => ({
 vi.mock("../../utils/validation.js", () => ({
   IsParameterKvValid: vi.fn().mockImplementation((data: unknown) => data),
 }));
-
-import { handleRoot, handleParameter, handle3DModel, handlePreview, handleAnimation } from "../../handlers/handlers.js";
-import { OpenScad } from "openscad-cli-wrapper";
-import { IsParameterKvValid } from "../../utils/validation.js";
 
 function createMockReqRes(body: unknown = {}): { req: Request; res: Response } {
   const req = { body } as Request;

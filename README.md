@@ -34,12 +34,14 @@ npm run start
 ## code formating
 
 Format lint etc ...
+
 ```bash
 cd src # cd srv
 npm run check
 ```
 
 Update packages
+
 ```bash
 cd src # cd srv
 npm run check-update

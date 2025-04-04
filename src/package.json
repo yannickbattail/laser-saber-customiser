@@ -26,7 +26,7 @@
     "format": "stylelint ./*.css && prettier --log-level error --write .",
     "depcheck": "depcheck --quiet --ignore-path=./.gitignore --ignores='@types/*,@vitest/coverage-v8,lie,pako,readable-stream,setimmediate,immediate'",
     "check": "npm run depcheck && npm run format && npm run lint && npm run build && npm run test",
-    "check-updates": "npm-check-updates -u && npm update --save && npm i && npm dedupe && npm run check",
+    "check-updates": "npx npm-check-updates -u && npm update --save && npm i && npm dedupe && npm run check",
     "publish-new-v": "npm version patch --no-git-tag-version && npm run check && npm publish"
   },
   "dependencies": {

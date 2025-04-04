@@ -1,0 +1,63 @@
+### get all presets
+GET http://localhost:8080/api/persistence/preset
+
+### save a preset
+POST http://localhost:8080/api/persistence/preset
+content-type: application/json
+
+{
+  "name": "model3",
+  "preset": {
+    "emitterType": "coneEmitter",
+    "handleType": "cylindersHandle",
+    "pommelType": "pommelType1",
+    "e1color": "silver",
+    "e2color": "silver",
+    "e2armColor": "red",
+    "e3color": "silver",
+    "e3maxHeigh": "50",
+    "e3diameter": "35",
+    "e3cutHeight": "20",
+    "e3angle": "45",
+    "h1cylinderNumber": "6",
+    "h1cylinderDiameter": "12",
+    "h1topColor": "silver",
+    "h1cylinderColor": "#444",
+    "h1ringColor": "silver",
+    "h1bottomColor": "#444",
+    "h2ringColor": "silver",
+    "h2Color": "#444",
+    "h3Color": "#444",
+    "h4Color": "#444",
+    "h4HoneyCombColor": "orange",
+    "h4outer_radius": "16",
+    "h4hole_diameter": "16",
+    "h4hex_walls": "1",
+    "h4Invert": "false",
+    "h5Color": "#444",
+    "h5Curve": "1000",
+    "h5diameter": "29",
+    "p1baseColor": "silver",
+    "p1diamondBaseColor": "red",
+    "p1diamondTopColor": "red",
+    "p1twistAngle": "0",
+    "p1height": "35",
+    "p1width": "18",
+    "p1sides": "6",
+    "p2baseColor": "silver",
+    "p2diamondBaseColor": "red",
+    "p2diamondTopColor": "red",
+    "p2height": "35",
+    "p2width": "18",
+    "p2sides": "6",
+    "p2SpikeColor": "silver",
+    "p2SpikeLength": "14",
+    "p3baseColor": "red",
+    "p3SpikeColor": "silver",
+    "p3sides": "6",
+    "ingnit": "true",
+    "showBlade": "true",
+    "bladeColor": "red",
+    "cutInQuarter": "false"
+  }
+}

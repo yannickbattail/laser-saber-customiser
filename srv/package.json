@@ -26,13 +26,17 @@
     "format": "prettier --log-level error --write .",
     "depcheck": "depcheck --quiet --ignore-path=./.gitignore --ignores='@types/*,@vitest/coverage-v8,stylelint'",
     "check": "npm run depcheck && npm run format && npm run lint && npm run build && npm run test",
-    "check-updates": "npm-check-updates -u && npm update --save && npm i && npm dedupe && npm run check"
+    "check-updates": "npx npm-check-updates -u && npm update --save && npm i && npm dedupe && npm run check"
   },
   "dependencies": {
+    "@types/lowdb": "^2.0.3",
     "@types/node": "^26.5.1",
     "ajv": "^8.20.0",
     "express": "^5.2.1",
-    "openscad-cli-wrapper": "^1.4.18"
+    "lowdb": "^7.0.1",
+    "nanoid": "^6.0.1",
+    "openscad-cli-wrapper": "^1.4.18",
+    "zod": "^4.6.2"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

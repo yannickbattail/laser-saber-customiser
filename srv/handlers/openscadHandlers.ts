@@ -8,18 +8,12 @@ const options = getDefaultOpenscadOptions();
 const modelFile = options.fileName;
 const execOutput = createFctExecCommand(false, false);
 
-export function handleRoot(req: Request, res: Response): void {
-  res.json({ message: "API home!" });
-}
-
 const cleanOldGenFiles = () => {
   setTimeout(() => cleanGenFiles(options.outputDir), 1000);
 };
 
-export async function handleParameter(req: Request, res: Response): Promise<void> {
-  const openscad = new OpenScad(modelFile, options.outputDir, execOutput);
-  const param = await openscad.getParameterDefinition(options.openScadOptions);
-  res.json(param);
+export function handleParameter(req: Request, res: Response): void {
+  res.json(getParameterDefinition(modelFile));
   cleanOldGenFiles();
 }
 
