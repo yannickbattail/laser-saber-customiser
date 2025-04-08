@@ -1,13 +1,13 @@
-import { PresetDb } from "./PresetDb.js";
+import { UserPreset } from "./UserPreset.js";
 
 export interface IPresetRepository {
-  getPreset(userId: string): Promise<PresetDb | null>;
+  getPreset(userId: string): Promise<UserPreset | null>;
 
   savePreset(
     userId: string,
     presetName: string,
     preset: Record<string, string>,
-  ): Promise<PresetDb>;
+  ): Promise<UserPreset>;
 
-  DeletePreset(presetDb: PresetDb): void;
+  DeletePreset(presetDb: UserPreset): void;
 }

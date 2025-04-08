@@ -1,6 +1,6 @@
 import { IParameterSet } from "laser-saber-customiser-commons/openscad/ParameterSet.js";
 
-export type PresetDb = {
+export type UserPreset = {
   id: string;
   createdAt: number;
   updatedAt: number;

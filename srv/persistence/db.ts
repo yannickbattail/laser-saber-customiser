@@ -2,7 +2,7 @@ import { JSONFilePreset } from "lowdb/node";
 import { mkdirSync } from "node:fs";
 import { Low } from "lowdb";
 import { DbStructure } from "./DbStructure.js";
-import { PresetDb } from "./presets/PresetDb.js";
+import { UserPreset } from "./presets/UserPreset.js";
 
 export class Db {
   private db: Low<DbStructure> | undefined;
@@ -13,7 +13,7 @@ export class Db {
     await this.db?.write();
   }
 
-  public async getPresets(): Promise<PresetDb[]> {
+  public async getPresets(): Promise<UserPreset[]> {
     return (await this.getData()).data.presets;
   }
 

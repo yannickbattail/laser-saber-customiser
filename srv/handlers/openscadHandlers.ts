@@ -14,15 +14,14 @@ import {
 } from "../../commons/openscad/OpenScadConfiguration.js";
 import { cleanGenFiles } from "../utils/cleanGenFiles.js";
 import { GenerateAnimation } from "../utils/AnimationGeneration.js";
+import { getParameterDefinition } from "../utils/getParameterDefinitionts.js";
 
 const cleanOldGenFiles = () => {
   setTimeout(() => cleanGenFiles(getOptions().outputDir, retentionTime), 1000);
 };
 
 export function handleParameter(req: Request, res: Response): void {
-  const openscad = new OpenScad(modelFile, getOptions(), execOutput);
-  const param = openscad.getParameterDefinition();
-  res.json(param);
+  res.json(getParameterDefinition(modelFile));
   cleanOldGenFiles();
 }
 
