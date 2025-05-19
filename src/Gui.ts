@@ -4,15 +4,19 @@ import {
   OpenScadOutputWithParameterDefinition,
   OpenScadOutputWithSummary,
 } from "../commons/openscad/OpenScadOutput.js";
-import { ParameterKV } from "laser-saber-customiser-commons/openscad/ParameterSet.js";
 import { IPresetRepository } from "./IPresetRepository.js";
 import { _throw } from "./utils.js";
 
 export class Gui {
   private lastFormChanged = 0;
   private changeTimeout = 2000;
+  private customiserForm: CustomiserForm;
 
   constructor(private presetRepository: IPresetRepository) {
+    this.customiserForm = new CustomiserForm(
+      "lsc__form_",
+      this.getSelectedPreset(),
+    );
     this.presetRepository = presetRepository;
     this.init().then(() => {
       window.setInterval(() => {
@@ -47,7 +51,10 @@ export class Gui {
     const parameterSetName = window.prompt("Enter preset name");
     if (parameterSetName) {
       if (parameterSetName !== "" && parameterSetName !== "<Default>") {
-        this.presetRepository.savePreset(parameterSetName, this.getFormData());
+        this.presetRepository.savePreset(
+          parameterSetName,
+          this.customiserForm.getFormData(),
+        );
         this.initPresets();
       }
     }
@@ -81,7 +88,7 @@ export class Gui {
         "preview",
         `<img class="previewImage loadingImage" src="img/loading.webp" alt="loading" title="loading" />`,
       );
-      const data = this.getFormData();
+      const data = this.customiserForm.getFormData();
       const res = await fetch(`/api/openscad/3DModel`, {
         method: "POST",
         headers: {
@@ -133,7 +140,7 @@ export class Gui {
         "preview",
         `<img class="previewImage loadingImage" src="img/loading.webp" alt="loading" title="loading" />`,
       );
-      const data = this.getFormData();
+      const data = this.customiserForm.getFormData();
       const res = await fetch(`/api/openscad/${type}`, {
         method: "POST",
         headers: {
@@ -171,13 +178,9 @@ export class Gui {
     const formParam: OpenScadOutputWithParameterDefinition = (await (
       await fetch("/api/openscad/parameter")
     ).json()) as OpenScadOutputWithParameterDefinition;
-    const customiserForm = new CustomiserForm();
     NodeUpdate.updateElement(
       "main",
-      await customiserForm.initForm(
-        formParam.parameterDefinition,
-        selectedPreset,
-      ),
+      await this.customiserForm.initForm(formParam.parameterDefinition),
     );
     this.changePart(
       document.getElementById("emitterType") as HTMLSelectElement,
@@ -203,12 +206,11 @@ export class Gui {
   }
 
   private getSelectedPreset(): Record<string, string> | null {
-    const presetSelect =
-      (document.getElementById("presetSelect") as HTMLSelectElement) ||
+    const presetName =
+      (document.getElementById("presetSelect") as HTMLSelectElement).value ||
       _throw(new Error("'presetSelect' ID not found"));
     const presets = this.presetRepository.getPresets();
-    const presetName = presetSelect.value;
-    if (presetName && presetName in presets.parameterSets) {
+    if (presetName in presets.parameterSets) {
       return presets.parameterSets[presetName];
     }
     return null;
@@ -224,15 +226,5 @@ export class Gui {
     if (Date.now() - this.lastFormChanged > this.changeTimeout) {
       await this.preview();
     }
-  }
-
-  private getFormData(): ParameterKV[] {
-    const form = document.getElementById("form") as HTMLFormElement;
-    const formData = new FormData(form);
-    const data: ParameterKV[] = [];
-    formData.forEach((value, key) => {
-      data.push({ parameter: key, value: value as string });
-    });
-    return data;
   }
 }

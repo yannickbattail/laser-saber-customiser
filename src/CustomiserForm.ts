@@ -7,18 +7,21 @@ import {
   ParameterString,
   ParameterStringOption,
 } from "../commons/openscad/ParameterDefinition.js";
-import { clone } from "./utils.js";
+import { clone, groupBy } from "./utils.js";
+import { ParameterKV } from "laser-saber-customiser-commons/openscad/ParameterSet.js";
 
 export class CustomiserForm {
   private defaultGroup = "Parameters";
 
-  public constructor() {}
+  public constructor(
+    private id: string,
+    private param: ParameterDefinition,
+  ) {}
 
   public async initForm(
-    param: ParameterDefinition,
     formValue: Record<string, string> | null,
   ): Promise<string> {
-    const formParam = clone(param);
+    const formParam = clone(this.param);
     if (formValue) {
       this.setValues(formParam, formValue);
     }
@@ -34,7 +37,7 @@ export class CustomiserForm {
     }
     return `
 <div>
-  <form id="form" onchange="gui.formChanged()">
+  <form id="${this.id}" onchange="gui.formChanged()">
     ${html}
   </form>
 </div>`;
@@ -135,14 +138,14 @@ export class CustomiserForm {
        <input type="radio" id="${p.name}" name="${p.name}" ${p.initial ? "" : 'checked="checked"'} value="false"/>❌`,
     );
   }
-}
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>
-  arr.reduce(
-    (groups, item) => {
-      (groups[key(item)] ||= []).push(item);
-      return groups;
-    },
-    {} as Record<K, T[]>,
-  );
+  public getFormData(): ParameterKV[] {
+    const form = document.getElementById(this.id) as HTMLFormElement;
+    const formData = new FormData(form);
+    const data: ParameterKV[] = [];
+    formData.forEach((value, key) => {
+      data.push({ parameter: key, value: value as string });
+    });
+    return data;
+  }
+}

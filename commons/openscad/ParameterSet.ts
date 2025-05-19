@@ -25,7 +25,7 @@ export class ParameterSet implements IParameterSet {
   public add(name: string, paramKV: ParameterKV[]) {
     this.parameterSets[name] = {};
     for (const p of paramKV) {
-      this.parameterSets[name][p.parameter] = p.value;
+      this.parameterSets[name][p.parameter] = p.value.toString();
     }
   }
 
@@ -36,7 +36,7 @@ export class ParameterSet implements IParameterSet {
 
 export type ParameterKV = {
   parameter: string;
-  value: string;
+  value: string | number | boolean;
 };
 
 export type ParameterFileSet = {
