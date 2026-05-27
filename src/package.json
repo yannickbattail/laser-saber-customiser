@@ -2,25 +2,45 @@
   "name": "laser-saber-customiser-web",
   "description": "",
   "version": "1.0.0",
-  "main": "Gui.js",
-  "author": "",
-  "license": "",
+  "author": "XcinnaY",
+  "maintainer": "XcinnaY",
+  "license": "LGPL-3.0-or-later",
+  "type": "module",
+  "main": "dist/src/Gui.js",
+  "types": "dist/src/Gui.d.ts",
+  "bin": "./dist/src/Gui.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yannickbattail/laser-saber-customiser"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
-    "clean": "rm ./*.js ./gen/*",
+    "clean": "rm ./*.js ./gen/* || true",
     "clean_gen": "rm ./gen/*",
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "lint": "eslint --fix './**/*.ts'",
-    "format": "stylelint ./*.css && prettier -w ."
+    "test": "vitest run --coverage ./tests/",
+    "lint": "eslint --fix .",
+    "format": "stylelint ./*.css && prettier --log-level error --write .",
+    "depcheck": "depcheck --quiet --ignore-path=./.gitignore --ignores='@types/*,@vitest/coverage-v8,lie,pako,readable-stream,setimmediate,immediate'",
+    "check": "npm run depcheck && npm run format && npm run lint && npm run build && npm run test",
+    "check-updates": "npm-check-updates -u && npm update --save && npm i && npm dedupe && npm run check",
+    "publish-new-v": "npm version patch --no-git-tag-version && npm run check && npm publish"
   },
-  "dependencies": {},
+  "dependencies": {
+    "openscad-cli-wrapper": "^1.4.14"
+  },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
+    "depcheck": "^1.4.7",
     "eslint": "^9.22.0",
     "globals": "^16.0.0",
     "prettier": "^3.5.3",
     "stylelint": "^16.15.0",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.26.0"
+    "typescript-eslint": "^8.26.0",
+    "vitest": "^4.1.7"
   }
 }

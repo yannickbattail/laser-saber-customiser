@@ -1,10 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-export function cleanGenFiles(
-  directory = "../src/gen",
-  retentionTime: number = 10 * 60 * 1000,
-) {
+export function cleanGenFiles(directory = "../src/gen", retentionTime: number = 10 * 60 * 1000) {
   fs.readdir(directory, (err, files) => {
     if (err) throw err;
 

@@ -1,3 +1,4 @@
+import { clone } from "./utils.js";
 import {
   ParameterBase,
   ParameterBoolean,
@@ -6,26 +7,19 @@ import {
   ParameterNumberOption,
   ParameterString,
   ParameterStringOption,
-} from "../commons/openscad/ParameterDefinition.js";
-import { clone } from "./utils.js";
+} from "openscad-cli-wrapper/dist/src/openscad/ParameterDefinition";
 
 export class CustomiserForm {
   private defaultGroup = "Parameters";
 
   public constructor() {}
 
-  public async initForm(
-    param: ParameterDefinition,
-    formValue: Record<string, string> | null,
-  ): Promise<string> {
+  public async initForm(param: ParameterDefinition, formValue: Record<string, string> | null): Promise<string> {
     const formParam = clone(param);
     if (formValue) {
       this.setValues(formParam, formValue);
     }
-    const groupedFormParam = groupBy(
-      formParam.parameters,
-      (p) => p.group ?? "Global",
-    );
+    const groupedFormParam = groupBy(formParam.parameters, (p) => p.group ?? "Global");
     let html = "";
     for (const groupedFormParamKey in groupedFormParam) {
       if (!groupedFormParamKey.includes("debug")) {
@@ -40,21 +34,13 @@ export class CustomiserForm {
 </div>`;
   }
 
-  private setValues(
-    param: ParameterDefinition,
-    formValue: Record<string, string>,
-  ) {
-    param.parameters.forEach(
-      (p) => (p.initial = p.name in formValue ? formValue[p.name] : p.initial),
-    );
+  private setValues(param: ParameterDefinition, formValue: Record<string, string>) {
+    param.parameters.forEach((p) => (p.initial = p.name in formValue ? formValue[p.name] : p.initial));
   }
 
   private displayGroup(
     groupedFormParamKey: string,
-    groupedFormParam: Record<
-      string,
-      (ParameterNumber | ParameterString | ParameterBoolean)[]
-    >,
+    groupedFormParam: Record<string, (ParameterNumber | ParameterString | ParameterBoolean)[]>,
   ) {
     let html = "<br>";
     html += `
@@ -71,12 +57,7 @@ export class CustomiserForm {
   }
 
   private generateFormParam(
-    p:
-      | ParameterNumber
-      | ParameterString
-      | ParameterBoolean
-      | ParameterStringOption
-      | ParameterNumberOption,
+    p: ParameterNumber | ParameterString | ParameterBoolean | ParameterStringOption | ParameterNumberOption,
     mainGroup: boolean,
   ) {
     if ("options" in p) {
@@ -114,10 +95,7 @@ export class CustomiserForm {
     );
   }
 
-  private generateSelect(
-    p: ParameterStringOption | ParameterNumberOption,
-    mainGroup?: boolean,
-  ) {
+  private generateSelect(p: ParameterStringOption | ParameterNumberOption, mainGroup?: boolean) {
     const onChange = mainGroup ? `onchange="gui.changePart(this)"` : "";
     return this.generateLine(
       p,
