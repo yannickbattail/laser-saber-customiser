@@ -1,24 +1,20 @@
 {
-  "compileOnSave": false,
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "baseUrl": "./",
-    //"outDir": "./dist/out-tsc",
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "strictPropertyInitialization": false,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "inlineSourceMap": true,
-    "declaration": false,
-    "downlevelIteration": true,
+    "target": "ES2024",
+    "module": "node16",
+    "lib": ["ES2024", "dom"],
+    "outDir": "./dist",
+    "moduleResolution": "node16",
+    "rootDir": "./",
+    "declaration": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
+    "strict": true,
+    "strictNullChecks": true,
+    "noImplicitAny": false,
+    "esModuleInterop": true,
     "resolveJsonModule": true,
-    "importHelpers": true,
-    "target": "ES2022",
-    "module": "es2020",
-    "lib": ["es2021", "dom"]
-  }
+    "forceConsistentCasingInFileNames": true
+  },
+  "exclude": ["node_modules", "dist"]
 }

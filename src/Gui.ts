@@ -1,10 +1,7 @@
 import { NodeUpdate } from "./NodeUpdate.js";
 import { CustomiserForm } from "./CustomiserForm.js";
-import {
-  OpenScadOutputWithParameterDefinition,
-  OpenScadOutputWithSummary,
-} from "../commons/openscad/OpenScadOutput.js";
-import { ParameterKV } from "laser-saber-customiser-commons/openscad/ParameterSet.js";
+import { OpenScadOutputWithParameterDefinition, OpenScadOutputWithSummary } from "openscad-cli-wrapper";
+import { ParameterKV } from "openscad-cli-wrapper";
 import { IPresetRepository } from "./IPresetRepository.js";
 import { _throw } from "./utils.js";
 
@@ -29,18 +26,12 @@ export class Gui {
   public changePart(me: HTMLSelectElement | null) {
     if (!me) return;
     const group = `${me.id} : ${me.value}`;
-    document
-      .querySelectorAll(`[id^="toggleTitle_${me.id} : "]`)
-      .forEach((e) => {
-        e.classList.add("toggleHide");
-        e.classList.remove("toggleShow");
-      });
-    document
-      .getElementById(`toggleTitle_${group}`)
-      ?.classList?.add("toggleShow");
-    document
-      .getElementById(`toggleTitle_${group}`)
-      ?.classList?.remove("toggleHide");
+    document.querySelectorAll(`[id^="toggleTitle_${me.id} : "]`).forEach((e) => {
+      e.classList.add("toggleHide");
+      e.classList.remove("toggleShow");
+    });
+    document.getElementById(`toggleTitle_${group}`)?.classList?.add("toggleShow");
+    document.getElementById(`toggleTitle_${group}`)?.classList?.remove("toggleHide");
   }
 
   public async savePreset() {
@@ -125,10 +116,7 @@ export class Gui {
       });
     } catch (e) {
       console.error(e);
-      NodeUpdate.updateElement(
-        "preview",
-        `<img src="img/saber_empty.webp" alt="no preview" title="no preview" />`,
-      );
+      NodeUpdate.updateElement("preview", `<img src="img/saber_empty.webp" alt="no preview" title="no preview" />`);
     }
   }
 
@@ -177,16 +165,8 @@ export class Gui {
       await fetch("/api/openscad/parameter")
     ).json()) as OpenScadOutputWithParameterDefinition;
     const customiserForm = new CustomiserForm();
-    NodeUpdate.updateElement(
-      "main",
-      await customiserForm.initForm(
-        formParam.parameterDefinition,
-        selectedPreset,
-      ),
-    );
-    this.changePart(
-      document.getElementById("emitterType") as HTMLSelectElement,
-    );
+    NodeUpdate.updateElement("main", await customiserForm.initForm(formParam.parameterDefinition, selectedPreset));
+    this.changePart(document.getElementById("emitterType") as HTMLSelectElement);
     this.changePart(document.getElementById("handleType") as HTMLSelectElement);
     this.changePart(document.getElementById("pommelType") as HTMLSelectElement);
   }

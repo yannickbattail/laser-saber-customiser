@@ -2,15 +2,18 @@
   "name": "laser-saber-customiser",
   "scripts": {
     "build:watch": "./start_dev.sh",
-    "format:all": "npm run --ws format && npm run --ws lint",
-    "start": "npm run -w srv start"
+    "start": "npm run -w srv start",
+    "publish-new-v": "npm version patch --no-git-tag-version && npm run --ws check:all && npm publish",
+    "clean:all": "npm run --ws clean",
+    "test:all": "npm run --ws test",
+    "lint:all": "npm run --ws lint",
+    "format:all": "npm run --ws format",
+    "depcheck:all": "npm run --ws depcheck",
+    "check:all": "npm run --ws check",
+    "check-updates": "npm run --ws check-updates"
   },
   "workspaces": [
-    "commons",
     "src",
     "srv"
-  ],
-  "dependencies": {
-    "glob": "^11.0.1"
-  }
+  ]
 }
