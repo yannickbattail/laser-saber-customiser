@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd /home/openscad/srv/
-node ./server.js
+node ./dist/server.js
