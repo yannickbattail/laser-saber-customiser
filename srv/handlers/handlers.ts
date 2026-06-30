@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import { IsParameterKvValid } from "../utils/validation.js";
-import { createFctExecCommand, GenerateAnimation, OpenScad } from "openscad-cli-wrapper";
-import { Export3dFormat } from "openscad-cli-wrapper";
-import { ParameterKV } from "openscad-cli-wrapper";
+import { createFctExecCommand, Export3dFormat, GenerateAnimation, OpenScad, ParameterKV } from "openscad-cli-wrapper";
 import { cleanGenFiles } from "../utils/cleanGenFiles.js";
 import { getDefaultOpenscadOptions } from "../utils/configuration.js";
 
