@@ -17,7 +17,6 @@ RUN groupadd -g 1000 openscad \
 FROM node:22-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json  ./
-COPY  commons/package.json ./commons/
 COPY  src/package.json ./src/
 COPY  srv/package.json ./srv/
 RUN npm --workspaces install

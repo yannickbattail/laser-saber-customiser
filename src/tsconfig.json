@@ -1,7 +1,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
     "outDir": "./dist/",
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -12,9 +11,7 @@
     "noFallthroughCasesInSwitch": true,
     "inlineSourceMap": true,
     "declaration": false,
-    "downlevelIteration": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
     "resolveJsonModule": true,
     "importHelpers": true,
     "target": "ES2022",

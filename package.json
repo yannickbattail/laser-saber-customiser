@@ -10,7 +10,7 @@
     "format:all": "npm run --ws format",
     "depcheck:all": "npm run --ws depcheck",
     "check:all": "npm run --ws check",
-    "check-updates": "npm run --ws check-updates"
+    "check-updates:all": "npm run --ws check-updates"
   },
   "workspaces": [
     "src",

@@ -17,7 +17,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "clean": "rm ./*.js ./gen/* || true",
+    "clean": "rm ./dist/* ./gen/* || true",
     "clean_gen": "rm ./gen/*",
     "build": "tsc",
     "build:watch": "tsc --watch",
@@ -30,17 +30,18 @@
     "publish-new-v": "npm version patch --no-git-tag-version && npm run check && npm publish"
   },
   "dependencies": {
-    "openscad-cli-wrapper": "^1.4.14"
+    "openscad-cli-wrapper": "^1.4.16"
   },
   "devDependencies": {
-    "@eslint/js": "^9.22.0",
+    "@eslint/js": "^10.0.1",
     "depcheck": "^1.4.7",
-    "eslint": "^9.22.0",
-    "globals": "^16.0.0",
-    "prettier": "^3.5.3",
-    "stylelint": "^16.15.0",
-    "typescript": "^5.8.2",
-    "typescript-eslint": "^8.26.0",
-    "vitest": "^4.1.7"
+    "eslint": "^10.6.0",
+    "globals": "^17.7.0",
+    "npm-check-updates": "^22.2.9",
+    "prettier": "^3.9.4",
+    "stylelint": "^17.14.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.62.1",
+    "vitest": "^4.1.9"
   }
 }
