@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { CustomiserForm } from "../CustomiserForm";
 import { ParameterDefinition, ParameterStringOption } from "openscad-cli-wrapper/dist/src/openscad/ParameterDefinition";
 

@@ -1,7 +1,6 @@
 import { NodeUpdate } from "./NodeUpdate.js";
 import { CustomiserForm } from "./CustomiserForm.js";
-import { OpenScadOutputWithParameterDefinition, OpenScadOutputWithSummary } from "openscad-cli-wrapper";
-import { ParameterKV } from "openscad-cli-wrapper";
+import { OpenScadOutputWithParameterDefinition, OpenScadOutputWithSummary, ParameterKV } from "openscad-cli-wrapper";
 import { IPresetRepository } from "./IPresetRepository.js";
 import { _throw } from "./utils.js";
 
