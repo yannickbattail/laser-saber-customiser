@@ -1,9 +1,9 @@
-# Laser saber customiser
+# Laser saber customizer
 
 ## prod
 
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 
 ## dev
@@ -15,6 +15,7 @@ nvm use
 ```
 
 ```bash
+cd src
 npm i
 npm run build:watch
 ```
@@ -22,24 +23,22 @@ npm run build:watch
 in another shell
 
 ```bash
+cd srv
+npm i
+npm run build
 npm run start
-```
-
-build only the server
-
-```bash
-npm run -w srv build
 ```
 
 ## code formating
 
+Format lint etc ...
 ```bash
-npm run format:all
+cd src # cd srv
+npm run check
 ```
 
+Update packages
 ```bash
-npm run --workspaces build
-npm run --workspaces build
+cd src # cd srv
+npm run check-update
 ```
-
-`--workspaces` means: execute the command in all workspaces (commons, srv, src)
