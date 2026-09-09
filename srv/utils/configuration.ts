@@ -7,7 +7,7 @@ export function getDefaultOpenscadOptions(): GenerateOptions {
     generateMosaic: false,
     onlyParameterSet: "",
     parallelJobs: 1,
-    outputDir: "./gen",
+    outputDir: "../src/gen/",
     embedThumbnailIn3mf: true,
     embedSourcesIn3mf: true,
     outFormats: [
@@ -29,8 +29,8 @@ export function getDefaultOpenscadOptions(): GenerateOptions {
     ],
     mosaicOptions: {
       geometry: {
+        height: 512,
         width: 256,
-        height: 256,
         border: 2,
       },
       tiles: {
@@ -45,7 +45,7 @@ export function getDefaultOpenscadOptions(): GenerateOptions {
       check_parameter_ranges: false,
       check_parameters: false,
       debug: false,
-      openScadExecutable: "openscad", // or "openscad-nightly"
+      openScadExecutable: "openscad-nightly", // or "openscad-nightly"
       hardwarnings: false,
       quiet: false,
       trust_python: false,
@@ -53,8 +53,8 @@ export function getDefaultOpenscadOptions(): GenerateOptions {
       imageOptions: {
         colorscheme: ColorScheme.Starnight, //Cornfield,Metallic,Sunset,Starnight,BeforeDawn,Nature,DaylightGem,NocturnalGem,DeepOcean,Solarized,Tomorrow,TomorrowNight,ClearSky,Monotone,
         imgsize: {
-          height: 1024,
-          width: 1024,
+          height: 512,
+          width: 256,
         },
         autocenter: true, // adjust camera to look at object's center
         camera: null, // camera parameters when exporting png: translate_x,y,z,rot_x,y,z,dist or eye_x,y,z,center_x,y,z
@@ -70,8 +70,8 @@ export function getDefaultOpenscadOptions(): GenerateOptions {
         animate: 20, // number of frames
         colorscheme: ColorScheme.Starnight, //Cornfield,Metallic,Sunset,Starnight,BeforeDawn,Nature,DaylightGem,NocturnalGem,DeepOcean,Solarized,Tomorrow,TomorrowNight,ClearSky,Monotone,
         imgsize: {
-          height: 300,
-          width: 300,
+          height: 512,
+          width: 256,
         },
         autocenter: false, // adjust camera to look at object's center
         camera: null, // camera parameters when exporting png: translate_x,y,z,rot_x,y,z,dist or eye_x,y,z,center_x,y,z

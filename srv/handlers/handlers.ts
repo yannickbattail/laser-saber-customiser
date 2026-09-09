@@ -16,25 +16,25 @@ const cleanOldGenFiles = () => {
   setTimeout(() => cleanGenFiles(options.outputDir), 1000);
 };
 
-export function handleParameter(req: Request, res: Response): void {
+export async function handleParameter(req: Request, res: Response): Promise<void> {
   const openscad = new OpenScad(modelFile, options.outputDir, execOutput);
-  const param = openscad.getParameterDefinition(options.openScadOptions);
+  const param = await openscad.getParameterDefinition(options.openScadOptions);
   res.json(param);
   cleanOldGenFiles();
 }
 
-export function handle3DModel(req: Request, res: Response): void {
+export async function handle3DModel(req: Request, res: Response): Promise<void> {
   const input = IsParameterKvValid<ParameterKV[]>(req.body);
   const openscad = new OpenScad(modelFile, options.outputDir, execOutput);
-  const param = openscad.generateModel(input, Export3dFormat["3mf"], options.openScadOptions);
+  const param = await openscad.generateModel(input, Export3dFormat["3mf"], options.openScadOptions);
   res.json(param);
   cleanOldGenFiles();
 }
 
-export function handlePreview(req: Request, res: Response): void {
+export async function handlePreview(req: Request, res: Response): Promise<void> {
   const input = IsParameterKvValid<ParameterKV[]>(req.body);
   const openscad = new OpenScad(modelFile, options.outputDir, execOutput);
-  const param = openscad.generateImage(input, options.openScadOptions);
+  const param = await openscad.generateImage(input, options.openScadOptions);
   res.json(param);
   cleanOldGenFiles();
 }
