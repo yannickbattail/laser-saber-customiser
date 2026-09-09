@@ -1,6 +1,10 @@
+import {
+  OpenScadOutputWithParameterDefinition,
+  OpenScadOutputWithSummary,
+} from "openscad-cli-wrapper/dist/src/types/OpenScadSummary.js";
+import { ParameterKV } from "openscad-cli-wrapper/dist/src/types/ParameterSet.js";
 import { NodeUpdate } from "./NodeUpdate.js";
 import { CustomiserForm } from "./CustomiserForm.js";
-import { OpenScadOutputWithParameterDefinition, OpenScadOutputWithSummary, ParameterKV } from "openscad-cli-wrapper";
 import { IPresetRepository } from "./IPresetRepository.js";
 import { _throw } from "./utils.js";
 

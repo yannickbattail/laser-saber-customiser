@@ -7,7 +7,7 @@ import {
   ParameterNumberOption,
   ParameterString,
   ParameterStringOption,
-} from "openscad-cli-wrapper/dist/src/openscad/ParameterDefinition";
+} from "openscad-cli-wrapper/dist/src/types/ParameterDefinition.js";
 
 export class CustomiserForm {
   private defaultGroup = "Parameters";

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { CustomiserForm } from "../CustomiserForm";
-import { ParameterDefinition, ParameterStringOption } from "openscad-cli-wrapper/dist/src/openscad/ParameterDefinition";
+import { ParameterDefinition, ParameterStringOption } from "openscad-cli-wrapper/dist/src/types/ParameterDefinition.js";
 
 describe("CustomiserForm", () => {
   let customiserForm: CustomiserForm;

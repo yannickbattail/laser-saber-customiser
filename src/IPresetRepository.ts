@@ -1,4 +1,4 @@
-import { ParameterKV, ParameterSet } from "openscad-cli-wrapper";
+import { ParameterKV, ParameterSet } from "openscad-cli-wrapper/dist/src/types/ParameterSet.js";
 
 export interface IPresetRepository {
   getPresets(): ParameterSet;
