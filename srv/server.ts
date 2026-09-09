@@ -1,12 +1,6 @@
 import express from "express";
 import process from "node:process";
-import {
-  handle3DModel,
-  handleAnimation,
-  handleParameter,
-  handlePreview,
-  handleRoot,
-} from "./handlers/handlers.js";
+import { handle3DModel, handleAnimation, handleParameter, handlePreview, handleRoot } from "./handlers/handlers.js";
 
 const port = process.argv.length >= 3 ? parseInt(process.argv[2]) : 8080;
 

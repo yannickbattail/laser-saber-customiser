@@ -1,7 +1,4 @@
-import {
-  ParameterKV,
-  ParameterSet,
-} from "laser-saber-customiser-commons/openscad/ParameterSet.js";
+import { ParameterKV, ParameterSet } from "openscad-cli-wrapper/dist/src/types/ParameterSet.js";
 
 export interface IPresetRepository {
   getPresets(): ParameterSet;

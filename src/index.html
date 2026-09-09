@@ -6,6 +6,14 @@
     <link href="img/icon.png" rel="icon" type="image/png" />
     <link href="style.css" rel="stylesheet" />
     <title>Laser Saber Customiser</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "openscad-cli-wrapper": "./node_modules/openscad-cli-wrapper/",
+          "openscad-cli-wrapper/": "./node_modules/openscad-cli-wrapper/"
+        }
+      }
+    </script>
   </head>
   <body class="dark">
     <table>
@@ -13,36 +21,17 @@
         <td>
           <div>
             <label for="presetSelect">My sabers</label>
-            <select
-              id="presetSelect"
-              name="presetSelect"
-              onchange="gui.changePreset()"
-            >
+            <select id="presetSelect" name="presetSelect" onchange="gui.changePreset()">
               <option value="&lt;Default&gt;">&lt;Default&gt;</option>
             </select>
             <button onclick="gui.savePreset()">
-              <img
-                class="save"
-                src="img/save.svg"
-                alt="save preset"
-                title="save preset"
-              />
+              <img class="save" src="img/save.svg" alt="save preset" title="save preset" />
             </button>
             <button onclick="gui.reset()">
-              <img
-                class="save"
-                src="img/reset.svg"
-                alt="reset"
-                title="reset"
-              />
+              <img class="save" src="img/reset.svg" alt="reset" title="reset" />
             </button>
             <button onclick="gui.delPreset()">
-              <img
-                class="save"
-                src="img/del.svg"
-                alt="delete preset"
-                title="delete preset"
-              />
+              <img class="save" src="img/del.svg" alt="delete preset" title="delete preset" />
             </button>
           </div>
         </td>
@@ -54,12 +43,7 @@
         <td>
           <!-- <button onclick="gui.animation()">Animate</button> -->
           <div id="preview">
-            <img
-              alt="no preview"
-              class="previewImage loadingImage"
-              src="img/saber_empty.webp"
-              title="no preview"
-            />
+            <img alt="no preview" class="previewImage loadingImage" src="img/saber_empty.webp" title="no preview" />
           </div>
         </td>
       </tr>
@@ -72,8 +56,8 @@
       }
     </script>
     <script type="module">
-      import { Gui } from "./Gui.js";
-      import { PresetRepository } from "./PresetRepository.js";
+      import { Gui } from "./dist/Gui.js";
+      import { PresetRepository } from "./dist/PresetRepository.js";
 
       window.gui = new Gui(new PresetRepository());
     </script>

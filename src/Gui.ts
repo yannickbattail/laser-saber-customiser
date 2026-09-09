@@ -1,10 +1,10 @@
-import { NodeUpdate } from "./NodeUpdate.js";
-import { CustomiserForm } from "./CustomiserForm.js";
 import {
   OpenScadOutputWithParameterDefinition,
   OpenScadOutputWithSummary,
-} from "../commons/openscad/OpenScadOutput.js";
-import { ParameterKV } from "laser-saber-customiser-commons/openscad/ParameterSet.js";
+} from "openscad-cli-wrapper/dist/src/types/OpenScadSummary.js";
+import { ParameterKV } from "openscad-cli-wrapper/dist/src/types/ParameterSet.js";
+import { NodeUpdate } from "./NodeUpdate.js";
+import { CustomiserForm } from "./CustomiserForm.js";
 import { IPresetRepository } from "./IPresetRepository.js";
 import { _throw } from "./utils.js";
 
@@ -29,18 +29,12 @@ export class Gui {
   public changePart(me: HTMLSelectElement | null) {
     if (!me) return;
     const group = `${me.id} : ${me.value}`;
-    document
-      .querySelectorAll(`[id^="toggleTitle_${me.id} : "]`)
-      .forEach((e) => {
-        e.classList.add("toggleHide");
-        e.classList.remove("toggleShow");
-      });
-    document
-      .getElementById(`toggleTitle_${group}`)
-      ?.classList?.add("toggleShow");
-    document
-      .getElementById(`toggleTitle_${group}`)
-      ?.classList?.remove("toggleHide");
+    document.querySelectorAll(`[id^="toggleTitle_${me.id} : "]`).forEach((e) => {
+      e.classList.add("toggleHide");
+      e.classList.remove("toggleShow");
+    });
+    document.getElementById(`toggleTitle_${group}`)?.classList?.add("toggleShow");
+    document.getElementById(`toggleTitle_${group}`)?.classList?.remove("toggleHide");
   }
 
   public async savePreset() {
@@ -98,7 +92,7 @@ export class Gui {
       const divPreview = document.getElementById("preview");
       if (divPreview) divPreview.innerHTML = "";
       const out = (await res.json()) as OpenScadOutputWithSummary;
-      const uri = "../../" + out.file.replace("./src/", "/");
+      const uri = `../../${out.file.replace("./src/", "/")}?t=${new Date().getTime()}`;
       NodeUpdate.updateElement(
         "preview",
         `
@@ -125,10 +119,7 @@ export class Gui {
       });
     } catch (e) {
       console.error(e);
-      NodeUpdate.updateElement(
-        "preview",
-        `<img src="img/saber_empty.webp" alt="no preview" title="no preview" />`,
-      );
+      NodeUpdate.updateElement("preview", `<img src="img/saber_empty.webp" alt="no preview" title="no preview" />`);
     }
   }
 
@@ -155,7 +146,7 @@ export class Gui {
             <img src="img/3D.svg" alt="display in 3D" title="display in 3D"/>
         </button>
     </div>
-    <img src="${uri.file.replace("./src/", "/")}" alt="${type}" title="${type}" />`,
+    <img src="${uri.file.replace("./src/", "/")}?t=${new Date().getTime()}" alt="${type}" title="${type}" />`,
       );
     } catch (e) {
       console.error(e);
@@ -177,16 +168,8 @@ export class Gui {
       await fetch("/api/openscad/parameter")
     ).json()) as OpenScadOutputWithParameterDefinition;
     const customiserForm = new CustomiserForm();
-    NodeUpdate.updateElement(
-      "main",
-      await customiserForm.initForm(
-        formParam.parameterDefinition,
-        selectedPreset,
-      ),
-    );
-    this.changePart(
-      document.getElementById("emitterType") as HTMLSelectElement,
-    );
+    NodeUpdate.updateElement("main", await customiserForm.initForm(formParam.parameterDefinition, selectedPreset));
+    this.changePart(document.getElementById("emitterType") as HTMLSelectElement);
     this.changePart(document.getElementById("handleType") as HTMLSelectElement);
     this.changePart(document.getElementById("pommelType") as HTMLSelectElement);
   }

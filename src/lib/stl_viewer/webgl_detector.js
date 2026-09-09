@@ -3,10 +3,7 @@ var webgl_Detector = {
   webgl: (function () {
     try {
       var canvas = document.createElement("canvas");
-      return (
-        !!window.WebGLRenderingContext &&
-        (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
-      );
+      return !!window.WebGLRenderingContext && (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"));
     } catch (e) {
       return false;
     }
@@ -47,8 +44,7 @@ var webgl_Detector = {
 
     parameters = parameters || {};
 
-    parent =
-      parameters.parent !== undefined ? parameters.parent : document.body;
+    parent = parameters.parent !== undefined ? parameters.parent : document.body;
     id = parameters.id !== undefined ? parameters.id : "oldie";
 
     element = Detector.getWebGLErrorMessage();
