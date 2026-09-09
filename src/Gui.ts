@@ -92,7 +92,7 @@ export class Gui {
       const divPreview = document.getElementById("preview");
       if (divPreview) divPreview.innerHTML = "";
       const out = (await res.json()) as OpenScadOutputWithSummary;
-      const uri = "../../" + out.file.replace("./src/", "/");
+      const uri = `../../${out.file.replace("./src/", "/")}?t=${new Date().getTime()}`;
       NodeUpdate.updateElement(
         "preview",
         `
@@ -146,7 +146,7 @@ export class Gui {
             <img src="img/3D.svg" alt="display in 3D" title="display in 3D"/>
         </button>
     </div>
-    <img src="${uri.file.replace("./src/", "/")}" alt="${type}" title="${type}" />`,
+    <img src="${uri.file.replace("./src/", "/")}?t=${new Date().getTime()}" alt="${type}" title="${type}" />`,
       );
     } catch (e) {
       console.error(e);
