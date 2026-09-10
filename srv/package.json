@@ -29,7 +29,7 @@
     "check-updates": "npm-check-updates -u && npm update --save && npm i && npm dedupe && npm run check"
   },
   "dependencies": {
-    "@types/node": "^26.5.0",
+    "@types/node": "^26.5.1",
     "ajv": "^8.20.0",
     "express": "^5.2.1",
     "openscad-cli-wrapper": "^1.4.18"
