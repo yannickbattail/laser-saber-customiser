@@ -24,29 +24,16 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf  /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-FROM node:22-alpine AS build
-WORKDIR /app
-COPY  src/package.json src/package-lock.json ./src/
-COPY  srv/package.json srv/package-lock.json ./srv/
-
-RUN cd src && npm i --no-audit --no-fund
-RUN cd srv && npm i --no-audit --no-fund
+WORKDIR /home/ubuntu
 
 COPY . .
 
-RUN cd src && npm run build
-RUN cd src && npm run build
+RUN cd ./src  && npm install --no-audit --no-fund && npm run build \
+ && cd ../srv && npm install --no-audit --no-fund && npm run build
 
-
-FROM prod
-WORKDIR /home/openscad
 COPY --chmod=555 entrypoint.sh /entrypoint.sh
-COPY --from=build /app/ /home/openscad/
-RUN chown -R 1000:1000 /home/openscad/src/gen/
-RUN cd src && npm install --omit=dev --no-audit --no-fund
-RUN cd srv && npm install --omit=dev --no-audit --no-fund
 
-USER 1000:1000
+USER ubuntu
 VOLUME /home/openscad/src/gen/
 EXPOSE 8080
 ENTRYPOINT ["/entrypoint.sh"]
