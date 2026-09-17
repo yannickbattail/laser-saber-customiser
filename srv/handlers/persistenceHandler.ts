@@ -11,7 +11,7 @@ function getUserId(req: Request): string {
 }
 
 export function getPresets(req: Request, res: Response): void {
-  res.json(presetRepo.getUserPreset(getUserId(req)));
+  res.json(presetRepo.getPresets(getUserId(req)));
 }
 
 export async function postPreset(req: Request, res: Response): Promise<void> {
@@ -22,5 +22,5 @@ export async function postPreset(req: Request, res: Response): Promise<void> {
 
 export async function deletePreset(req: Request, res: Response): Promise<void> {
   const namedPreset = req.body.name as string;
-  res.json(await presetRepo.DeletePreset(getUserId(req), namedPreset));
+  res.json(await presetRepo.deletePreset(getUserId(req), namedPreset));
 }

@@ -119,7 +119,7 @@ export class CustomiserForm {
     return this.generateLine(
       p,
       `
-<select id="${p.name}" name="${p.name}" ${onChange}>
+<select id="${p.name}" name="${p.name}" ${onChange} autocomplete="off">
     ${p.options?.map((o) => `<option value="${o.value}" ${o.value === p.initial ? 'selected="selected"' : ""}>${o.name}</option>`).join("\n")}
 </select>`,
     );

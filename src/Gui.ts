@@ -3,7 +3,7 @@ import { NodeUpdate } from "./NodeUpdate.js";
 import { CustomiserForm } from "./CustomiserForm.js";
 import { IPresetRepository } from "./IPresetRepository.js";
 import { _throw } from "./utils.js";
-import { IBackendApi } from "./IBackendApi";
+import { IBackendApi } from "./serverApi/IBackendApi.js";
 
 export class Gui {
   private lastFormChanged = 0;
@@ -41,8 +41,8 @@ export class Gui {
     const parameterSetName = window.prompt("Enter preset name");
     if (parameterSetName) {
       if (parameterSetName !== "" && parameterSetName !== "<Default>") {
-        this.presetRepository.savePreset(parameterSetName, this.customiserForm.getFormData());
-        this.initPresets(parameterSetName);
+        await this.presetRepository.savePreset(parameterSetName, this.customiserForm.getFormData());
+        await this.initPresets(parameterSetName);
       }
     }
   }
@@ -79,13 +79,13 @@ Error${e}`);
   }
 
   public async delPreset() {
-    this.presetRepository.delPresets(this.getSelectedPreset());
-    this.initPresets(null);
+    await this.presetRepository.deletePreset(this.getSelectedPreset());
+    await this.initPresets(null);
     await this.changePreset();
   }
 
   public async changePreset() {
-    await this.initForm(this.presetRepository.getPresetByName(this.getSelectedPreset()));
+    await this.initForm(await this.presetRepository.getPresetByName(this.getSelectedPreset()));
     this.formChanged();
   }
 
@@ -170,9 +170,9 @@ Error${e}`);
   private async init() {
     const formParam: OpenScadOutputWithParameterDefinition = await this.backend.getParameterDefinition();
     this.customiserForm = new CustomiserForm("lsc__form_", formParam.parameterDefinition);
-    await this.initForm(this.presetRepository.getPresetByName(this.getSelectedPreset()));
+    await this.initForm(await this.presetRepository.getPresetByName(this.getSelectedPreset()));
     this.formChanged();
-    this.initPresets(null);
+    await this.initPresets(null);
   }
 
   private async initForm(selectedPreset: Record<string, string> | null) {
@@ -182,9 +182,9 @@ Error${e}`);
     this.changePart(document.getElementById("pommelType") as HTMLSelectElement);
   }
 
-  private initPresets(selectedPreset: string | null) {
+  private async initPresets(selectedPreset: string | null) {
     const selPreset = selectedPreset ?? "<Default>";
-    const presets = this.presetRepository.getPresets();
+    const presets = await this.presetRepository.getPresets();
     presets.add("<Default>", []);
     const presetSelect =
       (document.getElementById("presetSelect") as HTMLSelectElement) ||
@@ -204,10 +204,10 @@ Error${e}`);
   }
 
   private getSelectedPreset(): string {
-    const presetName =
+    return (
       (document.getElementById("presetSelect") as HTMLSelectElement).value ||
-      _throw(new Error("'presetSelect' ID not found"));
-    return presetName;
+      _throw(new Error("'presetSelect' ID not found"))
+    );
   }
 
   private atInterval() {

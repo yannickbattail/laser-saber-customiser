@@ -61,7 +61,7 @@
     <script type="module">
       import { Gui } from "./dist/Gui.js";
       import { PresetRepository } from "./dist/PresetRepository.js";
-      import { BackendApi } from "./dist/BackendApi.js";
+      import { BackendApi } from "./dist/serverApi/BackendApi.js";
 
       window.gui = new Gui(new PresetRepository(), new BackendApi());
     </script>
