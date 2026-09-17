@@ -218,7 +218,11 @@ Error${e}`);
 
   private async applyChanges() {
     if (Date.now() - this.lastFormChanged > this.changeTimeout) {
-      await this.preview();
+      if ((document.getElementById("animate") as HTMLInputElement).checked) {
+        await this.animation();
+      } else {
+        await this.preview();
+      }
     }
   }
 }

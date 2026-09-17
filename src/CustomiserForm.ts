@@ -61,9 +61,8 @@ export class CustomiserForm {
     groupedFormParamKey: string,
     groupedFormParam: Record<string, (ParameterNumber | ParameterString | ParameterBoolean)[]>,
   ) {
-    let html = "<br>";
-    html += `
-<div id="group_${groupedFormParamKey}" class="toggleBlock">
+    return `
+<div id="group_${groupedFormParamKey}" class="toggleBlock parameterGroup">
   <div id="toggleTitle_${groupedFormParamKey}"  class="toggleShow" onclick="toggle(event)">${groupedFormParamKey}</div>
   <div>
     <table>
@@ -72,7 +71,6 @@ export class CustomiserForm {
   </div>
 </div>
 `;
-    return html;
   }
 
   private generateFormParam(

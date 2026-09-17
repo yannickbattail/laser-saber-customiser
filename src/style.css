@@ -67,6 +67,11 @@ fieldset {
   display: none;
 }
 
+.parameterGroup {
+  margin-bottom: 10px;
+}
+
+
 #preview {
   border-style: solid;
   border-width: 1px;
