@@ -11,26 +11,24 @@ export class PresetRepository implements IPresetRepository {
     return await this.db.getPresets();
   }
 
-  async DeletePreset(userId: string, presetName: string): Promise<void> {
-    const presets: UserPreset = await this.getUserPreset(userId);
-    delete presets.preset.parameterSets[presetName];
-    await this.db.save();
-  }
-
-  async savePreset(userId: string, presetName: string, preset: Record<string, string>): Promise<UserPreset> {
-    const presets: UserPreset = await this.getUserPreset(userId);
-    presets.preset.parameterSets[presetName] = preset;
-    await this.db.save();
-    return presets;
-  }
-
-  async getUserPreset(userId: string): Promise<UserPreset> {
+  async getPresets(userId: string): Promise<UserPreset> {
     const presetDbs = await this.db.getPresets();
     const preset = presetDbs.find((p) => p.userId === userId);
     if (preset) {
       return preset;
     }
     return await this.newUserPreset(userId);
+  }
+
+  async savePreset(
+    userId: string,
+    presetName: string,
+    preset: Record<string, string>,
+  ): Promise<Record<string, string>> {
+    const presets: UserPreset = await this.getPresets(userId);
+    presets.preset.parameterSets[presetName] = preset;
+    await this.db.save();
+    return preset;
   }
 
   private async newUserPreset(userId: string): Promise<UserPreset> {
@@ -48,5 +46,11 @@ export class PresetRepository implements IPresetRepository {
     presetDbs.push(newPreset);
     await this.db.save();
     return newPreset;
+  }
+
+  async deletePreset(userId: string, presetName: string): Promise<void> {
+    const presets: UserPreset = await this.getPresets(userId);
+    delete presets.preset.parameterSets[presetName];
+    await this.db.save();
   }
 }

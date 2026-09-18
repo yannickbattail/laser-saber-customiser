@@ -36,6 +36,9 @@
             <button onclick="gui.delPreset()">
               <img alt="delete preset" class="save" src="img/del.svg" title="delete preset" />
             </button>
+            <div>
+              <label><input type="checkbox" id="animate" name="animate" value="1" onchange="gui.formChanged()" />animate</label>
+            </div>
           </div>
         </td>
       </tr>
@@ -61,7 +64,7 @@
     <script type="module">
       import { Gui } from "./dist/Gui.js";
       import { PresetRepository } from "./dist/PresetRepository.js";
-      import { BackendApi } from "./dist/BackendApi.js";
+      import { BackendApi } from "./dist/serverApi/BackendApi.js";
 
       window.gui = new Gui(new PresetRepository(), new BackendApi());
     </script>

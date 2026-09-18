@@ -25,10 +25,10 @@ export class BackendApi implements IBackendApi {
   }
 
   async generatePreview(data: ParameterKV[]): Promise<OpenScadOutputWithSummary> {
-    return this.generateImage(data, "/api/openscad/animation");
+    return this.generateImage(data, "/api/openscad/preview");
   }
   async generateAnimation(data: ParameterKV[]): Promise<OpenScadOutputWithSummary> {
-    return this.generateImage(data, "/api/openscad/preview");
+    return this.generateImage(data, "/api/openscad/animation");
   }
 
   private async generateImage(data: ParameterKV[], url: string): Promise<OpenScadOutputWithSummary> {
