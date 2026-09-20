@@ -3,7 +3,7 @@ emitterType = "coneEmitter"; // [coneEmitter:cone emitter, armEmitter:arms emitt
 // type of handle
 handleType = "cylindersHandle"; // [ cylindersHandle:2 parts cylinders, ringsHandle:rings, spiralGripHandle:spiral grip, homeyCombHandle:homey comb, curveHandle:curved handle]
 // type of pommel
-pommelType = "pommelType1"; // [pommelType1, pommelType2, pommelType3]
+pommelType = "diamondPommel"; // [diamondPommel, diamondSpikePommel, ballSpikepommel, roundPomnel]
 
 
 /* [emitterType : coneEmitter] */
@@ -74,7 +74,7 @@ h5Curve = 1000;
 // handle diameter
 h5diameter = 29;
 
-/* [pommelType : pommelType1] */
+/* [pommelType : diamondPommel] */
 // base color
 p1baseColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // diamond base color
@@ -90,7 +90,7 @@ p1width = 18; // [5:1:60]
 // number of sides in the diamond
 p1sides = 6; // [3:1:12]
 
-/* [pommelType : pommelType2] */
+/* [pommelType : diamondSpikePommel] */
 // base color
 p2baseColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // diamond base color
@@ -108,7 +108,7 @@ p2SpikeColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white
 // length of spikes
 p2SpikeLength = 14; // [5:1:20]
 
-/* [pommelType : pommelType3] */
+/* [pommelType : ballSpikepommel] */
 // base color
 p3baseColor = "red"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // color of spikes
@@ -117,12 +117,12 @@ p3SpikeColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white
 p3sides = 6; // [3:1:12]
 
 /* [display] */
+// color of the blade
+bladeColor = "red"; // [red:red, Chartreuse:green, DodgerBlue:blue, yellow:yellow,  Magenta:purple, orange:orange, white:white]
 // ingnit, light up the blade
 ingnit = true;
 // show/display the blade
 showBlade = true;
-// color of the blade
-bladeColor = "red"; // [red:red, Chartreuse:green, DodgerBlue:blue, yellow:yellow,  Magenta:purple, orange:orange, white:white]
 // cut the saber in quarter to see the inside
 cutInQuarter = false;
 
@@ -208,7 +208,7 @@ module saber() {
             pommel();
         }
         if (cutInQuarter) {
-            translate([0, 0, -300])
+            translate([0, -50, -300])
                 cube([50, 50, 600], center = false);
         }
     }
@@ -441,11 +441,11 @@ module curveHandle(length) {
 module pommel() {
     difference() {
         translate([0, 0, -194]) {
-            if (pommelType == "pommelType1") {
+            if (pommelType == "diamondPommel") {
                 pommel1();
-            } else if (pommelType == "pommelType2") {
+            } else if (pommelType == "diamondSpikePommel") {
                 pommel2();
-            } else if (pommelType == "pommelType3") {
+            } else if (pommelType == "ballSpikepommel") {
                 pommel3();
             }
         }
