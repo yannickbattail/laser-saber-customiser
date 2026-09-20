@@ -3,7 +3,7 @@ emitterType = "coneEmitter"; // [coneEmitter:cone emitter, armEmitter:arms emitt
 // type of handle
 handleType = "cylindersHandle"; // [ cylindersHandle:2 parts cylinders, ringsHandle:rings, spiralGripHandle:spiral grip, homeyCombHandle:homey comb, curveHandle:curved handle]
 // type of pommel
-pommelType = "diamondPommel"; // [diamondPommel, diamondSpikePommel, ballSpikepommel, roundPomnel]
+pommelType = "diamondPommel"; // [diamondPommel, diamondSpikePommel, spherePommel, roundPomnel]
 
 
 /* [emitterType : coneEmitter] */
@@ -108,13 +108,23 @@ p2SpikeColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white
 // length of spikes
 p2SpikeLength = 14; // [5:1:20]
 
-/* [pommelType : ballSpikepommel] */
+/* [pommelType : spherePommel] */
+// type of ornament
+p3ornament = "rectangle"; // [none, rectangle, spike]
 // base color
-p3baseColor = "red"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
-// color of spikes
-p3SpikeColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
-// number of spikes
+p3baseColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// base color
+p3sphereColor = "red"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// color of ornament
+p3ornamentColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// number of ornament
 p3sides = 6; // [3:1:12]
+
+/* [pommelType : roundPomnel] */
+// base color
+p4baseColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// base color
+p4sphereColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 
 /* [display] */
 // color of the blade
@@ -445,8 +455,10 @@ module pommel() {
                 pommel1();
             } else if (pommelType == "diamondSpikePommel") {
                 pommel2();
-            } else if (pommelType == "ballSpikepommel") {
+            } else if (pommelType == "spherePommel") {
                 pommel3();
+            } else if (pommelType == "roundPomnel") {
+                pommel4();
             }
         }
         fundationHole();
@@ -500,21 +512,75 @@ module pommel2() {
 }
 
 module pommel3() {
-    translate([0, 0, -10])
-        color(p3baseColor)
-            sphere(18);
-    translate([0, 0, -14]) {
-        color(p3SpikeColor)
-            for (i = [0:p3sides]) {
-                rotate([0, 0, 360 / p3sides * i]) {
-                    translate([17, 0, 0])
-                        sphere(4);
-                    translate([18, 0, 0])
-                        rotate([0, 100, 0])
-                            cylinder(h = 6, d1 = 7, d2 = 0, center = false);
-                }
+  translate([0, 0, -8]) {
+    color(p3baseColor)
+      cylinder(h = 8, d = 33);
+  }
+  translate([0, 0, -20])
+    color(p3sphereColor)
+      sphere(18);
+  translate([0, 0, -24]) {
+    color(p3ornamentColor) {
+      if (p3ornament == "spike") {
+        for (i = [0:p3sides]) {
+          rotate([0, 0, 360 / p3sides * i]) {
+            translate([17, 0, 0])
+              sphere(4);
+            translate([18, 0, 0])
+              rotate([0, 100, 0])
+                cylinder(h = 6, d1 = 7, d2 = 0, center = false);
+          }
+        }
+      } else if (p3ornament == "rectangle") {
+        a = 360 / p3sides;
+        for (i = [0:p3sides]) {
+          rotate([0, 0, a * i]) {
+            difference() {
+              cylinder(r=21, h=8);
+              mmirror([1,0,0])
+                rotate([0, 0, a / 4+90])
+                  translate([-30, 0, -30])
+                    cube(60, center = false);
             }
+          }
+        }
+      }
     }
+  }
+}
+
+module pommel4() {
+  translate([0, 0, -8]) {
+    color(p4baseColor)
+      cylinder(h = 8, d = 33);
+  }
+  color(p4sphereColor) {
+    translate([0, 0, -38]) {
+      rotate_extrude() {
+        difference() {
+          union() {
+            circle(18);
+            translate([0, 18])
+              square([36, 24], center = true);
+          }
+          translate([38, 18])
+            circle(25);
+          // remove -x side for rotate_extrude
+          translate([-60, -18])
+            square(60);
+        }
+      }
+    }
+  }
+}
+
+/*
+same as mirror but duplicate children
+*/
+module mmirror(mat) {
+  children();
+  mirror(mat)
+    children();
 }
 
 module armHoles() {
