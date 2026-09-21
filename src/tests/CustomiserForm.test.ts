@@ -27,7 +27,7 @@ describe("CustomiserForm", () => {
     };
     const customiserForm = new CustomiserForm("", param);
     const html = await customiserForm.initForm({});
-    expect(html).toContain('<label for="testNumber">Test Number</label>');
+    expect(html).toContain('<label for="testNumber">Test number</label>');
     expect(html).toContain(
       '<input type="number" id="testNumber" name="testNumber" value="10" min="0" max="100" step="1" />',
     );
@@ -48,7 +48,7 @@ describe("CustomiserForm", () => {
     };
     const customiserForm = new CustomiserForm("", param);
     const html = await customiserForm.initForm({});
-    expect(html).toContain('<label for="testString">Test String</label>');
+    expect(html).toContain('<label for="testString">Test string</label>');
     expect(html).toContain('<input type="text" id="testString" name="testString" value="hello" maxlength="20" />');
   });
 
@@ -103,7 +103,7 @@ describe("CustomiserForm", () => {
     };
     const customiserForm = new CustomiserForm("", param);
     const html = await customiserForm.initForm({});
-    expect(html).toContain('<select id="testSelect" name="testSelect" >');
+    expect(html).toContain('<select id="testSelect" name="testSelect"  autocomplete="off">');
     expect(html).toContain('<option value="opt1" >Option 1</option>');
     expect(html).toContain('<option value="opt2" selected="selected">Option 2</option>');
   });
@@ -138,8 +138,8 @@ describe("CustomiserForm", () => {
     const html = await customiserForm.initForm({});
     expect(html).toContain('<div id="group_Group A"');
     expect(html).toContain('<div id="group_Group B"');
-    expect(html).toContain("Group A</div>");
-    expect(html).toContain("Group B</div>");
+    expect(html).toContain("Group a</div>");
+    expect(html).toContain("Group b</div>");
   });
 
   it("should exclude debug groups", async () => {
@@ -195,7 +195,7 @@ describe("CustomiserForm", () => {
     };
     const customiserForm = new CustomiserForm("", param);
     const html = await customiserForm.initForm({});
-    expect(html).toContain('<label for="testNoCaption">testNoCaption</label>');
+    expect(html).toContain('<label for="testNoCaption">Test no caption</label>');
   });
 
   it("should use Global as default group name", async () => {

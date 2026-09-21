@@ -1,6 +1,5 @@
-import { clone, groupBy } from "./utils.js";
+import { clone, groupBy, label } from "./utils.js";
 import {
-  ParameterBase,
   ParameterBoolean,
   ParameterDefinition,
   ParameterNumber,
@@ -63,7 +62,7 @@ export class CustomiserForm {
   ) {
     return `
 <div id="group_${groupedFormParamKey}" class="toggleBlock parameterGroup">
-  <div id="toggleTitle_${groupedFormParamKey}"  class="toggleShow" onclick="toggle(event)">${groupedFormParamKey}</div>
+  <div id="toggleTitle_${groupedFormParamKey}"  class="toggleShow" onclick="toggle(event)">${label(groupedFormParamKey)}</div>
   <div>
     <table>
       ${groupedFormParam[groupedFormParamKey].map((p) => this.generateFormParam(p, groupedFormParamKey === this.defaultGroup)).join("\n")}
@@ -74,6 +73,17 @@ export class CustomiserForm {
   }
 
   private generateFormParam(
+    p: ParameterNumber | ParameterString | ParameterBoolean | ParameterStringOption | ParameterNumberOption,
+    mainGroup: boolean,
+  ) {
+    return `
+<tr>
+  <td><label for="${p.name}">${label(p.caption ? p.caption : p.name)}</label></td>
+  <td>${this.generateFormParamLine(p, mainGroup)}</td>
+</tr>`;
+  }
+
+  private generateFormParamLine(
     p: ParameterNumber | ParameterString | ParameterBoolean | ParameterStringOption | ParameterNumberOption,
     mainGroup: boolean,
   ) {
@@ -90,44 +100,25 @@ export class CustomiserForm {
     }
   }
 
-  private generateLine(p: ParameterBase, inside: string) {
-    return `
-<tr>
-  <td><label for="${p.name}">${p.caption ? p.caption : p.name}</label></td>
-  <td>${inside}</td>
-</tr>`;
-  }
-
   private generateNumber(p: ParameterNumber) {
-    return this.generateLine(
-      p,
-      `<input type="number" id="${p.name}" name="${p.name}" value="${p.initial}" min="${p.min}" max="${p.max}" step="${p.step}" />`,
-    );
+    return `<input type="number" id="${p.name}" name="${p.name}" value="${p.initial}" min="${p.min}" max="${p.max}" step="${p.step}" />`;
   }
 
   private generateString(p: ParameterString) {
-    return this.generateLine(
-      p,
-      `<input type="text" id="${p.name}" name="${p.name}" value="${p.initial}" maxlength="${p.maxLength}" />`,
-    );
+    return `<input type="text" id="${p.name}" name="${p.name}" value="${p.initial}" maxlength="${p.maxLength}" />`;
   }
 
   private generateSelect(p: ParameterStringOption | ParameterNumberOption, mainGroup?: boolean) {
     const onChange = mainGroup ? `onchange="gui.changePart(this)"` : "";
-    return this.generateLine(
-      p,
-      `
+    return `
 <select id="${p.name}" name="${p.name}" ${onChange} autocomplete="off">
-    ${p.options?.map((o) => `<option value="${o.value}" ${o.value === p.initial ? 'selected="selected"' : ""}>${o.name}</option>`).join("\n")}
-</select>`,
-    );
+    ${p.options?.map((o) => `<option value="${o.value}" ${o.value === p.initial ? 'selected="selected"' : ""}>${label(o.name)}</option>`).join("\n")}
+</select>`;
   }
 
   private generateBoolean(p: ParameterBoolean) {
-    return this.generateLine(
-      p,
-      `<input type="radio" id="${p.name}" name="${p.name}" ${p.initial ? 'checked="checked"' : ""} value="true"/>✅
-       <input type="radio" id="${p.name}" name="${p.name}" ${p.initial ? "" : 'checked="checked"'} value="false"/>❌`,
-    );
+    return `
+    <input type="radio" id="${p.name}" name="${p.name}" ${p.initial ? 'checked="checked"' : ""} value="true"/>✅
+    <input type="radio" id="${p.name}" name="${p.name}" ${p.initial ? "" : 'checked="checked"'} value="false"/>❌`;
   }
 }

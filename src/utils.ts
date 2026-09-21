@@ -15,3 +15,15 @@ export const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>
     },
     {} as Record<K, T[]>,
   );
+
+export function label(str: string): string {
+  return toTitle(camelToHuman(str));
+}
+
+export function camelToHuman(str: string): string {
+  return str.replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase();
+}
+
+export function toTitle(str: string): string {
+  return str.length > 0 ? str[0].toUpperCase() + str.substr(1).toLowerCase() : str;
+}

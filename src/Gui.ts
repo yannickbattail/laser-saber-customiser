@@ -168,6 +168,7 @@ Error${e}`);
   }
 
   private async init() {
+    await this.setVersion();
     const formParam: OpenScadOutputWithParameterDefinition = await this.backend.getParameterDefinition();
     this.customiserForm = new CustomiserForm("lsc__form_", formParam.parameterDefinition);
     await this.initForm(await this.presetRepository.getPresetByName(this.getSelectedPreset()));
@@ -201,6 +202,13 @@ Error${e}`);
       }
       presetSelect.appendChild(option);
     });
+  }
+
+  private async setVersion() {
+    const version = (await (await fetch("/package.json")).json()) as {
+      version: string;
+    };
+    (document.getElementById("version") as HTMLSelectElement).innerText = version.version;
   }
 
   private getSelectedPreset(): string {

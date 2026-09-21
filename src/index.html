@@ -16,6 +16,7 @@
     </script>
   </head>
   <body class="dark">
+  <h2>Lightsaber customiser</h2>
     <table>
       <tr>
         <td>
@@ -37,7 +38,15 @@
               <img alt="delete preset" class="save" src="img/del.svg" title="delete preset" />
             </button>
             <div>
-              <label><input type="checkbox" id="animate" name="animate" value="1" onchange="gui.formChanged()" />animate</label>
+              <label
+                ><input
+                  type="checkbox"
+                  id="animate"
+                  name="animate"
+                  value="1"
+                  onchange="gui.formChanged()"
+                />animate</label
+              >
             </div>
           </div>
         </td>
@@ -47,7 +56,6 @@
           <div id="main"></div>
         </td>
         <td>
-          <!-- <button onclick="gui.animation()">Animate</button> -->
           <div id="preview">
             <img alt="no preview" class="previewImage loadingImage" src="img/saber_empty.webp" title="no preview" />
           </div>
@@ -69,5 +77,10 @@
       window.gui = new Gui(new PresetRepository(), new BackendApi());
     </script>
     <script src="lib/stl_viewer/stl_viewer.min.js"></script>
+  <div>
+    v<span id="version"></span>
+    <a href="https://github.com/yannickbattail/laser-saber-customiser/issues/new">Report a bug</a>.
+    <a href="https://github.com/yannickbattail/laser-saber-customiser">Sources on GitHub</a>
+  </div>
   </body>
 </html>
