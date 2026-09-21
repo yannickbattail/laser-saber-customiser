@@ -27,3 +27,11 @@ export function camelToHuman(str: string): string {
 export function toTitle(str: string): string {
   return str.length > 0 ? str[0].toUpperCase() + str.substr(1).toLowerCase() : str;
 }
+
+export function tryCatch(fct: { (): any; (): any }, message: string) {
+  try {
+    return fct();
+  } catch (e) {
+    console.error(message, e);
+  }
+}
