@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@types/lowdb": "^2.0.3",
-    "@types/node": "^26.5.1",
+    "@types/node": "^26.6.2",
     "ajv": "^8.20.0",
     "express": "^5.2.1",
     "lowdb": "^7.0.1",
@@ -42,13 +42,13 @@
     "@types/express": "^5.0.6",
     "@vitest/coverage-v8": "^4.1.9",
     "depcheck": "^1.4.7",
-    "eslint": "^10.10.0",
+    "eslint": "^10.11.0",
     "globals": "^17.12.0",
     "npm-check-updates": "^23.1.0",
-    "prettier": "^3.9.6",
+    "prettier": "^3.9.9",
     "stylelint": "^17.15.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.70.0",
+    "typescript-eslint": "^8.70.1",
     "vitest": "^4.1.9"
   }
 }
