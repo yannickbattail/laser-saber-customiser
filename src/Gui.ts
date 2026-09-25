@@ -2,13 +2,14 @@ import { OpenScadOutputWithParameterDefinition } from "openscad-cli-wrapper/dist
 import { NodeUpdate } from "./NodeUpdate.js";
 import { CustomiserForm } from "./CustomiserForm.js";
 import { IPresetRepository } from "./IPresetRepository.js";
-import { _throw } from "./utils.js";
+import { _throw, tryCatch } from "./utils.js";
 import { IBackendApi } from "./serverApi/IBackendApi.js";
 
 export class Gui {
   private lastFormChanged = 0;
   private changeTimeout = 2000;
   private customiserForm: CustomiserForm;
+  readonly PRESET_PARM_NAME: string = "p";
 
   constructor(
     private presetRepository: IPresetRepository,
@@ -48,34 +49,7 @@ export class Gui {
   }
 
   public async export() {
-    const preset = this.customiserForm.getFormData();
-    prompt("Copy it and save it", JSON.stringify(preset));
-  }
-
-  public async import() {
-    const presetStr = prompt("Paste your saved preset here", "{}");
-    const preset = this.parseGivenPreset(presetStr);
-    if (preset) {
-      console.log(preset);
-      await this.initForm(preset);
-      this.formChanged();
-    } else {
-      console.log("Nothing to import");
-    }
-  }
-
-  private parseGivenPreset(presetStr: string | null): Record<string, string> {
-    if (!presetStr) return {} as Record<string, string>;
-    try {
-      return JSON.parse(presetStr) as Record<string, string>;
-    } catch (e) {
-      alert(`Cannot use what you pasted here.
-
-Error${e}`);
-
-      console.warn(e);
-      return {} as Record<string, string>;
-    }
+    prompt("Copy it", window.location.href);
   }
 
   public async delPreset() {
@@ -171,7 +145,12 @@ Error${e}`);
     await this.setVersion();
     const formParam: OpenScadOutputWithParameterDefinition = await this.backend.getParameterDefinition();
     this.customiserForm = new CustomiserForm("lsc__form_", formParam.parameterDefinition);
-    await this.initForm(await this.presetRepository.getPresetByName(this.getSelectedPreset()));
+    const preset = await this.presetRepository.getPresetByName(this.getSelectedPreset());
+    const p = tryCatch(
+      () => JSON.parse(new URL(location.href).searchParams.get(this.PRESET_PARM_NAME) ?? "null"),
+      `error parsing URL param ?${this.PRESET_PARM_NAME}=...`,
+    );
+    await this.initForm(p ?? preset);
     this.formChanged();
     await this.initPresets(null);
   }
@@ -226,11 +205,19 @@ Error${e}`);
 
   private async applyChanges() {
     if (Date.now() - this.lastFormChanged > this.changeTimeout) {
+      this.updateUrl();
       if ((document.getElementById("animate") as HTMLInputElement).checked) {
         await this.animation();
       } else {
         await this.preview();
       }
     }
+  }
+
+  private updateUrl() {
+    const preset = JSON.stringify(this.customiserForm.getFormData());
+    const currentUrl = new URL(window.location.href);
+    currentUrl.search = `?${this.PRESET_PARM_NAME}=${preset}`;
+    window.history.pushState(preset, "", currentUrl.href);
   }
 }

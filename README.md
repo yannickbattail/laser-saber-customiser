@@ -1,5 +1,9 @@
 # Laser saber customiser
 
+Web page that allows you to build and customise your lightsaber.
+
+Test it [here](https://lightsaber.darthperious.top/).
+
 ## prod
 
 Run by docker
