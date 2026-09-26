@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 ### Added
+- set HTML metas to have preview in social media and chats
 ### Changed
 - change endpoint to directly output image or model
 ### Deprecated

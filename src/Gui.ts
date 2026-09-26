@@ -215,8 +215,25 @@ export class Gui {
 
   private updateUrl() {
     const preset = JSON.stringify(this.customiserForm.getFormData());
-    const currentUrl = new URL(window.location.href);
-    currentUrl.search = `?${this.PRESET_PARM_NAME}=${preset}`;
-    window.history.pushState(preset, "", currentUrl.href);
+    const newUrl = new URL(window.location.href);
+    newUrl.search = `?${this.PRESET_PARM_NAME}=${preset}`;
+    const imageUrl = new URL(window.location.href);
+    imageUrl.pathname = `/api/openscad/image.png`;
+    imageUrl.search = `?${this.PRESET_PARM_NAME}=${preset}`;
+    window.history.pushState(preset, "", newUrl.href);
+    this.updateMetas(newUrl.href, imageUrl.href);
+  }
+
+  private updateMetas(pageUri: string, imageUri: string) {
+    this.updateMetaProperty("og:url", pageUri);
+    this.updateMetaProperty("og:image", imageUri);
+    this.updateMetaName("twitter:image", imageUri);
+  }
+
+  private updateMetaProperty(property: string, content: string) {
+    (document.querySelector(`meta[property="${property}"]`) as HTMLMetaElement).content = content;
+  }
+  private updateMetaName(name: string, content: string) {
+    (document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement).content = content;
   }
 }
