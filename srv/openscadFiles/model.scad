@@ -123,7 +123,7 @@ p3sides = 6; // [3:1:12]
 /* [pommelType : roundPomnel] */
 // base color
 p4baseColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
-// base color
+// sphere color
 p4sphereColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 
 /* [display] */
@@ -154,6 +154,7 @@ animation_opening = false;
 debug = false;
 // add copyright
 addCopyright = true;
+// resolution
 $fn = 40;
 
 /* [Hidden] */
