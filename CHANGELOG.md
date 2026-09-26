@@ -4,10 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 ### Added
+- set HTML metas to have preview in social media and chats
 ### Changed
+- change endpoint to directly output image or model
 ### Deprecated
 ### Removed
 ### Fixed
+- generate image or model in a separate folder to prevent overriding the previous generation
 ### Security
 
 ## [1.0.1] - 2026-09-25

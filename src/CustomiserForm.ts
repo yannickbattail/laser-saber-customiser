@@ -7,7 +7,6 @@ import {
   ParameterString,
   ParameterStringOption,
 } from "openscad-cli-wrapper/dist/src/types/ParameterDefinition.js";
-import { ParameterKV } from "openscad-cli-wrapper/dist/src/types/ParameterSet.js";
 
 export class CustomiserForm {
   private defaultGroup = "Parameters";
@@ -41,13 +40,6 @@ export class CustomiserForm {
     const data: Record<string, string> = {};
     formData.forEach((value, key) => {
       data[key] = value.toString();
-    });
-    return data;
-  }
-  public toKV(formData: Record<string, string>): ParameterKV[] {
-    const data: ParameterKV[] = [];
-    Object.entries(formData).forEach((e) => {
-      data.push({ parameter: e[0], value: e[1] as string });
     });
     return data;
   }

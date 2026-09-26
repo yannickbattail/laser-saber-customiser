@@ -1,12 +1,5 @@
-import {
-  OpenScadOutputWithParameterDefinition,
-  OpenScadOutputWithSummary,
-} from "openscad-cli-wrapper/dist/src/types/OpenScadSummary";
-import { ParameterKV } from "openscad-cli-wrapper/dist/src/types/ParameterSet";
+import { ParameterDefinition } from "openscad-cli-wrapper/dist/src/types/ParameterDefinition.js";
 
 export interface IBackendApi {
-  getParameterDefinition(): Promise<OpenScadOutputWithParameterDefinition>;
-  generateModel(data: ParameterKV[]): Promise<OpenScadOutputWithSummary>;
-  generatePreview(data: ParameterKV[]): Promise<OpenScadOutputWithSummary>;
-  generateAnimation(data: ParameterKV[]): Promise<OpenScadOutputWithSummary>;
+  getParameterDefinition(): Promise<ParameterDefinition>;
 }
