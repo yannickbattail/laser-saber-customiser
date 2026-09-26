@@ -8,7 +8,4 @@ coverage
 /PresetRepository.js
 /IPresetRepository.js
 
-gen/*.json
-gen/*.webp
-gen/*.png
-gen/*.3mf
+gen/*

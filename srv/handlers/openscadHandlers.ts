@@ -1,49 +1,64 @@
+import path from "path";
 import { Request, Response } from "express";
-import { createFctExecCommand, Export3dFormat, GenerateAnimation, OpenScad, ParameterKV } from "openscad-cli-wrapper";
-import { IsParameterKvValid } from "../utils/validation.js";
-import { cleanGenFiles } from "../utils/cleanGenFiles.js";
-import { getDefaultOpenscadOptions } from "../utils/configuration.js";
-
-const options = getDefaultOpenscadOptions();
-const modelFile = options.fileName;
-const execOutput = createFctExecCommand(false, false);
-
-const cleanOldGenFiles = () => {
-  setTimeout(() => cleanGenFiles(options.outputDir), 1000);
-};
+import { OpenScadOutputWithSummary, ParameterKV } from "openscad-cli-wrapper";
+import {
+  cleanOldGenFiles,
+  generateAnimation,
+  generateImage,
+  generateModel,
+  getParameterDefinition,
+} from "../generate.js";
 
 export async function handleParameter(req: Request, res: Response): Promise<void> {
-  const openscad = new OpenScad(modelFile, options.outputDir, execOutput);
-  const param = await openscad.getParameterDefinition(options.openScadOptions);
+  const param = await getParameterDefinition();
   res.json(param);
   cleanOldGenFiles();
 }
 
-export async function handle3DModel(req: Request, res: Response): Promise<void> {
-  const input = IsParameterKvValid<ParameterKV[]>(req.body);
-  const openscad = new OpenScad(modelFile, options.outputDir, execOutput);
-  const param = await openscad.generateModel(input, Export3dFormat["3mf"], options.openScadOptions);
-  res.json(param);
+export async function handleModel3mf(req: Request, res: Response): Promise<void> {
+  return handleOutput(
+    req,
+    res,
+    async (input: ParameterKV[]): Promise<OpenScadOutputWithSummary> => await generateModel(input),
+  );
+}
+
+export async function handleImage(req: Request, res: Response): Promise<void> {
+  return handleOutput(
+    req,
+    res,
+    async (input: ParameterKV[]): Promise<OpenScadOutputWithSummary> => await generateImage(input),
+  );
+}
+
+export async function handleWebp(req: Request, res: Response): Promise<void> {
+  return handleOutput(
+    req,
+    res,
+    async (input: ParameterKV[]): Promise<OpenScadOutputWithSummary> => await generateAnimation(input),
+  );
+}
+
+async function handleOutput(
+  req: Request,
+  res: Response,
+  gen: (input: ParameterKV[]) => Promise<OpenScadOutputWithSummary>,
+) {
+  const input = IsValidParameter(req.query.p);
+  const param = await gen(input);
+  res.sendFile(path.join(process.cwd() + "/" + param.file));
   cleanOldGenFiles();
 }
 
-export async function handlePreview(req: Request, res: Response): Promise<void> {
-  const input = IsParameterKvValid<ParameterKV[]>(req.body);
-  const openscad = new OpenScad(modelFile, options.outputDir, execOutput);
-  const param = await openscad.generateImage(input, options.openScadOptions);
-  res.json(param);
-  cleanOldGenFiles();
+function IsValidParameter(query): ParameterKV[] {
+  const p = JSON.parse(query) as Record<string, string>;
+  return toKV(p);
 }
 
-export async function handleAnimation(req: Request, res: Response): Promise<void> {
-  const input = IsParameterKvValid<ParameterKV[]>(req.body);
-  input.push({
-    parameter: "animation_rotation",
-    value: "true",
+function toKV(formData: Record<string, string>): ParameterKV[] {
+  const data: ParameterKV[] = [];
+  Object.entries(formData).forEach((e) => {
+    data.push({ parameter: e[0], value: e[1] as string });
   });
-  const openscad = new OpenScad(modelFile, options.outputDir, execOutput);
-  let param = await openscad.generateAnimation(input, options.openScadOptions);
-  param = await GenerateAnimation(param, options.openScadOptions.animOptions.animDelay, execOutput);
-  res.json(param);
-  cleanOldGenFiles();
+  return data;
 }

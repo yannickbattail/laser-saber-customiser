@@ -1,4 +1,3 @@
-import { OpenScadOutputWithParameterDefinition } from "openscad-cli-wrapper/dist/src/types/OpenScadSummary.js";
 import { NodeUpdate } from "./NodeUpdate.js";
 import { CustomiserForm } from "./CustomiserForm.js";
 import { IPresetRepository } from "./IPresetRepository.js";
@@ -77,11 +76,12 @@ export class Gui {
         "preview",
         `<img class="previewImage loadingImage" src="img/loading.webp" alt="loading" title="loading" />`,
       );
-      const data = this.customiserForm.toKV(this.customiserForm.getFormData());
-      const out = await this.backend.generateModel(data);
+      const data = this.customiserForm.getFormData();
       const divPreview = document.getElementById("preview");
       if (divPreview) divPreview.innerHTML = "";
-      const uri = `../../${out.file.replace("./src/", "/")}?t=${new Date().getTime()}`;
+
+      const endpoint = "/api/openscad/model.3mf";
+      const uri = `${endpoint}?${this.PRESET_PARM_NAME}=${encodeURIComponent(JSON.stringify(data))}`;
       NodeUpdate.updateElement(
         "preview",
         `
@@ -118,10 +118,9 @@ export class Gui {
         "preview",
         `<img class="previewImage loadingImage" src="img/loading.webp" alt="loading" title="loading" />`,
       );
-      const data = this.customiserForm.toKV(this.customiserForm.getFormData());
-      const outputSummary = await (type === "preview"
-        ? this.backend.generatePreview(data)
-        : this.backend.generateAnimation(data));
+      const data = this.customiserForm.getFormData();
+      const endpoint = type === "preview" ? "/api/openscad/image.png" : "/api/openscad/animation.webp";
+      const url = `${endpoint}?${this.PRESET_PARM_NAME}=${encodeURIComponent(JSON.stringify(data))}`;
       NodeUpdate.updateElement(
         "preview",
         `
@@ -130,7 +129,7 @@ export class Gui {
             <img src="img/3D.svg" alt="display in 3D" title="display in 3D"/>
         </button>
     </div>
-    <img src="${outputSummary.file.replace("./src/", "/")}?t=${new Date().getTime()}" alt="${type}" title="${type}" />`,
+    <img src="${url}" alt="${type}" title="${type}" />`,
       );
     } catch (e) {
       console.error(e);
@@ -143,8 +142,8 @@ export class Gui {
 
   private async init() {
     await this.setVersion();
-    const formParam: OpenScadOutputWithParameterDefinition = await this.backend.getParameterDefinition();
-    this.customiserForm = new CustomiserForm("lsc__form_", formParam.parameterDefinition);
+    const formParam = await this.backend.getParameterDefinition();
+    this.customiserForm = new CustomiserForm("lsc__form_", formParam);
     const preset = await this.presetRepository.getPresetByName(this.getSelectedPreset());
     const p = tryCatch(
       () => JSON.parse(new URL(location.href).searchParams.get(this.PRESET_PARM_NAME) ?? "null"),

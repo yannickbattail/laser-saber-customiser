@@ -14,10 +14,21 @@ export function cleanGenFiles(directory = "../src/gen", retentionTime: number = 
         const fileAge = now - stats.mtimeMs;
 
         if (fileAge > retentionTime) {
-          fs.unlink(filePath, (err) => {
-            if (err) throw err;
-            console.log(`Deleted: ${filePath}`);
-          });
+          try {
+            if (stats.isDirectory()) {
+              fs.rm(filePath, { recursive: true, force: true }, (err) => {
+                if (err) console.log(`Error deleting dir: ${filePath}`, err);
+                console.log(`Deleted: ${filePath}`);
+              });
+            } else {
+              fs.unlink(filePath, (err) => {
+                if (err) console.log(`Error deleting file: ${filePath}`, err);
+                console.log(`Deleted: ${filePath}`);
+              });
+            }
+          } catch (e) {
+            console.log(`Error deleting: ${filePath}`, e);
+          }
         }
       });
     });
