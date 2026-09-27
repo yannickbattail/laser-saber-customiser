@@ -10,6 +10,16 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 ### Security
 
+## [1.0.3] - 2026-09-28
+### Added
+### Changed
+- do not export form values of hidden fields
+- hide from groups that are not used
+### Deprecated
+### Removed
+### Fixed
+### Security
+
 ## [1.0.2] - 2026-09-27
 ### Added
 - set HTML metas to have preview in social media and chats
