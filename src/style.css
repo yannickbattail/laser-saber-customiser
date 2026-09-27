@@ -28,6 +28,14 @@ fieldset {
   margin: 10px;
 }
 
+.show {
+  display: block;
+}
+
+.hide {
+  display: none;
+}
+
 .toggleBlock {
   border-style: solid;
   border-width: 1px;

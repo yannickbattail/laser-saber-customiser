@@ -93,7 +93,9 @@
       import { Gui } from "./dist/Gui.js";
       import { PresetRepository } from "./dist/PresetRepository.js";
       import { BackendApi } from "./dist/serverApi/BackendApi.js";
+      import { CustomiserForm } from "./dist/CustomiserForm.js";
 
+      window.CustomiserForm = CustomiserForm;
       window.gui = new Gui(new PresetRepository(), new BackendApi());
     </script>
     <script src="lib/stl_viewer/stl_viewer.min.js"></script>
