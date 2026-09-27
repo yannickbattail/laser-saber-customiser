@@ -10,13 +10,14 @@ import {
 
 export class CustomiserForm {
   private defaultGroup = "Parameters";
+  private readonly formId = "lsc__form_";
 
   public constructor(
-    private id: string,
+    private parentId: string,
     private param: ParameterDefinition,
   ) {}
 
-  public async initForm(formValue: Record<string, string> | null): Promise<string> {
+  public buildForm(formValue: Record<string, string> | null) {
     const formParam = clone(this.param);
     this.setValues(formParam, formValue ?? {});
     const groupedFormParam = groupBy(formParam.parameters, (p) => p.group ?? "Global");
@@ -26,20 +27,28 @@ export class CustomiserForm {
         html += this.displayGroup(groupedFormParamKey, groupedFormParam);
       }
     }
-    return `
-<div>
-  <form id="${this.id}" onchange="gui.formChanged()">
-    ${html}
-  </form>
-</div>`;
+    const formHtml = `
+      <div>
+        <form id="${this.formId}" onchange="gui.formChanged()">
+          ${html}
+        </form>
+      </div>`;
+    const parent = document.getElementById(this.parentId) as HTMLElement;
+    parent.innerHTML = formHtml;
+    CustomiserForm.changePart(document.getElementById("emitterType") as HTMLSelectElement);
+    CustomiserForm.changePart(document.getElementById("handleType") as HTMLSelectElement);
+    CustomiserForm.changePart(document.getElementById("pommelType") as HTMLSelectElement);
+    return formHtml;
   }
 
   public getFormData(): Record<string, string> {
-    const form = document.getElementById(this.id) as HTMLFormElement;
+    const form = document.getElementById(this.formId) as HTMLFormElement;
     const formData = new FormData(form);
     const data: Record<string, string> = {};
     formData.forEach((value, key) => {
-      data[key] = value.toString();
+      if ((document.getElementById(key) as HTMLElement).checkVisibility()) {
+        data[key] = value.toString();
+      }
     });
     return data;
   }
@@ -101,7 +110,7 @@ export class CustomiserForm {
   }
 
   private generateSelect(p: ParameterStringOption | ParameterNumberOption, mainGroup?: boolean) {
-    const onChange = mainGroup ? `onchange="gui.changePart(this)"` : "";
+    const onChange = mainGroup ? `onchange="CustomiserForm.changePart(this)"` : "";
     return `
 <select id="${p.name}" name="${p.name}" ${onChange} autocomplete="off">
     ${p.options?.map((o) => `<option value="${o.value}" ${o.value === p.initial ? 'selected="selected"' : ""}>${label(o.name)}</option>`).join("\n")}
@@ -112,5 +121,16 @@ export class CustomiserForm {
     return `
     <input type="radio" id="${p.name}" name="${p.name}" ${p.initial ? 'checked="checked"' : ""} value="true"/>✅
     <input type="radio" id="${p.name}" name="${p.name}" ${p.initial ? "" : 'checked="checked"'} value="false"/>❌`;
+  }
+
+  public static changePart(me: HTMLSelectElement | null) {
+    if (!me) return;
+    const group = `${me.id} : ${me.value}`;
+    document.querySelectorAll(`[id^="group_${me.id} : "]`).forEach((e) => {
+      e.classList.add("hide");
+      e.classList.remove("show");
+    });
+    document.getElementById(`group_${group}`)?.classList?.add("show");
+    document.getElementById(`group_${group}`)?.classList?.remove("hide");
   }
 }

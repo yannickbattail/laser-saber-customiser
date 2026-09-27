@@ -1,12 +1,33 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CustomiserForm } from "../CustomiserForm";
 import { ParameterDefinition, ParameterStringOption } from "openscad-cli-wrapper/dist/src/types/ParameterDefinition.js";
 
 describe("CustomiserForm", () => {
+  let parent: { innerHTML: string };
+
+  beforeEach(() => {
+    parent = { innerHTML: "" };
+    vi.stubGlobal("document", {
+      getElementById: vi.fn((id: string) => (id === "form1" || id === "" ? parent : null)),
+      querySelectorAll: vi.fn(() => []),
+    });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("should render the form into the parent element", async () => {
+    const customiserForm = new CustomiserForm("form1", { title: "", parameters: [] });
+    const html = customiserForm.buildForm(null);
+    expect(document.getElementById).toHaveBeenCalledWith("form1");
+    expect(parent.innerHTML).toBe(html);
+  });
+
   it("should generate a form with basic structure", async () => {
     const customiserForm = new CustomiserForm("form1", { title: "", parameters: [] });
-    const html = await customiserForm.initForm(null);
-    expect(html).toContain('<form id="form1" onchange="gui.formChanged()">');
+    const html = customiserForm.buildForm(null);
+    expect(html).toContain('<form id="lsc__form_" onchange="gui.formChanged()">');
     expect(html).toContain("</form>");
   });
 
@@ -26,7 +47,7 @@ describe("CustomiserForm", () => {
       ],
     };
     const customiserForm = new CustomiserForm("", param);
-    const html = await customiserForm.initForm({});
+    const html = customiserForm.buildForm({});
     expect(html).toContain('<label for="testNumber">Test number</label>');
     expect(html).toContain(
       '<input type="number" id="testNumber" name="testNumber" value="10" min="0" max="100" step="1" />',
@@ -47,7 +68,7 @@ describe("CustomiserForm", () => {
       ],
     };
     const customiserForm = new CustomiserForm("", param);
-    const html = await customiserForm.initForm({});
+    const html = await customiserForm.buildForm({});
     expect(html).toContain('<label for="testString">Test string</label>');
     expect(html).toContain('<input type="text" id="testString" name="testString" value="hello" maxlength="20" />');
   });
@@ -64,7 +85,7 @@ describe("CustomiserForm", () => {
       ],
     };
     const customiserForm = new CustomiserForm("", param);
-    const html = await customiserForm.initForm({});
+    const html = await customiserForm.buildForm({});
     expect(html).toContain('type="radio" id="testBoolean" name="testBoolean" checked="checked" value="true"');
     expect(html).toContain('type="radio" id="testBoolean" name="testBoolean"  value="false"');
   });
@@ -81,7 +102,7 @@ describe("CustomiserForm", () => {
       ],
     };
     const customiserForm = new CustomiserForm("", param);
-    const html = await customiserForm.initForm({});
+    const html = await customiserForm.buildForm({});
     expect(html).toContain('type="radio" id="testBoolean" name="testBoolean"  value="true"');
     expect(html).toContain('type="radio" id="testBoolean" name="testBoolean" checked="checked" value="false"');
   });
@@ -102,7 +123,7 @@ describe("CustomiserForm", () => {
       ],
     };
     const customiserForm = new CustomiserForm("", param);
-    const html = await customiserForm.initForm({});
+    const html = await customiserForm.buildForm({});
     expect(html).toContain('<select id="testSelect" name="testSelect"  autocomplete="off">');
     expect(html).toContain('<option value="opt1" >Option 1</option>');
     expect(html).toContain('<option value="opt2" selected="selected">Option 2</option>');
@@ -122,8 +143,8 @@ describe("CustomiserForm", () => {
       ],
     };
     const customiserForm = new CustomiserForm("", param);
-    const html = await customiserForm.initForm({});
-    expect(html).toContain('onchange="gui.changePart(this)"');
+    const html = await customiserForm.buildForm({});
+    expect(html).toContain('onchange="CustomiserForm.changePart(this)"');
   });
 
   it("should group parameters", async () => {
@@ -135,7 +156,7 @@ describe("CustomiserForm", () => {
       ],
     };
     const customiserForm = new CustomiserForm("", param);
-    const html = await customiserForm.initForm({});
+    const html = await customiserForm.buildForm({});
     expect(html).toContain('<div id="group_Group A"');
     expect(html).toContain('<div id="group_Group B"');
     expect(html).toContain("Group a</div>");
@@ -151,7 +172,7 @@ describe("CustomiserForm", () => {
       ],
     };
     const customiserForm = new CustomiserForm("", param);
-    const html = await customiserForm.initForm({});
+    const html = await customiserForm.buildForm({});
     expect(html).not.toContain("group_debug_info");
     expect(html).toContain("group_Normal");
   });
@@ -163,7 +184,7 @@ describe("CustomiserForm", () => {
     };
     const formValue = { p1: "custom" };
     const customiserForm = new CustomiserForm("", param);
-    const html = await customiserForm.initForm(formValue);
+    const html = await customiserForm.buildForm(formValue);
     expect(html).toContain('value="custom"');
   });
 
@@ -177,7 +198,7 @@ describe("CustomiserForm", () => {
     };
     const formValue = { p1: "custom1" };
     const customiserForm = new CustomiserForm("", param);
-    const html = await customiserForm.initForm(formValue);
+    const html = await customiserForm.buildForm(formValue);
     expect(html).toContain('name="p1" value="custom1"');
     expect(html).toContain('name="p2" value="default2"');
   });
@@ -194,7 +215,7 @@ describe("CustomiserForm", () => {
       ],
     };
     const customiserForm = new CustomiserForm("", param);
-    const html = await customiserForm.initForm({});
+    const html = await customiserForm.buildForm({});
     expect(html).toContain('<label for="testNoCaption">Test no caption</label>');
   });
 
@@ -210,7 +231,7 @@ describe("CustomiserForm", () => {
       ],
     };
     const customiserForm = new CustomiserForm("", param);
-    const html = await customiserForm.initForm({});
+    const html = await customiserForm.buildForm({});
     expect(html).toContain('<div id="group_Global"');
   });
 });

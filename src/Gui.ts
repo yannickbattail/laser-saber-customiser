@@ -26,17 +26,6 @@ export class Gui {
     window.setTimeout(() => this.applyChanges(), this.changeTimeout + 50);
   }
 
-  public changePart(me: HTMLSelectElement | null) {
-    if (!me) return;
-    const group = `${me.id} : ${me.value}`;
-    document.querySelectorAll(`[id^="toggleTitle_${me.id} : "]`).forEach((e) => {
-      e.classList.add("toggleHide");
-      e.classList.remove("toggleShow");
-    });
-    document.getElementById(`toggleTitle_${group}`)?.classList?.add("toggleShow");
-    document.getElementById(`toggleTitle_${group}`)?.classList?.remove("toggleHide");
-  }
-
   public async savePreset() {
     const parameterSetName = window.prompt("Enter preset name");
     if (parameterSetName) {
@@ -143,7 +132,7 @@ export class Gui {
   private async init() {
     await this.setVersion();
     const formParam = await this.backend.getParameterDefinition();
-    this.customiserForm = new CustomiserForm("lsc__form_", formParam);
+    this.customiserForm = new CustomiserForm("main", formParam);
     const preset = await this.presetRepository.getPresetByName(this.getSelectedPreset());
     const p = tryCatch(
       () => JSON.parse(new URL(location.href).searchParams.get(this.PRESET_PARM_NAME) ?? "null"),
@@ -155,10 +144,7 @@ export class Gui {
   }
 
   private async initForm(selectedPreset: Record<string, string> | null) {
-    NodeUpdate.updateElement("main", await this.customiserForm.initForm(selectedPreset));
-    this.changePart(document.getElementById("emitterType") as HTMLSelectElement);
-    this.changePart(document.getElementById("handleType") as HTMLSelectElement);
-    this.changePart(document.getElementById("pommelType") as HTMLSelectElement);
+    await this.customiserForm.buildForm(selectedPreset);
   }
 
   private async initPresets(selectedPreset: string | null) {
