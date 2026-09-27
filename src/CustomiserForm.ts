@@ -27,13 +27,13 @@ export class CustomiserForm {
         html += this.displayGroup(groupedFormParamKey, groupedFormParam);
       }
     }
-    const parent = document.getElementById(this.parentId) as HTMLElement;
     const formHtml = `
       <div>
         <form id="${this.formId}" onchange="gui.formChanged()">
           ${html}
         </form>
       </div>`;
+    const parent = document.getElementById(this.parentId) as HTMLElement;
     parent.innerHTML = formHtml;
     CustomiserForm.changePart(document.getElementById("emitterType") as HTMLSelectElement);
     CustomiserForm.changePart(document.getElementById("handleType") as HTMLSelectElement);
@@ -46,7 +46,9 @@ export class CustomiserForm {
     const formData = new FormData(form);
     const data: Record<string, string> = {};
     formData.forEach((value, key) => {
-      data[key] = value.toString();
+      if ((document.getElementById(key) as HTMLElement).checkVisibility()) {
+        data[key] = value.toString();
+      }
     });
     return data;
   }

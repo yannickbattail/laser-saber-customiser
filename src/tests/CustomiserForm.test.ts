@@ -1,12 +1,33 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CustomiserForm } from "../CustomiserForm";
 import { ParameterDefinition, ParameterStringOption } from "openscad-cli-wrapper/dist/src/types/ParameterDefinition.js";
 
 describe("CustomiserForm", () => {
+  let parent: { innerHTML: string };
+
+  beforeEach(() => {
+    parent = { innerHTML: "" };
+    vi.stubGlobal("document", {
+      getElementById: vi.fn((id: string) => (id === "form1" || id === "" ? parent : null)),
+      querySelectorAll: vi.fn(() => []),
+    });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("should render the form into the parent element", async () => {
+    const customiserForm = new CustomiserForm("form1", { title: "", parameters: [] });
+    const html = customiserForm.buildForm(null);
+    expect(document.getElementById).toHaveBeenCalledWith("form1");
+    expect(parent.innerHTML).toBe(html);
+  });
+
   it("should generate a form with basic structure", async () => {
     const customiserForm = new CustomiserForm("form1", { title: "", parameters: [] });
     const html = customiserForm.buildForm(null);
-    expect(html).toContain('<form id="form1" onchange="gui.formChanged()">');
+    expect(html).toContain('<form id="lsc__form_" onchange="gui.formChanged()">');
     expect(html).toContain("</form>");
   });
 
@@ -123,7 +144,7 @@ describe("CustomiserForm", () => {
     };
     const customiserForm = new CustomiserForm("", param);
     const html = await customiserForm.buildForm({});
-    expect(html).toContain('onchange="gui.changePart(this)"');
+    expect(html).toContain('onchange="CustomiserForm.changePart(this)"');
   });
 
   it("should group parameters", async () => {
