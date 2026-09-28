@@ -26,6 +26,13 @@
     <!-- Optional: your site's canonical URL -->
     <link rel="canonical" href="https://lightsaber.darthperious.top/" />
 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+
     <link href="img/icon.png" rel="icon" type="image/png" />
     <link href="style.css" rel="stylesheet" />
     <title>Lightsaber customiser</title>
@@ -39,49 +46,166 @@
     </script>
   </head>
   <body class="dark">
-    <h2>Lightsaber customiser</h2>
-    <table>
-      <tr>
-        <td>
-          <div>
-            <label for="presetSelect">My sabers</label>
-            <select id="presetSelect" name="presetSelect" onchange="gui.changePreset()">
-              <option value="&lt;Default&gt;">&lt;Default&gt;</option>
-            </select>
-            <button onclick="gui.savePreset()">
-              <img alt="save preset" class="save" src="img/save.svg" title="save preset" />
-            </button>
-            <button onclick="gui.export()">
-              <img alt="export preset" class="save" src="img/export.svg" title="export preset" />
-            </button>
-            <button onclick="gui.delPreset()">
-              <img alt="delete preset" class="save" src="img/del.svg" title="delete preset" />
-            </button>
-            <div>
-              <label
-                ><input
-                  type="checkbox"
-                  id="animate"
-                  name="animate"
-                  value="1"
-                  onchange="gui.formChanged()"
-                />animate</label
-              >
+    <!-- Ambient Sci-Fi Background -->
+    <div class="cyber-grid-bg" aria-hidden="true"></div>
+
+    <div class="terminal-shell">
+      <!-- HUD Top Header -->
+      <header class="hud-header">
+        <div class="hud-brand">
+          <div class="hud-logo-icon" aria-hidden="true">
+            <span class="pulse-indicator"></span>
+          </div>
+          <div class="hud-title-wrap">
+            <h1 class="hud-title">LIGHTSABER <span class="highlight">CUSTOMISER</span></h1>
+            <span class="hud-subtitle">TACTICAL KYBER CAD // FORGE TERMINAL</span>
+          </div>
+        </div>
+        <div class="hud-telemetry" aria-label="System status">
+          <div class="telemetry-item">
+            <span class="telemetry-label">CORE SYS</span>
+            <span class="telemetry-value text-success">ONLINE</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">KYBER MATRIX</span>
+            <span class="telemetry-value text-accent">ACTIVE</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">TERMINAL</span>
+            <span class="telemetry-value">v<span id="version"></span></span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Workspace Grid -->
+      <main class="terminal-workspace">
+        <!-- Configuration Column -->
+        <div class="workspace-column config-column">
+          <!-- Preset Control Deck -->
+          <section class="hud-card preset-deck" aria-label="Preset Controls">
+            <div class="card-header">
+              <span class="header-tag">[SYS.00] PRESET MANAGEMENT</span>
+              <h2 class="card-title">CONFIGURATION PROFILE</h2>
             </div>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <div id="main"></div>
-        </td>
-        <td>
-          <div id="preview">
-            <img alt="no preview" class="previewImage loadingImage" src="img/saber_empty.webp" title="no preview" />
-          </div>
-        </td>
-      </tr>
-    </table>
+            <div class="preset-controls-row">
+              <div class="preset-select-wrapper">
+                <label for="presetSelect" class="hud-label">MY SABERS</label>
+                <div class="custom-select-container">
+                  <select id="presetSelect" name="presetSelect" onchange="gui.changePreset()">
+                    <option value="&lt;Default&gt;">&lt;Default&gt;</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="preset-action-group">
+                <button
+                  type="button"
+                  class="hud-btn hud-btn-save"
+                  onclick="gui.savePreset()"
+                  title="Save preset"
+                  aria-label="Save preset"
+                >
+                  <img alt="save preset" class="save" src="img/save.svg" />
+                  <span class="btn-text">SAVE</span>
+                </button>
+                <button
+                  type="button"
+                  class="hud-btn hud-btn-export"
+                  onclick="gui.export()"
+                  title="Export preset"
+                  aria-label="Export preset"
+                >
+                  <img alt="export preset" class="save" src="img/export.svg" />
+                  <span class="btn-text">SHARE</span>
+                </button>
+                <button
+                  type="button"
+                  class="hud-btn hud-btn-delete"
+                  onclick="gui.delPreset()"
+                  title="Delete preset"
+                  aria-label="Delete preset"
+                >
+                  <img alt="delete preset" class="save" src="img/del.svg" />
+                  <span class="btn-text">DELETE</span>
+                </button>
+              </div>
+
+              <div class="animate-toggle-wrapper">
+                <label class="hud-toggle-label" for="animate">
+                  <input type="checkbox" id="animate" name="animate" value="1" onchange="gui.formChanged()" />
+                  <span class="toggle-custom" aria-hidden="true"></span>
+                  <span class="toggle-text">ANIMATE</span>
+                </label>
+              </div>
+            </div>
+          </section>
+
+          <!-- Dynamic Parameter Form Section -->
+          <section class="hud-card params-deck" aria-label="Subsystems Configuration">
+            <div class="card-header">
+              <span class="header-tag">[SYS.01] COMPONENT SPECIFICATIONS</span>
+              <h2 class="card-title">SUB-SYSTEM TUNING</h2>
+            </div>
+            <div id="main" class="form-container"></div>
+          </section>
+        </div>
+
+        <!-- Preview Column -->
+        <div class="workspace-column preview-column">
+          <section class="hud-card preview-deck" aria-label="Holographic Saber Chamber">
+            <div class="card-header">
+              <span class="header-tag">[OPTIC.02] REAL-TIME HOLO-RENDER</span>
+              <h2 class="card-title">SABER PROJECTION CHAMBER</h2>
+            </div>
+
+            <div class="holo-chamber">
+              <!-- Hologram framing & decorative reticles -->
+              <div class="chamber-reticle reticle-tl" aria-hidden="true"></div>
+              <div class="chamber-reticle reticle-tr" aria-hidden="true"></div>
+              <div class="chamber-reticle reticle-bl" aria-hidden="true"></div>
+              <div class="chamber-reticle reticle-br" aria-hidden="true"></div>
+              <div class="chamber-scanline" aria-hidden="true"></div>
+
+              <div class="chamber-telemetry top-telemetry" aria-hidden="true">
+                <span>FREQ: 1.42 THz</span>
+                <span>EMITTER: CALIBRATED</span>
+              </div>
+
+              <!-- Preview target container -->
+              <div id="preview">
+                <img alt="no preview" class="previewImage loadingImage" src="img/saber_empty.webp" title="no preview" />
+              </div>
+
+              <div class="chamber-telemetry bottom-telemetry" aria-hidden="true">
+                <span>ALIGNMENT: 0.001mm</span>
+                <span>STATUS: READY</span>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <!-- HUD Footer -->
+      <footer class="hud-footer">
+        <div class="footer-status">
+          <span class="status-indicator"></span>
+          <span>SYSTEM READY // CAD KERNEL ONLINE</span>
+        </div>
+        <div class="footer-links">
+          <a
+            href="https://github.com/yannickbattail/laser-saber-customiser/issues/new"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Report a bug</a
+          >
+          <span class="footer-sep" aria-hidden="true">//</span>
+          <a href="https://github.com/yannickbattail/laser-saber-customiser" target="_blank" rel="noopener noreferrer"
+            >Sources on GitHub</a
+          >
+        </div>
+      </footer>
+    </div>
+
     <script>
       function toggle(event) {
         const element = event.target;
@@ -99,10 +223,5 @@
       window.gui = new Gui(new PresetRepository(), new BackendApi());
     </script>
     <script src="lib/stl_viewer/stl_viewer.min.js"></script>
-    <div>
-      v<span id="version"></span>
-      <a href="https://github.com/yannickbattail/laser-saber-customiser/issues/new">Report a bug</a>.
-      <a href="https://github.com/yannickbattail/laser-saber-customiser">Sources on GitHub</a>
-    </div>
   </body>
 </html>
