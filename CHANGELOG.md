@@ -10,6 +10,15 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 ### Security
 
+## [1.0.4] - 2026-09-29
+### Added
+### Changed
+- new design
+### Deprecated
+### Removed
+### Fixed
+### Security
+
 ## [1.0.3] - 2026-09-28
 ### Added
 ### Changed
