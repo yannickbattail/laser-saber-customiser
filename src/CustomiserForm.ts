@@ -50,6 +50,13 @@ export class CustomiserForm {
         data[key] = value.toString();
       }
     });
+    const checkboxes = form.querySelectorAll('input[type="checkbox"]') as NodeListOf<HTMLInputElement>;
+    checkboxes.forEach((cb) => {
+      const key = cb.name;
+      if (!data[key] && cb.checkVisibility()) {
+        data[key] = cb.checked ? "true" : "false";
+      }
+    });
     return data;
   }
 
@@ -118,9 +125,13 @@ export class CustomiserForm {
   }
 
   private generateBoolean(p: ParameterBoolean) {
+    const checked = p.initial ? 'checked="checked"' : "";
     return `
-    <input type="radio" id="${p.name}" name="${p.name}" ${p.initial ? 'checked="checked"' : ""} value="true"/>✅
-    <input type="radio" id="${p.name}" name="${p.name}" ${p.initial ? "" : 'checked="checked"'} value="false"/>❌`;
+    <label class="hud-toggle-label" for="${p.name}">
+      <input type="checkbox" id="${p.name}" name="${p.name}" ${checked} value="1" onchange="gui.formChanged()" />
+      <span class="toggle-custom" aria-hidden="true"></span>
+      <span class="toggle-text"></span>
+    </label>`;
   }
 
   public static changePart(me: HTMLSelectElement | null) {
