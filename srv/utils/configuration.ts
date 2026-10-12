@@ -138,6 +138,7 @@ export function getDefaultOpenscadOptions(): GenerateOptions {
         discretization_by_error: false,
         vector_swizzle: true,
         ai_features: false,
+        unicode_identifiers: false,
         python_engine: false,
       },
     },

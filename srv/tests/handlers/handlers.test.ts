@@ -5,9 +5,9 @@ const {
   mockGetParameterDefinition,
   mockGenerateModel,
   mockGenerateImage,
-  mockGenerateAnimation,
-  mockGenerateAnimationFn,
-  mockCreateFctExecCommand,
+  mockGenerateWebpAnimation,
+  mockGenerateWebpAnimationFn,
+  mockCreateExecutor,
   mockCleanGenFiles,
   mockExistsSync,
   mockMkdirSync,
@@ -15,9 +15,9 @@ const {
   mockGetParameterDefinition: vi.fn().mockResolvedValue({ parameterDefinition: { params: "definition" } }),
   mockGenerateModel: vi.fn().mockReturnValue({ file: "model.3mf" }),
   mockGenerateImage: vi.fn().mockReturnValue({ file: "image.png" }),
-  mockGenerateAnimation: vi.fn().mockResolvedValue({ file: "anim.png" }),
-  mockGenerateAnimationFn: vi.fn().mockResolvedValue({ file: "anim.gif" }),
-  mockCreateFctExecCommand: vi.fn().mockReturnValue("execOutput"),
+  mockGenerateWebpAnimation: vi.fn().mockResolvedValue({ file: "anim.png" }),
+  mockGenerateWebpAnimationFn: vi.fn().mockResolvedValue({ file: "anim.gif" }),
+  mockCreateExecutor: vi.fn().mockReturnValue("execOutput"),
   mockCleanGenFiles: vi.fn(),
   mockExistsSync: vi.fn().mockReturnValue(false),
   mockMkdirSync: vi.fn(),
@@ -34,13 +34,13 @@ vi.mock("openscad-cli-wrapper", () => {
       getParameterDefinition: mockGetParameterDefinition,
       generateModel: mockGenerateModel,
       generateImage: mockGenerateImage,
-      generateAnimation: mockGenerateAnimation,
+      generateAnimation: mockGenerateWebpAnimation,
     };
   });
   return {
     OpenScad: MockOpenScad,
-    createFctExecCommand: mockCreateFctExecCommand,
-    GenerateAnimation: mockGenerateAnimationFn,
+    createExecutor: mockCreateExecutor,
+    GenerateWebpAnimation: mockGenerateWebpAnimationFn,
     Export3dFormat: { "3mf": "3mf" },
     ParameterKV: {},
     openscadParameterKvSchema: { type: "array" },
@@ -162,14 +162,14 @@ describe("handlers", () => {
       const { req, res } = createMockReqRes({ color: "red" });
       await handleWebp(req, res);
 
-      expect(mockGenerateAnimation).toHaveBeenCalledWith(
+      expect(mockGenerateWebpAnimation).toHaveBeenCalledWith(
         expect.arrayContaining([
           { parameter: "color", value: "red" },
           { parameter: "animation_rotation", value: "true" },
         ]),
         expect.any(Object),
       );
-      expect(mockGenerateAnimationFn).toHaveBeenCalledWith({ file: "anim.png" }, 50, "execOutput");
+      expect(mockGenerateWebpAnimationFn).toHaveBeenCalledWith({ file: "anim.png" }, 50, false, "execOutput");
       expect(res.sendFile as Mock).toHaveBeenCalledWith(expectedFilePath("anim.gif"));
     });
 
@@ -182,11 +182,11 @@ describe("handlers", () => {
     });
   });
 
-  describe("createFctExecCommand", () => {
-    it("should pass execOutput from createFctExecCommand to OpenScad constructor", () => {
+  describe("createExecutor", () => {
+    it("should pass execOutput from createExecutor to OpenScad constructor", () => {
       const { req, res } = createMockReqRes();
       handleParameter(req, res);
-      // The third argument to OpenScad is the return value of createFctExecCommand(false, false)
+      // The third argument to OpenScad is the return value of createExecutor(false, false)
       expect(OpenScad).toHaveBeenCalledWith("test-model.scad", "./test-gen", "execOutput");
     });
   });
