@@ -130,7 +130,7 @@ export class CustomiserForm {
     <label class="hud-toggle-label" for="${p.name}">
       <input type="checkbox" id="${p.name}" name="${p.name}" ${checked} value="1" onchange="gui.formChanged()" />
       <span class="toggle-custom" aria-hidden="true"></span>
-      <span class="toggle-text"></span>
+      <span class="toggle-text">${p.initial ? "ON" : "OFF"}</span>
     </label>`;
   }
 

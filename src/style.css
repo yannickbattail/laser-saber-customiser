@@ -875,6 +875,129 @@ fieldset {
   animation: cyber-pulse 1.8s infinite ease-in-out;
 }
 
+/* Holographic Loader Animation */
+.holo-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.75rem;
+  width: 100%;
+  height: 100%;
+  padding: 1.5rem;
+  position: relative;
+  z-index: 2;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+.holo-spinner {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.holo-ring {
+  position: absolute;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.holo-ring-outer {
+  inset: 0;
+  border: 2px dashed var(--neon-cyan);
+  box-shadow:
+    0 0 15px var(--neon-cyan-glow),
+    inset 0 0 12px var(--neon-cyan-dim);
+  animation: holo-spin-clockwise 7s linear infinite;
+}
+
+.holo-ring-mid {
+  inset: 14px;
+  border: 2px solid transparent;
+  border-top-color: var(--neon-electric);
+  border-bottom-color: var(--neon-electric);
+  box-shadow: 0 0 12px rgba(0, 153, 255, 0.45);
+  animation: holo-spin-counter 4s linear infinite;
+}
+
+.holo-ring-inner {
+  inset: 28px;
+  border: 1.5px dotted var(--neon-cyan);
+  animation: holo-spin-clockwise 2.5s linear infinite;
+}
+
+.holo-core {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff 15%, var(--neon-cyan) 65%, transparent 100%);
+  box-shadow:
+    0 0 18px var(--neon-cyan),
+    0 0 32px var(--neon-cyan-glow);
+  animation: holo-core-pulse 1.6s ease-in-out infinite alternate;
+}
+
+.holo-beam {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+  box-shadow: 0 0 8px var(--neon-cyan);
+  pointer-events: none;
+  animation: holo-beam-sweep 2.2s ease-in-out infinite;
+}
+
+.holo-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  text-align: center;
+}
+
+.holo-status-title {
+  font-family: var(--font-header);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 10px var(--neon-cyan-glow);
+  animation: cyber-pulse 2s infinite ease-in-out;
+}
+
+.holo-status-sub {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--text-secondary);
+}
+
+.holo-progress-bar {
+  width: 120px;
+  height: 4px;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid var(--border-tech);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+  margin-top: 0.25rem;
+}
+
+.holo-progress-fill {
+  height: 100%;
+  width: 45%;
+  background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+  border-radius: 2px;
+  box-shadow: 0 0 8px var(--neon-cyan);
+  animation: holo-bar-sweep 1.6s ease-in-out infinite;
+}
+
 /* 3D Action Floating Button */
 .btn3d {
   position: absolute;
@@ -993,6 +1116,60 @@ fieldset {
   }
   100% {
     top: 100%;
+  }
+}
+
+@keyframes holo-spin-clockwise {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes holo-spin-counter {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes holo-core-pulse {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.75;
+    box-shadow: 0 0 10px var(--neon-cyan);
+  }
+  100% {
+    transform: scale(1.25);
+    opacity: 1;
+    box-shadow:
+      0 0 22px var(--neon-cyan),
+      0 0 40px var(--neon-cyan-glow);
+  }
+}
+
+@keyframes holo-beam-sweep {
+  0%,
+  100% {
+    top: 15%;
+    opacity: 0.2;
+  }
+  50% {
+    top: 85%;
+    opacity: 0.85;
+  }
+}
+
+@keyframes holo-bar-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(350%);
   }
 }
 

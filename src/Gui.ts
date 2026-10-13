@@ -47,7 +47,7 @@ export class Gui {
   }
 
   public async changePreset() {
-    await this.initForm(await this.presetRepository.getPresetByName(this.getSelectedPreset()));
+    this.initForm(await this.presetRepository.getPresetByName(this.getSelectedPreset()));
     this.formChanged();
   }
 
@@ -61,10 +61,7 @@ export class Gui {
 
   public async display3DModel() {
     try {
-      NodeUpdate.updateElement(
-        "preview",
-        `<img class="previewImage loadingImage" src="img/loading.webp" alt="loading" title="loading" />`,
-      );
+      NodeUpdate.updateElement("preview", this.loading());
       const data = this.customiserForm.getFormData();
       const divPreview = document.getElementById("preview");
       if (divPreview) divPreview.innerHTML = "";
@@ -97,36 +94,52 @@ export class Gui {
       });
     } catch (e) {
       console.error(e);
-      NodeUpdate.updateElement("preview", `<img src="img/saber_empty.webp" alt="no preview" title="no preview" />`);
+      NodeUpdate.updateElement("preview", ``);
     }
   }
 
   public async getImage(type: "preview" | "animation") {
     try {
-      NodeUpdate.updateElement(
-        "preview",
-        `<img class="previewImage loadingImage" src="img/loading.webp" alt="loading" title="loading" />`,
-      );
+      NodeUpdate.updateElement("preview", this.loading());
       const data = this.customiserForm.getFormData();
       const endpoint = type === "preview" ? "/api/openscad/image.png" : "/api/openscad/animation.webp";
       const url = `${endpoint}?${this.PRESET_PARM_NAME}=${encodeURIComponent(JSON.stringify(data))}`;
-      NodeUpdate.updateElement(
-        "preview",
-        `
+      const newImg = new Image();
+      newImg.onload = () => {
+        NodeUpdate.updateElement(
+          "preview",
+          `
     <div class="btn3d">
         <button onclick="gui.display3DModel()">
             <img src="img/3D.svg" alt="display in 3D" title="display in 3D"/>
         </button>
     </div>
     <img src="${url}" alt="${type}" title="${type}" />`,
-      );
+        );
+      };
+      newImg.src = url;
     } catch (e) {
       console.error(e);
-      NodeUpdate.updateElement(
-        "preview",
-        `<img class="previewImage" src="img/saber_empty.webp" alt="no preview" title="no preview" />`,
-      );
+      NodeUpdate.updateElement("preview", ``);
     }
+  }
+
+  private loading(): string {
+    return `
+<div class="holo-loader">
+  <div class="holo-spinner">
+    <div class="holo-ring holo-ring-outer"></div>
+    <div class="holo-ring holo-ring-mid"></div>
+    <div class="holo-ring holo-ring-inner"></div>
+    <div class="holo-core"></div>
+    <div class="holo-beam"></div>
+  </div>
+  <div class="holo-status">
+    <span class="holo-status-title">SYNTHESIZING</span>
+    <span class="holo-status-sub">KYBER MATRIX CAD</span>
+    <div class="holo-progress-bar"><div class="holo-progress-fill"></div></div>
+  </div>
+</div>`;
   }
 
   private async init() {
@@ -138,13 +151,13 @@ export class Gui {
       () => JSON.parse(new URL(location.href).searchParams.get(this.PRESET_PARM_NAME) ?? "null"),
       `error parsing URL param ?${this.PRESET_PARM_NAME}=...`,
     );
-    await this.initForm(p ?? preset);
+    this.initForm(p ?? preset);
     this.formChanged();
     await this.initPresets(null);
   }
 
-  private async initForm(selectedPreset: Record<string, string> | null) {
-    await this.customiserForm.buildForm(selectedPreset);
+  private initForm(selectedPreset: Record<string, string> | null) {
+    this.customiserForm.buildForm(selectedPreset);
   }
 
   private async initPresets(selectedPreset: string | null) {
