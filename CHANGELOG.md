@@ -8,6 +8,20 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [1.0.5] - 2026-10-15
+
+### Added
+
+### Changed
+
 - new design for boolean values
 - cool new loading animation
 
