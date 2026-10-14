@@ -1,4 +1,4 @@
-import { ParameterSet } from "openscad-cli-wrapper";
+import { ParameterSet } from "openscad-cli-wrapper/dist/src/types/ParameterSet.js";
 
 export type UserPreset = {
   id: string;

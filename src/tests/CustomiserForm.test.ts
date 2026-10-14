@@ -73,7 +73,7 @@ describe("CustomiserForm", () => {
     expect(html).toContain('<input type="text" id="testString" name="testString" value="hello" maxlength="20" />');
   });
 
-  it("should generate boolean radio buttons", async () => {
+  it("should generate boolean toggle switch", async () => {
     const param: ParameterDefinition = {
       title: "Test Form",
       parameters: [
@@ -86,11 +86,14 @@ describe("CustomiserForm", () => {
     };
     const customiserForm = new CustomiserForm("", param);
     const html = await customiserForm.buildForm({});
-    expect(html).toContain('type="radio" id="testBoolean" name="testBoolean" checked="checked" value="true"');
-    expect(html).toContain('type="radio" id="testBoolean" name="testBoolean"  value="false"');
+    expect(html).toContain('type="checkbox"');
+    expect(html).toContain('checked="checked"');
+    expect(html).toContain('value="1"');
+    expect(html).toContain('class="hud-toggle-label"');
+    expect(html).toContain('">ON</span>');
   });
 
-  it("should generate boolean radio buttons (false)", async () => {
+  it("should generate boolean toggle switch (false)", async () => {
     const param: ParameterDefinition = {
       title: "Test Form",
       parameters: [
@@ -103,8 +106,10 @@ describe("CustomiserForm", () => {
     };
     const customiserForm = new CustomiserForm("", param);
     const html = await customiserForm.buildForm({});
-    expect(html).toContain('type="radio" id="testBoolean" name="testBoolean"  value="true"');
-    expect(html).toContain('type="radio" id="testBoolean" name="testBoolean" checked="checked" value="false"');
+    expect(html).toContain('type="checkbox"');
+    expect(html).toContain('value="1"');
+    expect(html).toContain('class="hud-toggle-label"');
+    expect(html).toContain('">OFF</span>');
   });
 
   it("should generate a select for options", async () => {

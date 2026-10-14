@@ -102,30 +102,30 @@
                   type="button"
                   class="hud-btn hud-btn-save"
                   onclick="gui.savePreset()"
-                  title="Save preset"
-                  aria-label="Save preset"
+                  title="Save saber"
+                  aria-label="Save saber"
                 >
-                  <img alt="save preset" class="save" src="img/save.svg" />
+                  <img alt="Save saber" class="save" src="img/save.svg" />
                   <span class="btn-text">SAVE</span>
                 </button>
                 <button
                   type="button"
                   class="hud-btn hud-btn-export"
                   onclick="gui.export()"
-                  title="Export preset"
-                  aria-label="Export preset"
+                  title="Export saber"
+                  aria-label="Export saber"
                 >
-                  <img alt="export preset" class="save" src="img/export.svg" />
+                  <img alt="Share saber" class="save" src="img/export.svg" />
                   <span class="btn-text">SHARE</span>
                 </button>
                 <button
                   type="button"
                   class="hud-btn hud-btn-delete"
                   onclick="gui.delPreset()"
-                  title="Delete preset"
-                  aria-label="Delete preset"
+                  title="Delete saber"
+                  aria-label="Delete saber"
                 >
-                  <img alt="delete preset" class="save" src="img/del.svg" />
+                  <img alt="Delete saber" class="save" src="img/del.svg" />
                   <span class="btn-text">DELETE</span>
                 </button>
               </div>
@@ -173,7 +173,20 @@
 
               <!-- Preview target container -->
               <div id="preview">
-                <img alt="no preview" class="previewImage loadingImage" src="img/saber_empty.webp" title="no preview" />
+                <div class="holo-loader">
+                  <div class="holo-spinner">
+                    <div class="holo-ring holo-ring-outer"></div>
+                    <div class="holo-ring holo-ring-mid"></div>
+                    <div class="holo-ring holo-ring-inner"></div>
+                    <div class="holo-core"></div>
+                    <div class="holo-beam"></div>
+                  </div>
+                  <div class="holo-status">
+                    <span class="holo-status-title">SYNTHESIZING</span>
+                    <span class="holo-status-sub">KYBER MATRIX CAD</span>
+                    <div class="holo-progress-bar"><div class="holo-progress-fill"></div></div>
+                  </div>
+                </div>
               </div>
 
               <div class="chamber-telemetry bottom-telemetry" aria-hidden="true">

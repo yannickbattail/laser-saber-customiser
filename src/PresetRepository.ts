@@ -25,14 +25,14 @@ export class PresetRepository implements IPresetRepository {
     return Promise.resolve(params);
   }
 
-  private saveAllPreset(parameterSet: ParameterSet) {
-    window.localStorage.setItem(PresetRepository.key, JSON.stringify(parameterSet, null, 2));
-  }
-
   async deletePreset(name: string): Promise<void> {
     const parameterSet = await this.getPresets();
     delete parameterSet.parameterSets[name];
     this.saveAllPreset(parameterSet);
     return Promise.resolve();
+  }
+
+  private saveAllPreset(parameterSet: ParameterSet) {
+    window.localStorage.setItem(PresetRepository.key, JSON.stringify(parameterSet, null, 2));
   }
 }

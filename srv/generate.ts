@@ -1,9 +1,9 @@
 import crypto from "crypto";
 import { existsSync, mkdirSync } from "node:fs";
 import {
-  createFctExecCommand,
+  createExecutor,
   Export3dFormat,
-  GenerateAnimation,
+  GenerateWebpAnimation,
   OpenScad,
   OpenScadOutputWithSummary,
   ParameterDefinition,
@@ -14,7 +14,7 @@ import { cleanGenFiles } from "./utils/cleanGenFiles.js";
 
 const options = getDefaultOpenscadOptions();
 const modelFile = options.fileName;
-const execOutput = createFctExecCommand(false, false);
+const execOutput = createExecutor(true, false);
 
 export async function getParameterDefinition(): Promise<ParameterDefinition> {
   const openscad = new OpenScad(modelFile, options.outputDir, execOutput);
@@ -53,7 +53,12 @@ export async function generateAnimation(input: ParameterKV[]): Promise<OpenScadO
     value: "true",
   });
   const param = await openscad.generateAnimation(input, options.openScadOptions);
-  return await GenerateAnimation(param, options.openScadOptions.animOptions.animDelay, execOutput);
+  return await GenerateWebpAnimation(
+    param,
+    options.openScadOptions.animOptions.animDelay,
+    !!options.openScadOptions.debug,
+    execOutput,
+  );
 }
 
 async function getOutputDir(input: ParameterKV[]) {
