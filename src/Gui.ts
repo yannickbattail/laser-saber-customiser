@@ -3,6 +3,7 @@ import { CustomiserForm } from "./CustomiserForm.js";
 import { IPresetRepository } from "./IPresetRepository.js";
 import { _throw, tryCatch } from "./utils.js";
 import { IBackendApi } from "./serverApi/IBackendApi.js";
+import { preview3D } from "./3dPreview.js";
 
 export class Gui {
   readonly PRESET_PARM_NAME: string = "p";
@@ -68,30 +69,7 @@ export class Gui {
 
       const endpoint = "/api/openscad/model.3mf";
       const uri = `${endpoint}?${this.PRESET_PARM_NAME}=${encodeURIComponent(JSON.stringify(data))}`;
-      NodeUpdate.updateElement(
-        "preview",
-        `
-   <div class="btn3d">
-        <a href="${uri}">
-            <img src="img/download.svg" alt="Download" title="Download"/>
-        </a>
-    </div>
-    <div id="stlViewer" class="stlViewer"></div>`,
-      );
-      // @ts-expect-error in js
-      new StlViewer(document.getElementById("stlViewer"), {
-        models: [
-          {
-            id: 0,
-            filename: uri,
-            rotationx: Math.PI / -2,
-          },
-        ],
-        auto_rotate: true,
-        zoom: 600,
-        allow_drag_and_drop: false,
-        jszip_path: "../../lib/jszip/jszip.min.js",
-      });
+      preview3D(uri);
     } catch (e) {
       console.error(e);
       NodeUpdate.updateElement("preview", ``);

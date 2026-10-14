@@ -30,10 +30,12 @@
     "publish-new-v": "npm version patch --no-git-tag-version && npm run check && npm publish"
   },
   "dependencies": {
-    "openscad-cli-wrapper": "^1.5.2"
+    "openscad-cli-wrapper": "^1.5.2",
+    "three": "^0.186.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/three": "^0.186.0",
     "@vitest/coverage-v8": "^5.0.4",
     "depcheck": "^1.4.7",
     "eslint": "^10.12.0",
