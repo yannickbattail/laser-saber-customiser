@@ -26,23 +26,23 @@
     "format": "stylelint ./*.css && prettier --log-level error --write .",
     "depcheck": "depcheck --quiet --ignore-path=./.gitignore --ignores='@types/*,@vitest/coverage-v8,lie,pako,readable-stream,setimmediate,immediate'",
     "check": "npm run depcheck && npm run format && npm run lint && npm run build && npm run test",
-    "check-updates": "npx npm-check-updates -u && npm update --save && npm i && npm dedupe && npm run check",
+    "check-updates": "npx npm-check-updates -u --reject typescript && npm update --save && npm i && npm dedupe && npm run check",
     "publish-new-v": "npm version patch --no-git-tag-version && npm run check && npm publish"
   },
   "dependencies": {
-    "openscad-cli-wrapper": "^1.5.1"
+    "openscad-cli-wrapper": "^1.5.2"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@vitest/coverage-v8": "^5.0.3",
+    "@vitest/coverage-v8": "^5.0.4",
     "depcheck": "^1.4.7",
-    "eslint": "^10.11.0",
+    "eslint": "^10.12.0",
     "globals": "^17.13.0",
-    "npm-check-updates": "^23.1.0",
-    "prettier": "^3.9.9",
+    "npm-check-updates": "^23.1.1",
+    "prettier": "^3.9.10",
     "stylelint": "^17.16.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.71.0",
-    "vitest": "^5.0.3"
+    "typescript-eslint": "^8.71.2",
+    "vitest": "^5.0.4"
   }
 }
