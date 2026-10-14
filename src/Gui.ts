@@ -5,10 +5,10 @@ import { _throw, tryCatch } from "./utils.js";
 import { IBackendApi } from "./serverApi/IBackendApi.js";
 
 export class Gui {
+  readonly PRESET_PARM_NAME: string = "p";
   private lastFormChanged = 0;
   private changeTimeout = 2000;
   private customiserForm: CustomiserForm;
-  readonly PRESET_PARM_NAME: string = "p";
 
   constructor(
     private presetRepository: IPresetRepository,

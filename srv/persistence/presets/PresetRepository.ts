@@ -31,6 +31,12 @@ export class PresetRepository implements IPresetRepository {
     return preset;
   }
 
+  async deletePreset(userId: string, presetName: string): Promise<void> {
+    const presets: UserPreset = await this.getPresets(userId);
+    delete presets.preset.parameterSets[presetName];
+    await this.db.save();
+  }
+
   private async newUserPreset(userId: string): Promise<UserPreset> {
     const presetDbs = await this.db.getPresets();
     const newPreset: UserPreset = {
@@ -46,11 +52,5 @@ export class PresetRepository implements IPresetRepository {
     presetDbs.push(newPreset);
     await this.db.save();
     return newPreset;
-  }
-
-  async deletePreset(userId: string, presetName: string): Promise<void> {
-    const presets: UserPreset = await this.getPresets(userId);
-    delete presets.preset.parameterSets[presetName];
-    await this.db.save();
   }
 }

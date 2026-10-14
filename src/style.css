@@ -254,6 +254,7 @@ body {
   .config-column {
     order: 2;
   }
+
   .preview-column {
     order: 1;
   }
@@ -1182,6 +1183,7 @@ fieldset {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+
   .chamber-scanline {
     display: none;
   }

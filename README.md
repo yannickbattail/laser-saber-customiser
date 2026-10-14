@@ -7,6 +7,7 @@ Test it [here](https://lightsaber.darthperious.top/).
 ## prod
 
 Run by docker
+
 ```bash
 docker build . -t laser-saber-customiser
 docker compose up --build
@@ -72,6 +73,7 @@ Backend returns parameters
     v
 Frontend generate form
 ```
+
 ```
 Frontend send preset (parameter's values)
     |

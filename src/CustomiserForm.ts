@@ -17,6 +17,17 @@ export class CustomiserForm {
     private param: ParameterDefinition,
   ) {}
 
+  public static changePart(me: HTMLSelectElement | null) {
+    if (!me) return;
+    const group = `${me.id} : ${me.value}`;
+    document.querySelectorAll(`[id^="group_${me.id} : "]`).forEach((e) => {
+      e.classList.add("hide");
+      e.classList.remove("show");
+    });
+    document.getElementById(`group_${group}`)?.classList?.add("show");
+    document.getElementById(`group_${group}`)?.classList?.remove("hide");
+  }
+
   public buildForm(formValue: Record<string, string> | null) {
     const formParam = clone(this.param);
     this.setValues(formParam, formValue ?? {});
@@ -132,16 +143,5 @@ export class CustomiserForm {
       <span class="toggle-custom" aria-hidden="true"></span>
       <span class="toggle-text">${p.initial ? "ON" : "OFF"}</span>
     </label>`;
-  }
-
-  public static changePart(me: HTMLSelectElement | null) {
-    if (!me) return;
-    const group = `${me.id} : ${me.value}`;
-    document.querySelectorAll(`[id^="group_${me.id} : "]`).forEach((e) => {
-      e.classList.add("hide");
-      e.classList.remove("show");
-    });
-    document.getElementById(`group_${group}`)?.classList?.add("show");
-    document.getElementById(`group_${group}`)?.classList?.remove("hide");
   }
 }
