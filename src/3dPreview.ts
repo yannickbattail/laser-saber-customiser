@@ -12,7 +12,7 @@ export function preview3D(file3mf: string) {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x101722);
   const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 10000);
-  camera.position.set(150, 150, 200);
+  camera.position.set(0, 0, 200);
 
   const renderer = new THREE.WebGLRenderer({
     antialias: true,
@@ -100,6 +100,9 @@ export function preview3D(file3mf: string) {
       // the original model colors.
       applyMetallicMaterials(model);
 
+      // Rotate model so the Z-axis cylinder is aligned vertically with the Y-axis.
+      model.rotation.x = -Math.PI / 2;
+
       scene.add(model);
 
       // Center the model around the origin.
@@ -107,11 +110,11 @@ export function preview3D(file3mf: string) {
       const center = box.getCenter(new THREE.Vector3());
       model.position.sub(center);
 
-      // Adjust the camera to fit the model.
+      // Adjust the camera to fit the model and display it from the front.
       const size = box.getSize(new THREE.Vector3());
       const maxDimension = Math.max(size.x, size.y, size.z);
-      const distance = maxDimension * 2.5;
-      camera.position.set(distance, distance, distance);
+      const distance = maxDimension * 1.5;
+      camera.position.set(0, 0, distance);
       camera.near = Math.max(maxDimension / 1000, 0.01);
       camera.far = Math.max(maxDimension * 100, 1000);
       camera.updateProjectionMatrix();

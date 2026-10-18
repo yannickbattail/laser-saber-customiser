@@ -67,7 +67,7 @@ export function getDefaultOpenscadOptions(): GenerateOptions {
       },
       animOptions: {
         animDelay: 50, // delay in milliseconds between frames
-        animate: 20, // number of frames
+        animate: 50, // number of frames
         colorscheme: ColorScheme.Starnight, //Cornfield,Metallic,Sunset,Starnight,BeforeDawn,Nature,DaylightGem,NocturnalGem,DeepOcean,Solarized,Tomorrow,TomorrowNight,ClearSky,Monotone,
         imgsize: {
           height: 512,
