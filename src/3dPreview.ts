@@ -3,6 +3,8 @@ import * as THREE from "three";
 import { ThreeMFLoader } from "three/examples/jsm/loaders/3MFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
+
 export function preview3D(file3mf: string) {
   const container = document.getElementById("preview");
 
@@ -35,6 +37,19 @@ export function preview3D(file3mf: string) {
 
   container.appendChild(renderer.domElement);
 
+  // Environment map
+  // Provides reflections for metallic materials.
+
+  const pmremGenerator = new THREE.PMREMGenerator(renderer);
+
+  const environment = new RoomEnvironment();
+
+  scene.environment = pmremGenerator.fromScene(environment).texture;
+
+  environment.dispose();
+
+  pmremGenerator.dispose();
+
   // Lighting
   scene.add(new THREE.HemisphereLight(0xffffff, 0x303040, 2));
 
@@ -48,6 +63,60 @@ export function preview3D(file3mf: string) {
   fillLight.position.set(-100, 50, -100);
   scene.add(fillLight);
 
+  // Additional light for metallic highlights.
+  const rimLight = new THREE.DirectionalLight(0xffffff, 2);
+
+  rimLight.position.set(0, 100, -150);
+
+  scene.add(rimLight);
+
+  // Metallic materials
+  // Preserve original colors and vertex colors.
+  function applyMetallicMaterials(object: THREE.Object3D): void {
+    object.traverse((child) => {
+      if (!(child instanceof THREE.Mesh)) {
+        return;
+      }
+
+      const materials = Array.isArray(child.material) ? child.material : [child.material];
+
+      const metallicMaterials = materials.map((material) => {
+        // Preserve existing physically based materials.
+        if (material instanceof THREE.MeshStandardMaterial) {
+          material.metalness = 0.85;
+          material.roughness = 0.25;
+
+          material.needsUpdate = true;
+
+          return material;
+        }
+
+        // Convert other materials while retaining
+        // their original color-related properties.
+        return new THREE.MeshStandardMaterial({
+          color: material.color ? material.color.clone() : new THREE.Color(0xffffff),
+
+          map: "map" in material ? material.map : null,
+
+          vertexColors: "vertexColors" in material ? material.vertexColors : false,
+
+          flatShading: "flatShading" in material ? material.flatShading : false,
+
+          opacity: material.opacity,
+
+          transparent: material.transparent,
+
+          side: material.side,
+
+          metalness: 0.85,
+
+          roughness: 0.25,
+        });
+      });
+
+      child.material = Array.isArray(child.material) ? metallicMaterials : metallicMaterials[0];
+    });
+  }
   // Camera controls
   const controls = new OrbitControls(camera, renderer.domElement);
 
@@ -61,8 +130,9 @@ export function preview3D(file3mf: string) {
     file3mf,
 
     (model) => {
-      // ThreeMFLoader handles the model's supported materials.
-      // Avoid replacing them with a single generic material.
+      // Apply metallic rendering without replacing
+      // the original model colors.
+      applyMetallicMaterials(model);
 
       scene.add(model);
 
