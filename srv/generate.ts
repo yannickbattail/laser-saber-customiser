@@ -22,6 +22,7 @@ export async function getParameterDefinition(): Promise<ParameterDefinition> {
 }
 
 export async function generateModel(input: ParameterKV[]): Promise<OpenScadOutputWithSummary> {
+  input.push({ parameter: "$fn", value: "100" });
   const outputDir = await getOutputDir(input);
   const fileName = `${outputDir}/model_model.3mf`;
   if (existsSync(fileName)) {
