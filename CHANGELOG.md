@@ -16,6 +16,22 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 
+## [1.1.0] - 2026-10-19
+
+### Added
+
+### Changed
+
+- new 3d viewer
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
 ## [1.0.5] - 2026-10-15
 
 ### Added
