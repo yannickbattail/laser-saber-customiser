@@ -6,6 +6,6 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - generatedImages:/home/openscad/src/gen
+      - db:/home/ubuntu/srv/db/
 volumes:
-  generatedImages:
+  db:

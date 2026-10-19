@@ -3,11 +3,11 @@ import { GeneratedFormat, GenerateOptions } from "./types.js";
 
 export function getDefaultOpenscadOptions(): GenerateOptions {
   return {
-    fileName: "openscadFiles/model.scad",
+    fileName: "../openscadFiles/model.scad",
     generateMosaic: false,
     onlyParameterSet: "",
     parallelJobs: 1,
-    outputDir: "../src/gen/",
+    outputDir: "../gen/",
     embedThumbnailIn3mf: true,
     embedSourcesIn3mf: true,
     outFormats: [

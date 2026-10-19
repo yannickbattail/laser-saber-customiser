@@ -29,11 +29,12 @@ WORKDIR /home/ubuntu
 COPY . .
 
 RUN cd ./src  && npm install --no-audit --no-fund && npm run build \
- && cd ../srv && npm install --no-audit --no-fund && npm run build
+ && cd ../srv && npm install --no-audit --no-fund && npm run build \
+ && mkdir /home/ubuntu/gen && chown ubuntu /home/ubuntu/gen
 
 COPY --chmod=555 entrypoint.sh /entrypoint.sh
 
 USER ubuntu
-VOLUME /home/openscad/src/gen/
+VOLUME /home/ubuntu/srv/db/
 EXPOSE 8080
 ENTRYPOINT ["/entrypoint.sh"]

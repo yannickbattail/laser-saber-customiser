@@ -4,8 +4,8 @@ import tseslint from "typescript-eslint";
 
 /** @type {import("eslint").Linter.Config[]} */
 export default [
-  { ignores: ["lib/**", "dist/**"] },
-  { files: ["**/*.{mjs,cjs,ts}"] },
+  { ignores: ["coverage/**", "dist/**"] },
+  { files: ["**/*.{js,mjs,cjs,ts}"] },
   { languageOptions: { globals: { ...globals.browser, ...globals.node } } },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
