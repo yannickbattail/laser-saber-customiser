@@ -1,21 +1,23 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist/",
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "allowSyntheticDefaultImports": true,
     "strict": true,
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": false,
+    "target": "ES2022",
+    "module": "es2020",
+    "lib": ["es2021", "dom"],
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
     "strictPropertyInitialization": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "inlineSourceMap": true,
-    "declaration": false,
-    "experimentalDecorators": true,
-    "resolveJsonModule": true,
-    "importHelpers": true,
-    "target": "ES2022",
-    "module": "es2020",
-    "lib": ["es2021", "dom"]
-  }
+    "importHelpers": true
+  },
+  "exclude": ["node_modules", "dist", "coverage"]
 }
