@@ -1,7 +1,7 @@
 // type of emitter
 emitterType = "coneEmitter"; // [coneEmitter:cone emitter, armEmitter:arms emitter, oblicEmitter:oblic emitter]
 // type of handle
-handleType = "cylindersHandle"; // [ cylindersHandle:2 parts cylinders, ringsHandle:rings, spiralGripHandle:spiral grip, homeyCombHandle:homey comb, curveHandle:curved handle]
+handleType = "cylindersHandle"; // [ cylindersHandle:2 parts cylinders, ringsHandle:rings, spiralGripHandle:spiral grip, honeyCombHandle:honey comb, curveHandle:curved handle]
 // type of pommel
 pommelType = "diamondPommel"; // [diamondPommel, diamondSpikePommel, spherePommel, roundPomnel]
 
@@ -52,7 +52,7 @@ h2Color = "#444"; // [silver:silver, orange:gold, #444:black, white:white, red:r
 // top color
 h3Color = "#444"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 
-/* [handleType : homeyCombHandle] */
+/* [handleType : honeyCombHandle] */
 // top color
 h4Color = "#444"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // honey comb color
@@ -333,7 +333,7 @@ module handle() {
                 ringsHandle(length);
             } else if (handleType == "spiralGripHandle") {
                 spiralGripHandle(length);
-            } else if (handleType == "homeyCombHandle") {
+            } else if (handleType == "honeyCombHandle") {
                 honey_comb_handle(length);
             } else if (handleType == "curveHandle") {
                 curveHandle(length);
