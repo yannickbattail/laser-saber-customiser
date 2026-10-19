@@ -7,5 +7,3 @@ coverage
 /utils.js
 /PresetRepository.js
 /IPresetRepository.js
-
-gen/*

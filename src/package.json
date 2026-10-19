@@ -17,8 +17,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "clean": "rm ./dist/* ../srv/gen/* || true",
-    "clean_gen": "rm ../srv/gen/*",
+    "clean": "rm -Rf ./dist/ ./coverage/ || true",
     "build": "tsc",
     "build:watch": "tsc --watch",
     "test": "vitest run --coverage ./tests/",

@@ -7,7 +7,7 @@ export function getDefaultOpenscadOptions(): GenerateOptions {
     generateMosaic: false,
     onlyParameterSet: "",
     parallelJobs: 1,
-    outputDir: "../src/gen/",
+    outputDir: "../gen/",
     embedThumbnailIn3mf: true,
     embedSourcesIn3mf: true,
     outFormats: [
