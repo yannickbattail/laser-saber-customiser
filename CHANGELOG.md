@@ -16,6 +16,28 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 
+## [1.1.1] - 2026-10-20
+
+### Added
+
+### Changed
+
+- move the "gen" dir to the root folder
+- move the model dir to the root folder
+- increase the model resolution, set $fn=100
+
+### Deprecated
+
+### Removed
+
+- remove old lib, now use three
+
+### Fixed
+
+- typo "honey" in the model
+
+### Security
+
 ## [1.1.0] - 2026-10-19
 
 ### Added
