@@ -118,17 +118,10 @@ describe("handlers", () => {
 
       expect(OpenScad).toHaveBeenCalledWith(
         "test-model.scad",
-        "./test-gen/f5385d466143864bc5c60d45e4d4963fd7008540d65c8cd3af74002d08c8232a",
+        "./test-gen/e643f093bdf7136187b992ea32bc1192f78b30fee1b835f6bf9c05dfa5be58cc",
         "execOutput",
       );
-      expect(mockGenerateModel).toHaveBeenCalledWith(
-        [
-          { parameter: "height", value: "10" },
-          { parameter: "$fn", value: "100" },
-        ],
-        "3mf",
-        expect.any(Object),
-      );
+      expect(mockGenerateModel).toHaveBeenCalledWith([{ parameter: "height", value: "10" }], "3mf", expect.any(Object));
       expect(res.sendFile as Mock).toHaveBeenCalledWith(expectedFilePath("model.3mf"));
     });
 

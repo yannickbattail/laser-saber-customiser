@@ -155,7 +155,7 @@ debug = false;
 // add copyright
 addCopyright = true;
 // resolution
-$fn = 40;
+$fn = 100;
 
 /* [Hidden] */
 ringDiameter = 36;
