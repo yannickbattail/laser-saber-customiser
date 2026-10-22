@@ -142,6 +142,11 @@ export function replace3DModel(viewer: Preview3DViewer, file3mf: string): void {
       viewer.controls.target.set(0, 0, 0);
       viewer.controls.update();
 
+      const blade = viewer.currentModel.getObjectByName("OpenSCAD Model 1");
+      if (blade) {
+        applyBladeMaterial(blade);
+      }
+
       viewer.render();
     },
     undefined,
@@ -191,5 +196,103 @@ function applyMetallicMaterials(object: THREE.Object3D): void {
     });
 
     child.material = Array.isArray(child.material) ? metallicMaterials : metallicMaterials[0];
+  });
+}
+
+function applyBladeMaterial(object: THREE.Object3D): void {
+  const meshes: THREE.Mesh[] = [];
+  object.traverse((child) => {
+    if (child instanceof THREE.Mesh) {
+      meshes.push(child);
+    }
+  });
+
+  meshes.forEach((mesh) => {
+    const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+    let baseColor = new THREE.Color(0xffffff);
+
+    const bladeMaterials = materials.map((material) => {
+      if ("color" in material && material.color instanceof THREE.Color) {
+        baseColor = material.color.clone();
+      }
+
+      return new THREE.MeshBasicMaterial({
+        color: baseColor,
+        map: "map" in material && material.map instanceof THREE.Texture ? material.map : null,
+        vertexColors:
+          "vertexColors" in material && typeof material.vertexColors === "boolean" ? material.vertexColors : false,
+        opacity: typeof material.opacity === "number" && material.opacity < 0.85 ? material.opacity : 0.85,
+        transparent: true,
+        side: material.side,
+        depthWrite: false,
+        toneMapped: false,
+      });
+    });
+
+    mesh.material = Array.isArray(mesh.material) ? bladeMaterials : bladeMaterials[0];
+
+    if (!mesh.geometry.attributes.normal) {
+      mesh.geometry.computeVertexNormals();
+    }
+
+    mesh.geometry.computeBoundingBox();
+    const size = new THREE.Vector3();
+    if (mesh.geometry.boundingBox) {
+      mesh.geometry.boundingBox.getSize(size);
+    }
+
+    const radius = Math.max(Math.min(size.x || 12.5, size.y || 12.5) / 2, 1);
+
+    const glowLayers = [
+      { offset: radius * 0.12, opacity: 0.5 },
+      { offset: radius * 0.28, opacity: 0.3 },
+      { offset: radius * 0.55, opacity: 0.18 },
+      { offset: radius * 0.95, opacity: 0.08 },
+      { offset: radius * 1.5, opacity: 0.03 },
+    ];
+
+    glowLayers.forEach(({ offset, opacity }) => {
+      const glowMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+          glowColor: { value: baseColor.clone() },
+          offset: { value: offset },
+          opacity: { value: opacity },
+        },
+        vertexShader: `
+          uniform float offset;
+          varying vec3 vNormal;
+          void main() {
+            vNormal = normalize(normalMatrix * normal);
+            vec3 displaced = position + normal * offset;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(displaced, 1.0);
+          }
+        `,
+        fragmentShader: `
+          uniform vec3 glowColor;
+          uniform float opacity;
+          varying vec3 vNormal;
+          void main() {
+            float intensity = pow(1.0 - abs(dot(vNormal, vec3(0.0, 0.0, 1.0))) * 0.3, 1.2) * opacity;
+            gl_FragColor = vec4(glowColor, intensity);
+          }
+        `,
+        side: THREE.BackSide,
+        blending: THREE.AdditiveBlending,
+        transparent: true,
+        depthWrite: false,
+        toneMapped: false,
+      });
+
+      const glowMesh = new THREE.Mesh(mesh.geometry, glowMaterial);
+      mesh.add(glowMesh);
+    });
+
+    const bladeLight = new THREE.PointLight(baseColor, 3, Math.max(size.z * 1.5, 200));
+    if (mesh.geometry.boundingBox) {
+      const center = new THREE.Vector3();
+      mesh.geometry.boundingBox.getCenter(center);
+      bladeLight.position.copy(center);
+    }
+    mesh.add(bladeLight);
   });
 }
