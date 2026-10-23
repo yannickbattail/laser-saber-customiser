@@ -16,6 +16,23 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 
+## [1.1.2] - 2026-10-23
+
+### Added
+
+### Changed
+
+- direct 3D preview (no more image)
+- refactor model: split emitters, handles and pommels in separated files, use object as config
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
 ## [1.1.1] - 2026-10-20
 
 ### Added

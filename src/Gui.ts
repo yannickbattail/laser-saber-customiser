@@ -1,4 +1,3 @@
-import { NodeUpdate } from "./NodeUpdate.js";
 import { CustomiserForm } from "./CustomiserForm.js";
 import { IPresetRepository } from "./IPresetRepository.js";
 import { _throw, tryCatch } from "./utils.js";
@@ -52,72 +51,15 @@ export class Gui {
     this.formChanged();
   }
 
-  public async preview() {
-    await this.getImage("preview");
-  }
-
-  public async animation() {
-    await this.getImage("animation");
-  }
-
   public async display3DModel() {
     try {
-      NodeUpdate.updateElement("preview", this.loading());
       const data = this.customiserForm.getFormData();
-      const divPreview = document.getElementById("preview");
-      if (divPreview) divPreview.innerHTML = "";
-
       const endpoint = "/api/openscad/model.3mf";
       const uri = `${endpoint}?${this.PRESET_PARM_NAME}=${encodeURIComponent(JSON.stringify(data))}`;
       preview3D(uri);
     } catch (e) {
       console.error(e);
-      NodeUpdate.updateElement("preview", ``);
     }
-  }
-
-  public async getImage(type: "preview" | "animation") {
-    try {
-      NodeUpdate.updateElement("preview", this.loading());
-      const data = this.customiserForm.getFormData();
-      const endpoint = type === "preview" ? "/api/openscad/image.png" : "/api/openscad/animation.webp";
-      const url = `${endpoint}?${this.PRESET_PARM_NAME}=${encodeURIComponent(JSON.stringify(data))}`;
-      const newImg = new Image();
-      newImg.onload = () => {
-        NodeUpdate.updateElement(
-          "preview",
-          `
-    <div class="btn3d">
-        <button onclick="gui.display3DModel()">
-            <img src="img/3D.svg" alt="display in 3D" title="display in 3D"/>
-        </button>
-    </div>
-    <img src="${url}" alt="${type}" title="${type}" />`,
-        );
-      };
-      newImg.src = url;
-    } catch (e) {
-      console.error(e);
-      NodeUpdate.updateElement("preview", ``);
-    }
-  }
-
-  private loading(): string {
-    return `
-<div class="holo-loader">
-  <div class="holo-spinner">
-    <div class="holo-ring holo-ring-outer"></div>
-    <div class="holo-ring holo-ring-mid"></div>
-    <div class="holo-ring holo-ring-inner"></div>
-    <div class="holo-core"></div>
-    <div class="holo-beam"></div>
-  </div>
-  <div class="holo-status">
-    <span class="holo-status-title">SYNTHESIZING</span>
-    <span class="holo-status-sub">KYBER MATRIX CAD</span>
-    <div class="holo-progress-bar"><div class="holo-progress-fill"></div></div>
-  </div>
-</div>`;
   }
 
   private async init() {
@@ -182,11 +124,7 @@ export class Gui {
   private async applyChanges() {
     if (Date.now() - this.lastFormChanged > this.changeTimeout) {
       this.updateUrl();
-      if ((document.getElementById("animate") as HTMLInputElement).checked) {
-        await this.animation();
-      } else {
-        await this.preview();
-      }
+      await this.display3DModel();
     }
   }
 
