@@ -1,5 +1,5 @@
 // type of emitter
-emitterType = "coneEmitter"; // [coneEmitter:cone emitter, armEmitter:arms emitter, oblicEmitter:oblic emitter]
+emitterType = "coneEmitter"; // [coneEmitter:cone emitter, armEmitter:arms emitter, oblicEmitter:oblic emitter, crossguard:crossguard]
 // type of handle
 handleType = "cylindersHandle"; // [ cylindersHandle:2 parts cylinders, ringsHandle:rings, spiralGripHandle:spiral grip, honeyCombHandle:honey comb, curveHandle:curved handle]
 // type of pommel
@@ -27,6 +27,24 @@ e3diameter = 35; // [30:1:50]
 e3cutHeight = 20; // [0:1:100]
 // emitter angle
 e3angle = 45; // [0:5:60]
+
+/* [emitterType : crossguard] */
+// color
+e4color = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// color of the crossguard
+e4crossguardColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// length of the crossguard (one side)
+e4length=70; // [10:1:150]
+// diamter of the Tip
+e4diamterTip=10; // [1:1:50]
+// horizontal Scale (stretch horizontally)
+e4horizontalScale=3.5; // [-20:0.1:20]
+// vertical Scale (stretch vertically)
+e4verticalScale=3.5; // [-20:0.1:20]
+// color of the sphere on the tip
+e4sphereColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// diamter of the sphere on the tip
+e4diamterSphere=15; // [0:1:50]
 
 /* [handleType : cylindersHandle] */
 // number of cylinders
@@ -163,6 +181,7 @@ use <parts/base/fundation.scad>;
 use <parts/emitters/coneEmitter.scad>;
 use <parts/emitters/armEmitter.scad>;
 use <parts/emitters/oblicEmitter.scad>;
+use <parts/emitters/crossguard.scad>;
 
 use <parts/handles/cylindersHandle.scad>;
 use <parts/handles/ringsHandle.scad>;
@@ -187,6 +206,7 @@ $vpd = animation_rotation || animation_opening?1100:[];
 confConeEmitter = object(color = e1color, looseCoef=looseCoef);
 confArmEmitter = object(color = e2color, armColor = e2armColor, armStopperSize=armStopperSize, armAngle=armAngle, looseCoef=looseCoef);
 confOblicEmitter = object(color = e3color, diameter = e3diameter, maxHeight=e3maxHeight, cutHeight = e3cutHeight, angle = e3angle);
+confCrossguard = object(color = e4color, crossguardColor=e4crossguardColor, length=e4length, diamterTip=e4diamterTip, horizontalScale=e4horizontalScale, verticalScale=e4verticalScale, sphereColor=e4sphereColor, diamterSphere=e4diamterSphere);
 
 confCylindersHandle = object(cylinderNumber=h1cylinderNumber, cylinderDiameter=h1cylinderDiameter, topColor=h1topColor, cylinderColor=h1cylinderColor, ringColor=h1ringColor, bottomColor=h1bottomColor);
 confRingsHandle = object(ringColor=h2ringColor, color=h2Color);
@@ -233,8 +253,10 @@ module emitter() {
         armEmitterAll(confArmEmitter);
     } else if (emitterType == "oblicEmitter") {
         oblicEmitterAll(confOblicEmitter);
+    } else if (emitterType == "crossguard") {
+        crossguardAll(confCrossguard);
     } else {
-      assert(true, str("unknown emitterType: ", emitterType));
+        assert(true, str("unknown emitterType: ", emitterType));
     }
 }
 
@@ -271,6 +293,14 @@ module oblicEmitterAll(confOblicEmitter) {
     }
 }
 
+module crossguardAll(confCrossguard) {
+  difference() {
+    crossguard(confCrossguard);
+    fundationHole(looseCoef);
+    bladeHole();
+  }
+}
+
 module handle() {
     difference() {
         translate([0, 0, -6]) {
@@ -299,7 +329,7 @@ module copyright() {
     translate([0, 0, -40]) {
         rotate([0, 90, 0]) {
             linear_extrude(30) {
-                text("© Copyright XcinnsY", size = 4, valign = "center", font = "Arial");
+                text("© Copyright XcinnaY", size = 4, valign = "center", font = "Arial");
             }
         }
     }
