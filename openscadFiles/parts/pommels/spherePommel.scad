@@ -27,9 +27,9 @@ module spherePommel(confSpherePommel) {
         for (i = [0:confSpherePommel.sides]) {
           rotate([0, 0, a * i]) {
             difference() {
-              cylinder(r=21, h=8);
-              mmirror([1,0,0])
-                rotate([0, 0, a / 4+90])
+              cylinder(r = 21, h = 8);
+              mmirror([1, 0, 0])
+                rotate([0, 0, a / 4 + 90])
                   translate([-30, 0, -30])
                     cube(60, center = false);
             }

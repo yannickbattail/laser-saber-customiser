@@ -5,7 +5,7 @@ module crossguard(confCrossguard) {
     color(confCrossguard.color) {
       cylinder(h = 40, d = 34);
     }
-    mmirror([1,0,0]) {
+    mmirror([1, 0, 0]) {
       translate([0, 0, 20]) {
         rotate([0, 90, 0]) {
           translate([0, 0, confCrossguard.length]) {

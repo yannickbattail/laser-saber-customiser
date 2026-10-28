@@ -1,4 +1,4 @@
-INCH=25.4;
+INCH = 25.4;
 module blade(confBlade) {
   bladeLength = 200;
   getIn = confBlade.animationOpening

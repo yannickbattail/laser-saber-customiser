@@ -1,4 +1,3 @@
-
 /*
 same as mirror but duplicate children
 */
