@@ -3,6 +3,10 @@ import { ThreeMFLoader } from "three/examples/jsm/loaders/3MFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 
+type DeviceOrientationEventWithPermission = typeof DeviceOrientationEvent & {
+  requestPermission?: () => Promise<PermissionState>;
+};
+
 export interface Preview3DViewer {
   container: HTMLElement;
   scene: THREE.Scene;
@@ -73,6 +77,7 @@ export function initialize3DPreviewer(containerId = "preview"): Preview3DViewer 
   };
 
   controls.addEventListener("change", viewer.render);
+  enableDeviceOrientationControls(viewer);
 
   const resizeObserver = new ResizeObserver(() => {
     const width = container.clientWidth;
@@ -164,6 +169,73 @@ export function preview3D(file3mf: string): Preview3DViewer {
   }
   replace3DModel(viewer, file3mf);
   return viewer;
+}
+
+function enableDeviceOrientationControls(viewer: Preview3DViewer): void {
+  const orientationEventType =
+    "ondeviceorientationabsolute" in window ? "deviceorientationabsolute" : "deviceorientation";
+
+  let enabled = false;
+  let baselineBeta: number | null = null;
+  let baselineGamma: number | null = null;
+  const baselineSpherical = new THREE.Spherical();
+  const currentOffset = new THREE.Vector3();
+  const nextOffset = new THREE.Vector3();
+
+  const rotationSensitivity = 0.05;
+
+  const enable = async (): Promise<void> => {
+    if (enabled || !("DeviceOrientationEvent" in window)) {
+      return;
+    }
+
+    const deviceOrientationEvent = DeviceOrientationEvent as DeviceOrientationEventWithPermission;
+
+    if (typeof deviceOrientationEvent.requestPermission === "function") {
+      const permission = await deviceOrientationEvent.requestPermission();
+      if (permission !== "granted") {
+        return;
+      }
+    }
+
+    enabled = true;
+    window.addEventListener(orientationEventType, handleOrientation, true);
+  };
+
+  const handleOrientation = (event: DeviceOrientationEvent): void => {
+    if (event.beta === null || event.gamma === null) {
+      return;
+    }
+
+    currentOffset.copy(viewer.camera.position).sub(viewer.controls.target);
+
+    if (baselineBeta === null || baselineGamma === null) {
+      baselineBeta = event.beta;
+      baselineGamma = event.gamma;
+      baselineSpherical.setFromVector3(currentOffset);
+      return;
+    }
+
+    const betaDelta = event.beta - baselineBeta;
+    const gammaDelta = event.gamma - baselineGamma;
+
+    const nextSpherical = baselineSpherical.clone();
+    nextSpherical.radius = currentOffset.length();
+    nextSpherical.theta -= gammaDelta * rotationSensitivity;
+    nextSpherical.phi -= betaDelta * rotationSensitivity;
+    nextSpherical.phi = Math.max(0.01, Math.min(Math.PI - 0.01, nextSpherical.phi));
+
+    nextOffset.setFromSpherical(nextSpherical);
+    viewer.camera.position.copy(viewer.controls.target).add(nextOffset);
+    viewer.camera.lookAt(viewer.controls.target);
+
+    viewer.controls.update();
+    viewer.render();
+  };
+
+  viewer.container.addEventListener("pointerdown", () => void enable(), { once: true });
+  viewer.container.addEventListener("touchstart", () => void enable(), { once: true, passive: true });
+  void enable();
 }
 
 function applyMetallicMaterials(object: THREE.Object3D): void {

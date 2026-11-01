@@ -16,6 +16,25 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 
+## [1.1.3] - 2026-11-02
+
+### Added
+
+- emitter type: crossguard
+- move camera with accelerometer on mobile
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+- update npm packages
+
 ## [1.1.2] - 2026-10-23
 
 ### Added
