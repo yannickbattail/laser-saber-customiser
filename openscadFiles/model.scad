@@ -1,5 +1,5 @@
 // type of emitter
-emitterType = "coneEmitter"; // [coneEmitter:cone emitter, armEmitter:arms emitter, oblicEmitter:oblic emitter]
+emitterType = "coneEmitter"; // [coneEmitter:cone emitter, armEmitter:arms emitter, oblicEmitter:oblic emitter, crossguard:crossguard]
 // type of handle
 handleType = "cylindersHandle"; // [ cylindersHandle:2 parts cylinders, ringsHandle:rings, spiralGripHandle:spiral grip, honeyCombHandle:honey comb, curveHandle:curved handle]
 // type of pommel
@@ -27,6 +27,24 @@ e3diameter = 35; // [30:1:50]
 e3cutHeight = 20; // [0:1:100]
 // emitter angle
 e3angle = 45; // [0:5:60]
+
+/* [emitterType : crossguard] */
+// color
+e4color = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// color of the crossguard
+e4crossguardColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// length of the crossguard (one side)
+e4length = 70; // [10:1:150]
+// diamter of the Tip
+e4diamterTip = 10; // [1:1:50]
+// horizontal Scale (stretch horizontally)
+e4horizontalScale = 3.5; // [-20:0.1:20]
+// vertical Scale (stretch vertically)
+e4verticalScale = 3.5; // [-20:0.1:20]
+// color of the sphere on the tip
+e4sphereColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// diamter of the sphere on the tip
+e4diamterSphere = 15; // [0:1:50]
 
 /* [handleType : cylindersHandle] */
 // number of cylinders
@@ -163,6 +181,7 @@ use <parts/base/fundation.scad>;
 use <parts/emitters/coneEmitter.scad>;
 use <parts/emitters/armEmitter.scad>;
 use <parts/emitters/oblicEmitter.scad>;
+use <parts/emitters/crossguard.scad>;
 
 use <parts/handles/cylindersHandle.scad>;
 use <parts/handles/ringsHandle.scad>;
@@ -177,29 +196,30 @@ use <parts/pommels/roundPomnel.scad>;
 
 //armAngle = 0; // [-60:1:0]
 armAngle = animation_opening
-    ?($t < 0.5 ? -60 * (1 - $t * 2) : 0)
-    :(ingnit ? 0 : -60);
+  ?($t < 0.5 ? -60 * (1 - $t * 2) : 0)
+  :(ingnit ? 0 : -60);
 
 $vpt = animation_rotation || animation_opening?[0, 0, 0]:[];
 $vpr = animation_rotation ?[70, 0, 365 * $t]: (animation_opening?[70, 0, 0]:[]);
 $vpd = animation_rotation || animation_opening?1100:[];
 
-confConeEmitter = object(color = e1color, looseCoef=looseCoef);
-confArmEmitter = object(color = e2color, armColor = e2armColor, armStopperSize=armStopperSize, armAngle=armAngle, looseCoef=looseCoef);
-confOblicEmitter = object(color = e3color, diameter = e3diameter, maxHeight=e3maxHeight, cutHeight = e3cutHeight, angle = e3angle);
+confConeEmitter = object(color = e1color, looseCoef = looseCoef);
+confArmEmitter = object(color = e2color, armColor = e2armColor, armStopperSize = armStopperSize, armAngle = armAngle, looseCoef = looseCoef);
+confOblicEmitter = object(color = e3color, diameter = e3diameter, maxHeight = e3maxHeight, cutHeight = e3cutHeight, angle = e3angle);
+confCrossguard = object(color = e4color, crossguardColor = e4crossguardColor, length = e4length, diamterTip = e4diamterTip, horizontalScale = e4horizontalScale, verticalScale = e4verticalScale, sphereColor = e4sphereColor, diamterSphere = e4diamterSphere);
 
-confCylindersHandle = object(cylinderNumber=h1cylinderNumber, cylinderDiameter=h1cylinderDiameter, topColor=h1topColor, cylinderColor=h1cylinderColor, ringColor=h1ringColor, bottomColor=h1bottomColor);
-confRingsHandle = object(ringColor=h2ringColor, color=h2Color);
-confSpiralGripHandle = object(color=h3Color);
-confHoneyCombHandle = object(color=h4Color, honeyCombColor=h4HoneyCombColor, outerRadius=h4outer_radius, holeDiameter=h4hole_diameter, hexWalls=h4hex_walls, invert=h4Invert);
-confCurveHandle = object(Color=h5Color, Curve=h5Curve, diameter=h5diameter);
+confCylindersHandle = object(cylinderNumber = h1cylinderNumber, cylinderDiameter = h1cylinderDiameter, topColor = h1topColor, cylinderColor = h1cylinderColor, ringColor = h1ringColor, bottomColor = h1bottomColor);
+confRingsHandle = object(ringColor = h2ringColor, color = h2Color);
+confSpiralGripHandle = object(color = h3Color);
+confHoneyCombHandle = object(color = h4Color, honeyCombColor = h4HoneyCombColor, outerRadius = h4outer_radius, holeDiameter = h4hole_diameter, hexWalls = h4hex_walls, invert = h4Invert);
+confCurveHandle = object(Color = h5Color, Curve = h5Curve, diameter = h5diameter);
 
-confDiamondPommel = object(baseColor=p1baseColor, diamondBaseColor=p1diamondBaseColor, diamondTopColor=p1diamondTopColor, twistAngle=p1twistAngle, height=p1height, width=p1width, sides=p1sides);
-confDiamondSpikePommel = object(baseColor=p2baseColor, diamondBaseColor=p2diamondBaseColor, diamondTopColor=p2diamondTopColor, height=p2height, width=p2width, sides=p2sides, SpikeColor=p2SpikeColor, SpikeLength=p2SpikeLength);
-confSpherePommel = object(ornament=p3ornament, baseColor=p3baseColor, sphereColor=p3sphereColor, ornamentColor=p3ornamentColor, sides=p3sides);
-confRoundPomnel = object(baseColor=p4baseColor, sphereColor=p4sphereColor);
+confDiamondPommel = object(baseColor = p1baseColor, diamondBaseColor = p1diamondBaseColor, diamondTopColor = p1diamondTopColor, twistAngle = p1twistAngle, height = p1height, width = p1width, sides = p1sides);
+confDiamondSpikePommel = object(baseColor = p2baseColor, diamondBaseColor = p2diamondBaseColor, diamondTopColor = p2diamondTopColor, height = p2height, width = p2width, sides = p2sides, SpikeColor = p2SpikeColor, SpikeLength = p2SpikeLength);
+confSpherePommel = object(ornament = p3ornament, baseColor = p3baseColor, sphereColor = p3sphereColor, ornamentColor = p3ornamentColor, sides = p3sides);
+confRoundPomnel = object(baseColor = p4baseColor, sphereColor = p4sphereColor);
 
-confBlade = object(bladeColor=bladeColor, animationOpening=animation_opening, ingnit=ingnit, showBlade=showBlade);
+confBlade = object(bladeColor = bladeColor, animationOpening = animation_opening, ingnit = ingnit, showBlade = showBlade);
 
 if (part == "all") {
   if (showBlade) {
@@ -215,111 +235,121 @@ if (part == "all") {
   handle();
   pommel();
 } else if (part == "emitter") {
-    emitter();
+  emitter();
 } else if (part == "handle") {
-    handle();
+  handle();
 } else if (part == "pommel") {
-    pommel();
+  pommel();
 } else if (part == "arm") {
-    armPos([19, 0, 30], false);
+  armPos([19, 0, 30], false);
 } else if (part == "fundation") {
-    fundation();
+  fundation();
 }
 
 module emitter() {
-    if (emitterType == "coneEmitter") {
-        coneEmitterAll(confConeEmitter);
-    } else if (emitterType == "armEmitter") {
-        armEmitterAll(confArmEmitter);
-    } else if (emitterType == "oblicEmitter") {
-        oblicEmitterAll(confOblicEmitter);
-    } else {
-      assert(true, str("unknown emitterType: ", emitterType));
-    }
+  if (emitterType == "coneEmitter") {
+    coneEmitterAll(confConeEmitter);
+  } else if (emitterType == "armEmitter") {
+    armEmitterAll(confArmEmitter);
+  } else if (emitterType == "oblicEmitter") {
+    oblicEmitterAll(confOblicEmitter);
+  } else if (emitterType == "crossguard") {
+    crossguardAll(confCrossguard);
+  } else {
+    assert(true, str("unknown emitterType: ", emitterType));
+  }
 }
 
 module coneEmitterAll(confConeEmitter) {
-    color(confConeEmitter.color) {
-        difference() {
-            coneEmitter(confConeEmitter);
-            fundationHole(looseCoef);
-            bladeHole();
-        }
+  color(confConeEmitter.color) {
+    difference() {
+      coneEmitter(confConeEmitter);
+      fundationHole(looseCoef);
+      bladeHole();
     }
+  }
 }
 
 module armEmitterAll(confArmEmitter) {
-    color(confArmEmitter.armColor)
-        arms(confArmEmitter);
-    color(confArmEmitter.color) {
-        difference() {
-            coneEmitter(confArmEmitter);
-            armHoles(confArmEmitter);
-            fundationHole(looseCoef);
-            bladeHole();
-        }
+  color(confArmEmitter.armColor)
+    arms(confArmEmitter);
+  color(confArmEmitter.color) {
+    difference() {
+      coneEmitter(confArmEmitter);
+      armHoles(confArmEmitter);
+      fundationHole(looseCoef);
+      bladeHole();
     }
+  }
 }
 
 module oblicEmitterAll(confOblicEmitter) {
-    color(confOblicEmitter.color) {
-        difference() {
-            oblicEmitter(confOblicEmitter);
-            fundationHole(looseCoef);
-            bladeHole();
-        }
+  color(confOblicEmitter.color) {
+    difference() {
+      oblicEmitter(confOblicEmitter);
+      fundationHole(looseCoef);
+      bladeHole();
     }
+  }
+}
+
+module crossguardAll(confCrossguard) {
+  difference() {
+    crossguard(confCrossguard);
+    fundationHole(looseCoef);
+    bladeHole();
+  }
 }
 
 module handle() {
-    difference() {
-        translate([0, 0, -6]) {
-            length = 206 - 18;
-            if (handleType == "cylindersHandle") {
-              cylindersHandle(length, confCylindersHandle);
-            } else if (handleType == "ringsHandle") {
-              ringsHandle(length, confRingsHandle);
-            } else if (handleType == "spiralGripHandle") {
-              spiralGripHandle(length, confSpiralGripHandle);
-            } else if (handleType == "honeyCombHandle") {
-              honeyCombHandle(length, confHoneyCombHandle);
-            } else if (handleType == "curveHandle") {
-              curveHandle(length, confCurveHandle);
-            } else {
-              assert(true, str("unknown handleType: ", handleType));
-            }
-        }
-        if (addCopyright)
-          copyright();
-        fundationHole(looseCoef);
+  difference() {
+    translate([0, 0, -6]) {
+      length = 206 - 18;
+      if (handleType == "cylindersHandle") {
+        cylindersHandle(length, confCylindersHandle);
+      } else if (handleType == "ringsHandle") {
+        ringsHandle(length, confRingsHandle);
+      } else if (handleType == "spiralGripHandle") {
+        spiralGripHandle(length, confSpiralGripHandle);
+      } else if (handleType == "honeyCombHandle") {
+        honeyCombHandle(length, confHoneyCombHandle);
+      } else if (handleType == "curveHandle") {
+        curveHandle(length, confCurveHandle);
+      } else {
+        assert(true, str("unknown handleType: ", handleType));
+      }
     }
+    if (addCopyright)
+    copyright();
+    fundationHole(looseCoef);
+  }
 }
 
 module copyright() {
-    translate([0, 0, -40]) {
-        rotate([0, 90, 0]) {
-            linear_extrude(30) {
-                text("© Copyright XcinnsY", size = 4, valign = "center", font = "Arial");
-            }
-        }
+  translate([0, 0, -40]) {
+    rotate([0, 90, 0]) {
+      linear_extrude(30) {
+        text("© Copyright XcinnaY", size = 4, valign = "center", font = "Arial");
+      }
     }
+  }
 }
 
 module pommel() {
-    difference() {
-        translate([0, 0, -194]) {
-            if (pommelType == "diamondPommel") {
-                diamondPommel(confDiamondPommel);
-            } else if (pommelType == "diamondSpikePommel") {
-                diamondSpikePommel(confDiamondSpikePommel);
-            } else if (pommelType == "spherePommel") {
-                spherePommel(confSpherePommel);
-            } else if (pommelType == "roundPomnel") {
-                roundPomnel(confRoundPomnel);
-            } else {
-              assert(true, str("unknown pommelType: ", pommelType));
-            }
-        }
-        fundationHole(looseCoef);
+  difference() {
+    translate([0, 0, -194]) {
+      if (pommelType == "diamondPommel") {
+        diamondPommel(confDiamondPommel);
+      } else if (pommelType == "diamondSpikePommel") {
+        diamondSpikePommel(confDiamondSpikePommel);
+      } else if (pommelType == "spherePommel") {
+        spherePommel(confSpherePommel);
+      } else if (pommelType == "roundPomnel") {
+        roundPomnel(confRoundPomnel);
+      } else {
+        assert(true, str("unknown pommelType: ", pommelType));
+      }
     }
+    fundationHole(looseCoef);
+  }
 }

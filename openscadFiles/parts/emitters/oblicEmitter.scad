@@ -1,4 +1,3 @@
-
 module oblicEmitter(confOblicEmitter) {
   translate([0, 0, -6]) {
     difference() {
