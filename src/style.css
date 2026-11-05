@@ -827,6 +827,15 @@ fieldset {
   margin-top: 0.35rem;
 }
 
+#status.generating {
+  color: var(--neon-cyan);
+  animation: status-generating 1.2s infinite ease-in-out;
+}
+
+#status.ready {
+  color: var(--accent-success);
+}
+
 /* Scanline Effect */
 .chamber-scanline {
   position: absolute;
@@ -1171,6 +1180,18 @@ fieldset {
   }
   100% {
     transform: translateX(350%);
+  }
+}
+
+@keyframes status-generating {
+  0%,
+  100% {
+    opacity: 1;
+    text-shadow: 0 0 8px var(--neon-cyan-glow);
+  }
+  50% {
+    opacity: 0.5;
+    text-shadow: none;
   }
 }
 

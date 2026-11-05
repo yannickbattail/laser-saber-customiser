@@ -45,8 +45,6 @@ export function initialize3DPreviewer(containerId = "preview"): Preview3DViewer 
 
   container.appendChild(renderer.domElement);
 
-  applyHdriEnvironment(scene, renderer, hdriImageUrl, panoramaImageUrl);
-
   scene.add(new THREE.HemisphereLight(0xffffff, 0x303040, 2));
 
   const keyLight = new THREE.DirectionalLight(0xffffff, 3);
@@ -83,6 +81,8 @@ export function initialize3DPreviewer(containerId = "preview"): Preview3DViewer 
     },
   };
 
+  applyHdriEnvironment(viewer, hdriImageUrl, panoramaImageUrl);
+
   controls.addEventListener("change", viewer.render);
   enableDeviceOrientationControls(viewer);
 
@@ -107,7 +107,7 @@ export function initialize3DPreviewer(containerId = "preview"): Preview3DViewer 
   return viewer;
 }
 
-export function replace3DModel(viewer: Preview3DViewer, file3mf: string): void {
+export function replace3DModel(viewer: Preview3DViewer, file3mf: string, readyCallback: () => void): void {
   if (viewer.currentModel) {
     viewer.scene.remove(viewer.currentModel);
     viewer.currentModel.traverse((child) => {
@@ -160,6 +160,7 @@ export function replace3DModel(viewer: Preview3DViewer, file3mf: string): void {
       }
 
       viewer.render();
+      readyCallback();
     },
     undefined,
     (error) => {
@@ -170,19 +171,14 @@ export function replace3DModel(viewer: Preview3DViewer, file3mf: string): void {
 
 let viewer: Preview3DViewer | null = null;
 
-export function preview3D(file3mf: string): Preview3DViewer {
+export function preview3D(file3mf: string, readyCallback: () => void): Preview3DViewer {
   if (!viewer) {
     viewer = initialize3DPreviewer();
   }
-  replace3DModel(viewer, file3mf);
+  replace3DModel(viewer, file3mf, readyCallback);
   return viewer;
 }
-function applyHdriEnvironment(
-  scene: THREE.Scene,
-  renderer: THREE.WebGLRenderer,
-  hdriUrl: string,
-  backgroundUrl?: string,
-): void {
+function applyHdriEnvironment(viewer: Preview3DViewer, hdriUrl: string, backgroundUrl?: string): void {
   const hdrLoader = new HDRLoader();
   const textureLoader = new THREE.TextureLoader();
 
@@ -190,14 +186,11 @@ function applyHdriEnvironment(
     hdriUrl,
     (texture) => {
       texture.mapping = THREE.EquirectangularReflectionMapping;
-
-      const pmremGenerator = new THREE.PMREMGenerator(renderer);
-      const environmentMap = pmremGenerator.fromEquirectangular(texture).texture;
-
-      scene.environment = environmentMap;
-
+      const pmremGenerator = new THREE.PMREMGenerator(viewer.renderer);
+      viewer.scene.environment = pmremGenerator.fromEquirectangular(texture).texture;
       texture.dispose();
       pmremGenerator.dispose();
+      viewer.render();
     },
     undefined,
     (error) => {
@@ -212,7 +205,7 @@ function applyHdriEnvironment(
         texture.colorSpace = THREE.SRGBColorSpace;
         texture.mapping = THREE.EquirectangularReflectionMapping;
 
-        scene.background = texture;
+        viewer.scene.background = texture;
       },
       undefined,
       (error) => {

@@ -6,8 +6,8 @@ import { preview3D } from "./3dPreview.js";
 
 export class Gui {
   readonly PRESET_PARM_NAME: string = "p";
+  readonly changeTimeout = 2000;
   private lastFormChanged = 0;
-  private changeTimeout = 2000;
   private customiserForm: CustomiserForm;
 
   constructor(
@@ -53,12 +53,25 @@ export class Gui {
 
   public async display3DModel() {
     try {
+      this.setStatus("GENERATING");
       const data = this.customiserForm.getFormData();
       const endpoint = "/api/openscad/model.3mf";
       const uri = `${endpoint}?${this.PRESET_PARM_NAME}=${encodeURIComponent(JSON.stringify(data))}`;
-      preview3D(uri);
+      preview3D(uri, () => this.ready());
     } catch (e) {
       console.error(e);
+    }
+  }
+
+  public ready() {
+    this.setStatus("READY");
+  }
+
+  private setStatus(status: string) {
+    const s = document.getElementById("status");
+    if (s) {
+      s.innerText = `STATUS: ${status}`;
+      s.className = status.toLowerCase();
     }
   }
 
