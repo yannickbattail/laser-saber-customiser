@@ -136,12 +136,17 @@ export class CustomiserForm {
   }
 
   private generateBoolean(p: ParameterBoolean) {
-    const checked = p.initial ? 'checked="checked"' : "";
+    const checked = this.isActive(p.initial) ? 'checked="checked"' : "";
     return `
     <label class="hud-toggle-label" for="${p.name}">
       <input type="checkbox" id="${p.name}" name="${p.name}" ${checked} value="1" onchange="gui.formChanged()" />
       <span class="toggle-custom" aria-hidden="true"></span>
       <span class="toggle-text">${p.initial ? "ON" : "OFF"}</span>
     </label>`;
+  }
+  private isActive(val: string | number | boolean): boolean {
+    if (typeof val === "boolean") return val;
+    if (typeof val === "number") return !!val;
+    return !(val === "0" || val.toLowerCase() === "false");
   }
 }
