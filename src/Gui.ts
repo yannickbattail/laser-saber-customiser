@@ -23,6 +23,7 @@ export class Gui {
 
   public formChanged() {
     this.lastFormChanged = Date.now();
+    this.startAnimation();
     window.setTimeout(() => this.applyChanges(), this.changeTimeout + 50);
   }
 
@@ -136,8 +137,25 @@ export class Gui {
 
   private async applyChanges() {
     if (Date.now() - this.lastFormChanged > this.changeTimeout) {
+      this.hideAnimation();
       this.updateUrl();
       await this.display3DModel();
+    }
+  }
+
+  private startAnimation() {
+    const anim = document.getElementById("status-animation");
+    if (anim) {
+      anim.classList.remove("active");
+      void anim.offsetWidth;
+      anim.classList.add("active");
+    }
+  }
+
+  private hideAnimation() {
+    const anim = document.getElementById("status-animation");
+    if (anim) {
+      anim.classList.remove("active");
     }
   }
 

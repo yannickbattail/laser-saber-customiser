@@ -827,6 +827,27 @@ fieldset {
   margin-top: 0.35rem;
 }
 
+.status-container {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.status-animation {
+  display: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0, 240, 255, 0.2);
+  border-top-color: var(--neon-cyan);
+  box-shadow: 0 0 6px var(--neon-cyan-glow);
+}
+
+.status-animation.active {
+  display: inline-block;
+  animation: status-countdown 2s linear;
+}
+
 #status.generating {
   color: var(--neon-cyan);
   animation: status-generating 1.2s infinite ease-in-out;
@@ -1192,6 +1213,15 @@ fieldset {
   50% {
     opacity: 0.5;
     text-shadow: none;
+  }
+}
+
+@keyframes status-countdown {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(720deg);
   }
 }
 
