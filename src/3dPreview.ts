@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { ThreeMFLoader } from "three/examples/jsm/loaders/3MFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
+import { HDRLoader } from "three/examples/jsm/loaders/HDRLoader.js";
 
 type DeviceOrientationEventWithPermission = typeof DeviceOrientationEvent & {
   requestPermission?: () => Promise<PermissionState>;
@@ -16,6 +16,9 @@ export interface Preview3DViewer {
   currentModel: THREE.Object3D | null;
   render: () => void;
 }
+
+const panoramaImageUrl = "./img/tactical-kyber-lab-equirectangular.png";
+const hdriImageUrl = "./img/tactical-kyber-lab.hdr";
 
 export function initialize3DPreviewer(containerId = "preview"): Preview3DViewer {
   const container = document.getElementById(containerId);
@@ -42,12 +45,6 @@ export function initialize3DPreviewer(containerId = "preview"): Preview3DViewer 
 
   container.appendChild(renderer.domElement);
 
-  const pmremGenerator = new THREE.PMREMGenerator(renderer);
-  const environment = new RoomEnvironment();
-  scene.environment = pmremGenerator.fromScene(environment).texture;
-  environment.dispose();
-  pmremGenerator.dispose();
-
   scene.add(new THREE.HemisphereLight(0xffffff, 0x303040, 2));
 
   const keyLight = new THREE.DirectionalLight(0xffffff, 3);
@@ -58,11 +55,15 @@ export function initialize3DPreviewer(containerId = "preview"): Preview3DViewer 
   fillLight.position.set(-100, 50, -100);
   scene.add(fillLight);
 
-  const rimLight = new THREE.DirectionalLight(0xffffff, 2);
-  rimLight.position.set(0, 100, -150);
-  scene.add(rimLight);
-
   const controls = new OrbitControls(camera, renderer.domElement);
+
+  renderer.domElement.style.cursor = "grab";
+  renderer.domElement.addEventListener("pointerdown", () => {
+    renderer.domElement.style.cursor = "grabbing";
+  });
+  renderer.domElement.addEventListener("pointerup", () => {
+    renderer.domElement.style.cursor = "grab";
+  });
 
   const viewer: Preview3DViewer = {
     container,
@@ -75,6 +76,8 @@ export function initialize3DPreviewer(containerId = "preview"): Preview3DViewer 
       renderer.render(scene, camera);
     },
   };
+
+  applyHdriEnvironment(viewer, hdriImageUrl, panoramaImageUrl);
 
   controls.addEventListener("change", viewer.render);
   enableDeviceOrientationControls(viewer);
@@ -99,31 +102,33 @@ export function initialize3DPreviewer(containerId = "preview"): Preview3DViewer 
 
   return viewer;
 }
-
-export function replace3DModel(viewer: Preview3DViewer, file3mf: string): void {
-  if (viewer.currentModel) {
-    viewer.scene.remove(viewer.currentModel);
-    viewer.currentModel.traverse((child) => {
-      if (!(child instanceof THREE.Mesh)) {
-        return;
-      }
-
-      if (Array.isArray(child.material)) {
-        child.material.forEach((material) => material.dispose());
-      } else {
-        child.material.dispose();
-      }
-
-      child.geometry.dispose();
-    });
-    viewer.currentModel = null;
+function removeObject(obj: THREE.Object3D<THREE.Object3DEventMap>) {
+  if (!(obj instanceof THREE.Mesh)) {
+    return;
   }
 
-  const loader = new ThreeMFLoader();
+  if (Array.isArray(obj.material)) {
+    obj.material.forEach((material) => material.dispose());
+  } else {
+    obj.material.dispose();
+  }
 
+  obj.geometry.dispose();
+  obj.dispose();
+}
+export function replace3DModel(viewer: Preview3DViewer, file3mf: string, readyCallback: () => void): void {
+  const objs = viewer.scene.getObjectsByProperty("name", "saber");
+  objs.forEach((o) => {
+    viewer.scene.remove(o);
+    removeObject(o);
+  });
+
+  viewer.render();
+  const loader = new ThreeMFLoader();
   loader.load(
     file3mf,
     (model) => {
+      model.name = "saber";
       applyMetallicMaterials(model);
 
       model.rotation.x = -Math.PI / 2;
@@ -147,12 +152,13 @@ export function replace3DModel(viewer: Preview3DViewer, file3mf: string): void {
       viewer.controls.target.set(0, 0, 0);
       viewer.controls.update();
 
-      const blade = viewer.currentModel.getObjectByName("OpenSCAD Model 1");
+      const blade = viewer.currentModel.getObjectByName("OpenSCAD Model 5");
       if (blade) {
         applyBladeMaterial(blade);
       }
 
       viewer.render();
+      readyCallback();
     },
     undefined,
     (error) => {
@@ -163,12 +169,48 @@ export function replace3DModel(viewer: Preview3DViewer, file3mf: string): void {
 
 let viewer: Preview3DViewer | null = null;
 
-export function preview3D(file3mf: string): Preview3DViewer {
+export function preview3D(file3mf: string, readyCallback: () => void): Preview3DViewer {
   if (!viewer) {
     viewer = initialize3DPreviewer();
   }
-  replace3DModel(viewer, file3mf);
+  replace3DModel(viewer, file3mf, readyCallback);
   return viewer;
+}
+function applyHdriEnvironment(viewer: Preview3DViewer, hdriUrl: string, backgroundUrl?: string): void {
+  const hdrLoader = new HDRLoader();
+  const textureLoader = new THREE.TextureLoader();
+
+  hdrLoader.load(
+    hdriUrl,
+    (texture) => {
+      texture.mapping = THREE.EquirectangularReflectionMapping;
+      const pmremGenerator = new THREE.PMREMGenerator(viewer.renderer);
+      viewer.scene.environment = pmremGenerator.fromEquirectangular(texture).texture;
+      texture.dispose();
+      pmremGenerator.dispose();
+      viewer.render();
+    },
+    undefined,
+    (error) => {
+      console.error("Unable to load HDRI environment:", error);
+    },
+  );
+
+  if (backgroundUrl) {
+    textureLoader.load(
+      backgroundUrl,
+      (texture) => {
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.mapping = THREE.EquirectangularReflectionMapping;
+
+        viewer.scene.background = texture;
+      },
+      undefined,
+      (error) => {
+        console.error("Unable to load panorama background:", error);
+      },
+    );
+  }
 }
 
 function enableDeviceOrientationControls(viewer: Preview3DViewer): void {

@@ -162,7 +162,7 @@
 
               <div class="chamber-telemetry top-telemetry" aria-hidden="true">
                 <span>FREQ: 1.42 THz</span>
-                <span>EMITTER: CALIBRATED</span>
+                <span>BLADE: CALIBRATED</span>
               </div>
 
               <!-- Preview target container -->
@@ -185,7 +185,10 @@
 
               <div class="chamber-telemetry bottom-telemetry" aria-hidden="true">
                 <span>ALIGNMENT: 0.001mm</span>
-                <span>STATUS: READY</span>
+                <span class="status-container">
+                  <span id="status-animation" class="status-animation"></span>
+                  <span id="status">STATUS: STANDBY</span>
+                </span>
               </div>
             </div>
           </section>
@@ -199,16 +202,11 @@
           <span>SYSTEM READY // CAD KERNEL ONLINE</span>
         </div>
         <div class="footer-links">
-          <a
-            href="https://github.com/yannickbattail/laser-saber-customiser/issues/new"
-            target="_blank"
-            rel="noopener noreferrer"
-            >Report a bug</a
-          >
+          <a href="https://discord.gg/jhyvmtY6B" target="_blank" rel="noopener noreferrer">Discord</a>
           <span class="footer-sep" aria-hidden="true">//</span>
-          <a href="https://github.com/yannickbattail/laser-saber-customiser" target="_blank" rel="noopener noreferrer"
-            >Sources on GitHub</a
-          >
+          <a href="https://github.com/yannickbattail/laser-saber-customiser/issues/new" target="_blank" rel="noopener noreferrer">Report a bug</a>
+          <span class="footer-sep" aria-hidden="true">//</span>
+          <a href="https://github.com/yannickbattail/laser-saber-customiser" target="_blank" rel="noopener noreferrer">Sources on GitHub</a>
         </div>
       </footer>
     </div>

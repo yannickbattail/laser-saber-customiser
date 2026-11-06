@@ -16,6 +16,28 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 
+## [1.1.4] - 2026-11-06
+
+### Added
+
+- set background HDRI
+- change status when generating
+- animation when form has changed
+- discord link
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+- boolean values
+- `replace3DModel()` 2 sabers were displayed
+
+### Security
+
 ## [1.1.3] - 2026-11-02
 
 ### Added
