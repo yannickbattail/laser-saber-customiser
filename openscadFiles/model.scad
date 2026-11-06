@@ -222,13 +222,13 @@ confRoundPomnel = object(baseColor = p4baseColor, sphereColor = p4sphereColor);
 confBlade = object(bladeColor = bladeColor, animationOpening = animation_opening, ingnit = ingnit, showBlade = showBlade);
 
 if (part == "all") {
-  if (showBlade) {
-    blade(confBlade);
-  }
   fundation();
   emitter();
   handle();
   pommel();
+  if (showBlade) {
+    blade(confBlade);
+  }
 } else if (part == "saber") {
   fundation();
   emitter();

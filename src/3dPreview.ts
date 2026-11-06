@@ -55,10 +55,6 @@ export function initialize3DPreviewer(containerId = "preview"): Preview3DViewer 
   fillLight.position.set(-100, 50, -100);
   scene.add(fillLight);
 
-  const rimLight = new THREE.DirectionalLight(0xffffff, 2);
-  rimLight.position.set(0, 100, -150);
-  scene.add(rimLight);
-
   const controls = new OrbitControls(camera, renderer.domElement);
 
   renderer.domElement.style.cursor = "grab";
@@ -106,31 +102,33 @@ export function initialize3DPreviewer(containerId = "preview"): Preview3DViewer 
 
   return viewer;
 }
-
-export function replace3DModel(viewer: Preview3DViewer, file3mf: string, readyCallback: () => void): void {
-  if (viewer.currentModel) {
-    viewer.scene.remove(viewer.currentModel);
-    viewer.currentModel.traverse((child) => {
-      if (!(child instanceof THREE.Mesh)) {
-        return;
-      }
-
-      if (Array.isArray(child.material)) {
-        child.material.forEach((material) => material.dispose());
-      } else {
-        child.material.dispose();
-      }
-
-      child.geometry.dispose();
-    });
-    viewer.currentModel = null;
+function removeObject(obj: THREE.Object3D<THREE.Object3DEventMap>) {
+  if (!(obj instanceof THREE.Mesh)) {
+    return;
   }
 
-  const loader = new ThreeMFLoader();
+  if (Array.isArray(obj.material)) {
+    obj.material.forEach((material) => material.dispose());
+  } else {
+    obj.material.dispose();
+  }
 
+  obj.geometry.dispose();
+  obj.dispose();
+}
+export function replace3DModel(viewer: Preview3DViewer, file3mf: string, readyCallback: () => void): void {
+  const objs = viewer.scene.getObjectsByProperty("name", "saber");
+  objs.forEach((o) => {
+    viewer.scene.remove(o);
+    removeObject(o);
+  });
+
+  viewer.render();
+  const loader = new ThreeMFLoader();
   loader.load(
     file3mf,
     (model) => {
+      model.name = "saber";
       applyMetallicMaterials(model);
 
       model.rotation.x = -Math.PI / 2;
@@ -154,7 +152,7 @@ export function replace3DModel(viewer: Preview3DViewer, file3mf: string, readyCa
       viewer.controls.target.set(0, 0, 0);
       viewer.controls.update();
 
-      const blade = viewer.currentModel.getObjectByName("OpenSCAD Model 1");
+      const blade = viewer.currentModel.getObjectByName("OpenSCAD Model 5");
       if (blade) {
         applyBladeMaterial(blade);
       }
