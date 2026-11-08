@@ -1,7 +1,7 @@
 {
   "name": "laser-saber-customiser-server",
   "description": "",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "author": "XcinnaY",
   "maintainer": "XcinnaY",
   "license": "LGPL-3.0-or-later",
@@ -34,9 +34,8 @@
     "@types/node": "^26.6.6",
     "ajv": "^8.20.0",
     "express": "^5.3.0",
-    "lowdb": "^7.0.1",
-    "nanoid": "^6.0.2",
     "openscad-cli-wrapper": "^1.5.2",
+    "pino": "^10.4.0",
     "qs": "^6.17.1"
   },
   "devDependencies": {

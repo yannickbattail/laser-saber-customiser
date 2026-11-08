@@ -16,6 +16,29 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 
+## [1.1.5] - 2026-11-09
+
+### Added
+
+- set image preview for discord and other
+- server logging
+
+### Changed
+
+- reduce accelerometer sensitivity
+
+### Deprecated
+
+### Removed
+
+- persistence API
+
+### Fixed
+
+### Security
+
+- update npm packages
+
 ## [1.1.4] - 2026-11-06
 
 ### Added

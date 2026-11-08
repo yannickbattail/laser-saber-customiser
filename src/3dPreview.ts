@@ -224,7 +224,7 @@ function enableDeviceOrientationControls(viewer: Preview3DViewer): void {
   const currentOffset = new THREE.Vector3();
   const nextOffset = new THREE.Vector3();
 
-  const rotationSensitivity = 0.05;
+  const rotationSensitivity = 0.02;
 
   const enable = async (): Promise<void> => {
     if (enabled || !("DeviceOrientationEvent" in window)) {
