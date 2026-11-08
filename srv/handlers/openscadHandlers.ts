@@ -8,6 +8,7 @@ import {
   generateModel,
   getParameterDefinition,
 } from "../generate.js";
+import { readFileSync } from "node:fs";
 
 export async function handleParameter(req: Request, res: Response): Promise<void> {
   const param = await getParameterDefinition();
@@ -38,6 +39,15 @@ export async function handleWebp(req: Request, res: Response): Promise<void> {
     async (input: ParameterKV[]): Promise<OpenScadOutputWithSummary> => await generateAnimation(input),
   );
 }
+
+export const indexHandler = (req: Request, res: Response) => {
+  const index: string = readFileSync("../src/index.html", "utf8");
+  const newIndex = index.replaceAll(
+    "{{PARAMETER}}",
+    req.query.p ? "api/openscad/image.png?p=" + encodeURIComponent(req.query.p?.toString()) : "img/icon.png",
+  );
+  res.send(newIndex);
+};
 
 async function handleOutput(
   req: Request,
