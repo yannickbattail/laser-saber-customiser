@@ -43,9 +43,4 @@ app.get("/api/openscad/model.3mf", handleModel3mf);
 app.get("/api/openscad/image.png", handleImage);
 app.get("/api/openscad/animation.webp", handleWebp);
 
-// disable for now, because it not (yet) used int the frontend
-// app.get("/api/persistence/preset", getPresets);
-// app.post("/api/persistence/preset", postPreset);
-// app.delete("/api/persistence/preset", deletePreset);
-
 app.listen(port, () => console.log(`Listening on http://localhost:${port}/`));
