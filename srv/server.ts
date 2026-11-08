@@ -2,10 +2,12 @@ import process from "node:process";
 import express, { NextFunction, Request, Response } from "express";
 import qs from "qs";
 import { handleImage, handleModel3mf, handleParameter, handleWebp } from "./handlers/openscadHandlers.js";
+import { httpLogger } from "./http-logger.js";
 
 const port = process.argv.length >= 3 ? parseInt(process.argv[2]) : 8080;
 
 const app = express();
+app.use(httpLogger);
 
 app.set("query parser", (queryString) => {
   return qs.parse(queryString, {
