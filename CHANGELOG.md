@@ -39,6 +39,24 @@ All notable changes to this project will be documented in this file.
 
 - update npm packages
 
+## [1.1.6] - 2026-11-22
+
+### Added
+
+- pointy emitter
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+- update npm packages
+
 ## [1.1.4] - 2026-11-06
 
 ### Added
