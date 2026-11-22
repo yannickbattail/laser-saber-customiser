@@ -1,5 +1,5 @@
 // type of emitter
-emitterType = "coneEmitter"; // [coneEmitter:cone emitter, armEmitter:arms emitter, oblicEmitter:oblic emitter, crossguard:crossguard]
+emitterType = "coneEmitter"; // [coneEmitter:cone emitter, armEmitter:arms emitter, oblicEmitter:oblic emitter, crossguard:crossguard, pointyEmitter:pointy emitter]
 // type of handle
 handleType = "cylindersHandle"; // [ cylindersHandle:2 parts cylinders, ringsHandle:rings, spiralGripHandle:spiral grip, honeyCombHandle:honey comb, curveHandle:curved handle]
 // type of pommel
@@ -45,6 +45,14 @@ e4verticalScale = 3.5; // [-20:0.1:20]
 e4sphereColor = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // diamter of the sphere on the tip
 e4diamterSphere = 15; // [0:1:50]
+
+/* [emitterType : pointyEmitter] */
+// color
+e5color = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
+// emitter diameter
+e5diameter = 35; // [30:1:50]
+// curve
+e5curve=30;
 
 /* [handleType : cylindersHandle] */
 // number of cylinders
@@ -182,6 +190,7 @@ use <parts/emitters/coneEmitter.scad>;
 use <parts/emitters/armEmitter.scad>;
 use <parts/emitters/oblicEmitter.scad>;
 use <parts/emitters/crossguard.scad>;
+use <parts/emitters/pointyEmitter.scad>;
 
 use <parts/handles/cylindersHandle.scad>;
 use <parts/handles/ringsHandle.scad>;
@@ -207,6 +216,7 @@ confConeEmitter = object(color = e1color, looseCoef = looseCoef);
 confArmEmitter = object(color = e2color, armColor = e2armColor, armStopperSize = armStopperSize, armAngle = armAngle, looseCoef = looseCoef);
 confOblicEmitter = object(color = e3color, diameter = e3diameter, maxHeight = e3maxHeight, cutHeight = e3cutHeight, angle = e3angle);
 confCrossguard = object(color = e4color, crossguardColor = e4crossguardColor, length = e4length, diamterTip = e4diamterTip, horizontalScale = e4horizontalScale, verticalScale = e4verticalScale, sphereColor = e4sphereColor, diamterSphere = e4diamterSphere);
+confPointyEmitter = object(color = e5color, diameter = e5diameter, curve = e5curve);
 
 confCylindersHandle = object(cylinderNumber = h1cylinderNumber, cylinderDiameter = h1cylinderDiameter, topColor = h1topColor, cylinderColor = h1cylinderColor, ringColor = h1ringColor, bottomColor = h1bottomColor);
 confRingsHandle = object(ringColor = h2ringColor, color = h2Color);
@@ -255,6 +265,8 @@ module emitter() {
     oblicEmitterAll(confOblicEmitter);
   } else if (emitterType == "crossguard") {
     crossguardAll(confCrossguard);
+  } else if (emitterType == "pointyEmitter") {
+    pointyEmitterAll(confPointyEmitter);
   } else {
     assert(true, str("unknown emitterType: ", emitterType));
   }
@@ -296,6 +308,14 @@ module oblicEmitterAll(confOblicEmitter) {
 module crossguardAll(confCrossguard) {
   difference() {
     crossguard(confCrossguard);
+    fundationHole(looseCoef);
+    bladeHole();
+  }
+}
+
+module pointyEmitterAll(confPointyEmitter) {
+  difference() {
+    pointyEmitter(confPointyEmitter);
     fundationHole(looseCoef);
     bladeHole();
   }
