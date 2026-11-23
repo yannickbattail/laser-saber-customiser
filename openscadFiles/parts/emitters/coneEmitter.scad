@@ -1,5 +1,4 @@
-use <../../honey_comb.scad>;
-use <../../util.scad>;
+use <../../lib/util.scad>;
 
 module coneEmitter(confConeEmitter) {
   ringDiameter = 36;

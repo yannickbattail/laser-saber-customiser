@@ -1,4 +1,4 @@
-use <../../honey_comb.scad>;
+use <../../lib/honey_comb.scad>;
 
 module honeyCombHandle(length, confHoneyCombHandle) {
   if (confHoneyCombHandle.invert) {

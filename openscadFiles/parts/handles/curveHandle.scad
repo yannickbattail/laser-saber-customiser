@@ -1,4 +1,4 @@
-use <../../util.scad>;
+use <../../lib/util.scad>;
 
 module curveHandle(length, confCurveHandle) {
   color(confCurveHandle.Color) {
