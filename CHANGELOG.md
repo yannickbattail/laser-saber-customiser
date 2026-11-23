@@ -7,6 +7,22 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 ### Changed
+- improve pointy emitter
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [1.1.6] - 2026-11-22
+
+### Added
+
+- pointy emitter
+
+### Changed
 
 ### Deprecated
 
@@ -15,6 +31,8 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 ### Security
+
+- update npm packages
 
 ## [1.1.5] - 2026-11-09
 
@@ -32,24 +50,6 @@ All notable changes to this project will be documented in this file.
 ### Removed
 
 - persistence API
-
-### Fixed
-
-### Security
-
-- update npm packages
-
-## [1.1.6] - 2026-11-22
-
-### Added
-
-- pointy emitter
-
-### Changed
-
-### Deprecated
-
-### Removed
 
 ### Fixed
 
