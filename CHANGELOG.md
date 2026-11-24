@@ -8,6 +8,20 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [1.1.7] - 2026-11-24
+
+### Added
+
+### Changed
+
 - fast image preview and 3D view on demand
 - improve pointy emitter
 - enable/disable accelerometer
