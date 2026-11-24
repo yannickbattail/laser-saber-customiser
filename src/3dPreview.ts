@@ -277,7 +277,10 @@ async function requestAccelerometerPermission(): Promise<boolean> {
 
 function enableDeviceOrientationControls(viewerInstance: Preview3DViewer): void {
   viewerInstance.container.addEventListener("pointerdown", () => void activateAccelerometer(true), { once: true });
-  viewerInstance.container.addEventListener("touchstart", () => void activateAccelerometer(true), { once: true, passive: true });
+  viewerInstance.container.addEventListener("touchstart", () => void activateAccelerometer(true), {
+    once: true,
+    passive: true,
+  });
 }
 
 export async function activateAccelerometer(enable: boolean): Promise<void> {

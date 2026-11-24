@@ -8,7 +8,8 @@ module honeyCombHandle(length, confHoneyCombHandle) {
           cylinder(h = length, d = 31);
       color(confHoneyCombHandle.honeyCombColor)
         translate([0, 0, -length])
-          honey_comb_cylinder(length, confHoneyCombHandle.outerRadius, 1, confHoneyCombHandle.holeDiameter, confHoneyCombHandle.hexWalls);
+          honey_comb_cylinder(length, confHoneyCombHandle.outerRadius, 1, confHoneyCombHandle.holeDiameter,
+          confHoneyCombHandle.hexWalls);
     }
   } else {
     color(confHoneyCombHandle.color)
@@ -16,6 +17,7 @@ module honeyCombHandle(length, confHoneyCombHandle) {
         cylinder(h = length, d = 31);
     color(confHoneyCombHandle.honeyCombColor)
       translate([0, 0, -length])
-        honey_comb_cylinder(length, confHoneyCombHandle.outerRadius, 1, confHoneyCombHandle.holeDiameter, confHoneyCombHandle.hexWalls);
+        honey_comb_cylinder(length, confHoneyCombHandle.outerRadius, 1, confHoneyCombHandle.holeDiameter,
+        confHoneyCombHandle.hexWalls);
   }
 }

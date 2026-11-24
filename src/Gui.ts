@@ -8,9 +8,10 @@ import { activateAccelerometer, preview3D, Preview3DViewer, replace3DModel } fro
 export class Gui {
   readonly PRESET_PARM_NAME: string = "p";
   readonly changeTimeout = 100;
+  viewer: Preview3DViewer;
   private lastFormChanged = 0;
   private customiserForm: CustomiserForm;
-  viewer: Preview3DViewer;
+
   constructor(
     private presetRepository: IPresetRepository,
     private backend: IBackendApi,
