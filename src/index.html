@@ -161,8 +161,13 @@
               <div class="chamber-scanline" aria-hidden="true"></div>
 
               <div class="chamber-telemetry top-telemetry" aria-hidden="true">
-                <span>FREQ: 1.42 THz</span>
-                <span>BLADE: CALIBRATED</span>
+                <div class="accelerometer-toggle-wrapper">
+                  <label class="hud-toggle-label" for="accelerometer">
+                    <input type="checkbox" id="accelerometer" name="accelerometer" value="1" onchange="gui.toggleAccelerometer()" />
+                    <span class="toggle-custom" aria-hidden="true"></span>
+                    <span class="toggle-text">ACCELEROMETER</span>
+                  </label>
+                </div>
               </div>
 
               <!-- Preview target container -->
@@ -182,6 +187,7 @@
                   </div>
                 </div>
               </div>
+              <div id="3DViewer"></div>
 
               <div class="chamber-telemetry bottom-telemetry" aria-hidden="true">
                 <span>ALIGNMENT: 0.001mm</span>

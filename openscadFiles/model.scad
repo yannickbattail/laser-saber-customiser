@@ -51,8 +51,12 @@ e4diamterSphere = 15; // [0:1:50]
 e5color = "silver"; // [silver:silver, orange:gold, #444:black, white:white, red:red, green:green, blue:blue, yellow:yellow]
 // emitter diameter
 e5diameter = 35; // [30:1:50]
+// rotation
+e5rotation = 0; // [0:90:270]
 // curve
-e5curve=30;
+e5curve=30; // [20:1:60]
+// scale
+e5scale=2; // [0.5:0.1:4]
 
 /* [handleType : cylindersHandle] */
 // number of cylinders
@@ -216,7 +220,7 @@ confConeEmitter = object(color = e1color, looseCoef = looseCoef);
 confArmEmitter = object(color = e2color, armColor = e2armColor, armStopperSize = armStopperSize, armAngle = armAngle, looseCoef = looseCoef);
 confOblicEmitter = object(color = e3color, diameter = e3diameter, maxHeight = e3maxHeight, cutHeight = e3cutHeight, angle = e3angle);
 confCrossguard = object(color = e4color, crossguardColor = e4crossguardColor, length = e4length, diamterTip = e4diamterTip, horizontalScale = e4horizontalScale, verticalScale = e4verticalScale, sphereColor = e4sphereColor, diamterSphere = e4diamterSphere);
-confPointyEmitter = object(color = e5color, diameter = e5diameter, curve = e5curve);
+confPointyEmitter = object(color = e5color, diameter = e5diameter, rotation = e5rotation, curve = e5curve, scale = e5scale);
 
 confCylindersHandle = object(cylinderNumber = h1cylinderNumber, cylinderDiameter = h1cylinderDiameter, topColor = h1topColor, cylinderColor = h1cylinderColor, ringColor = h1ringColor, bottomColor = h1bottomColor);
 confRingsHandle = object(ringColor = h2ringColor, color = h2Color);

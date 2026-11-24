@@ -16,6 +16,42 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 
+## [1.1.7] - 2026-11-24
+
+### Added
+
+### Changed
+
+- fast image preview and 3D view on demand
+- improve pointy emitter
+- enable/disable accelerometer
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [1.1.6] - 2026-11-22
+
+### Added
+
+- pointy emitter
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+- update npm packages
+
 ## [1.1.5] - 2026-11-09
 
 ### Added
@@ -32,24 +68,6 @@ All notable changes to this project will be documented in this file.
 ### Removed
 
 - persistence API
-
-### Fixed
-
-### Security
-
-- update npm packages
-
-## [1.1.6] - 2026-11-22
-
-### Added
-
-- pointy emitter
-
-### Changed
-
-### Deprecated
-
-### Removed
 
 ### Fixed
 

@@ -1,4 +1,4 @@
-use <../../util.scad>;
+use <../../lib/util.scad>;
 
 module ringsHandle(length, confRingsHandle) {
   // cylinder that join rings

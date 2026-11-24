@@ -1,4 +1,4 @@
-use <../../util.scad>;
+use <../../lib/util.scad>;
 
 module crossguard(confCrossguard) {
   translate([0, 0, -6]) {

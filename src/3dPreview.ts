@@ -20,25 +20,27 @@ export interface Preview3DViewer {
 const panoramaImageUrl = "./img/tactical-kyber-lab-equirectangular.png";
 const hdriImageUrl = "./img/tactical-kyber-lab.hdr";
 
-export function initialize3DPreviewer(containerId = "preview"): Preview3DViewer {
+function initialize3DPreviewer(containerId: string): Preview3DViewer {
   const container = document.getElementById(containerId);
   if (!container) {
     throw new Error("Model viewer container not found");
   }
 
+  const width = 256;
+  const height = 512;
   container.innerHTML = "";
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x101722);
 
-  const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 10000);
+  const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 10000);
   camera.position.set(0, 0, 200);
 
   const renderer = new THREE.WebGLRenderer({
     antialias: true,
   });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(container.clientWidth, container.clientHeight);
+  renderer.setSize(width, height);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.0;
@@ -64,7 +66,6 @@ export function initialize3DPreviewer(containerId = "preview"): Preview3DViewer 
   renderer.domElement.addEventListener("pointerup", () => {
     renderer.domElement.style.cursor = "grab";
   });
-
   const viewer: Preview3DViewer = {
     container,
     scene,
@@ -169,11 +170,10 @@ export function replace3DModel(viewer: Preview3DViewer, file3mf: string, readyCa
 
 let viewer: Preview3DViewer | null = null;
 
-export function preview3D(file3mf: string, readyCallback: () => void): Preview3DViewer {
+export function preview3D(containerId: string): Preview3DViewer {
   if (!viewer) {
-    viewer = initialize3DPreviewer();
+    viewer = initialize3DPreviewer(containerId);
   }
-  replace3DModel(viewer, file3mf, readyCallback);
   return viewer;
 }
 function applyHdriEnvironment(viewer: Preview3DViewer, hdriUrl: string, backgroundUrl?: string): void {
@@ -213,71 +213,103 @@ function applyHdriEnvironment(viewer: Preview3DViewer, hdriUrl: string, backgrou
   }
 }
 
-function enableDeviceOrientationControls(viewer: Preview3DViewer): void {
-  const orientationEventType =
-    "ondeviceorientationabsolute" in window ? "deviceorientationabsolute" : "deviceorientation";
+const orientationEventType =
+  "ondeviceorientationabsolute" in window ? "deviceorientationabsolute" : "deviceorientation";
 
-  let enabled = false;
-  let baselineBeta: number | null = null;
-  let baselineGamma: number | null = null;
-  const baselineSpherical = new THREE.Spherical();
-  const currentOffset = new THREE.Vector3();
-  const nextOffset = new THREE.Vector3();
+let accelerometerEnabled = false;
+let accelerometerBaselineBeta: number | null = null;
+let accelerometerBaselineGamma: number | null = null;
+const accelerometerBaselineSpherical = new THREE.Spherical();
+const accelerometerCurrentOffset = new THREE.Vector3();
+const accelerometerNextOffset = new THREE.Vector3();
+const accelerometerRotationSensitivity = 0.02;
+let accelerometerListenerAttached = false;
 
-  const rotationSensitivity = 0.02;
+function handleAccelerometerOrientation(event: DeviceOrientationEvent): void {
+  if (!accelerometerEnabled || !viewer) {
+    return;
+  }
 
-  const enable = async (): Promise<void> => {
-    if (enabled || !("DeviceOrientationEvent" in window)) {
+  if (event.beta === null || event.gamma === null) {
+    return;
+  }
+
+  accelerometerCurrentOffset.copy(viewer.camera.position).sub(viewer.controls.target);
+
+  if (accelerometerBaselineBeta === null || accelerometerBaselineGamma === null) {
+    accelerometerBaselineBeta = event.beta;
+    accelerometerBaselineGamma = event.gamma;
+    accelerometerBaselineSpherical.setFromVector3(accelerometerCurrentOffset);
+    return;
+  }
+
+  const betaDelta = event.beta - accelerometerBaselineBeta;
+  const gammaDelta = event.gamma - accelerometerBaselineGamma;
+
+  const nextSpherical = accelerometerBaselineSpherical.clone();
+  nextSpherical.radius = accelerometerCurrentOffset.length();
+  nextSpherical.theta -= gammaDelta * accelerometerRotationSensitivity;
+  nextSpherical.phi -= betaDelta * accelerometerRotationSensitivity;
+  nextSpherical.phi = Math.max(0.01, Math.min(Math.PI - 0.01, nextSpherical.phi));
+
+  accelerometerNextOffset.setFromSpherical(nextSpherical);
+  viewer.camera.position.copy(viewer.controls.target).add(accelerometerNextOffset);
+  viewer.camera.lookAt(viewer.controls.target);
+
+  viewer.controls.update();
+  viewer.render();
+}
+
+async function requestAccelerometerPermission(): Promise<boolean> {
+  if (!("DeviceOrientationEvent" in window)) {
+    return false;
+  }
+
+  const deviceOrientationEvent = DeviceOrientationEvent as DeviceOrientationEventWithPermission;
+
+  if (typeof deviceOrientationEvent.requestPermission === "function") {
+    const permission = await deviceOrientationEvent.requestPermission();
+    return permission === "granted";
+  }
+
+  return true;
+}
+
+function enableDeviceOrientationControls(viewerInstance: Preview3DViewer): void {
+  viewerInstance.container.addEventListener("pointerdown", () => void activateAccelerometer(true), { once: true });
+  viewerInstance.container.addEventListener("touchstart", () => void activateAccelerometer(true), {
+    once: true,
+    passive: true,
+  });
+}
+
+export async function activateAccelerometer(enable: boolean): Promise<void> {
+  if (enable === accelerometerEnabled) {
+    return;
+  }
+
+  if (enable) {
+    const granted = await requestAccelerometerPermission();
+    if (!granted) {
       return;
     }
 
-    const deviceOrientationEvent = DeviceOrientationEvent as DeviceOrientationEventWithPermission;
-
-    if (typeof deviceOrientationEvent.requestPermission === "function") {
-      const permission = await deviceOrientationEvent.requestPermission();
-      if (permission !== "granted") {
-        return;
-      }
+    accelerometerEnabled = true;
+    accelerometerBaselineBeta = null;
+    accelerometerBaselineGamma = null;
+    if (!accelerometerListenerAttached) {
+      window.addEventListener(orientationEventType, handleAccelerometerOrientation, true);
+      accelerometerListenerAttached = true;
     }
-
-    enabled = true;
-    window.addEventListener(orientationEventType, handleOrientation, true);
-  };
-
-  const handleOrientation = (event: DeviceOrientationEvent): void => {
-    if (event.beta === null || event.gamma === null) {
-      return;
+  } else {
+    accelerometerEnabled = false;
+    accelerometerBaselineBeta = null;
+    accelerometerBaselineGamma = null;
+    if (accelerometerListenerAttached) {
+      window.removeEventListener(orientationEventType, handleAccelerometerOrientation, true);
+      accelerometerListenerAttached = false;
     }
-
-    currentOffset.copy(viewer.camera.position).sub(viewer.controls.target);
-
-    if (baselineBeta === null || baselineGamma === null) {
-      baselineBeta = event.beta;
-      baselineGamma = event.gamma;
-      baselineSpherical.setFromVector3(currentOffset);
-      return;
-    }
-
-    const betaDelta = event.beta - baselineBeta;
-    const gammaDelta = event.gamma - baselineGamma;
-
-    const nextSpherical = baselineSpherical.clone();
-    nextSpherical.radius = currentOffset.length();
-    nextSpherical.theta -= gammaDelta * rotationSensitivity;
-    nextSpherical.phi -= betaDelta * rotationSensitivity;
-    nextSpherical.phi = Math.max(0.01, Math.min(Math.PI - 0.01, nextSpherical.phi));
-
-    nextOffset.setFromSpherical(nextSpherical);
-    viewer.camera.position.copy(viewer.controls.target).add(nextOffset);
-    viewer.camera.lookAt(viewer.controls.target);
-
-    viewer.controls.update();
-    viewer.render();
-  };
-
-  viewer.container.addEventListener("pointerdown", () => void enable(), { once: true });
-  viewer.container.addEventListener("touchstart", () => void enable(), { once: true, passive: true });
-  void enable();
+  }
 }
 
 function applyMetallicMaterials(object: THREE.Object3D): void {

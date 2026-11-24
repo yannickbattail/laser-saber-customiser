@@ -1,7 +1,7 @@
 {
   "name": "laser-saber-customiser-server",
   "description": "",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "author": "XcinnaY",
   "maintainer": "XcinnaY",
   "license": "LGPL-3.0-or-later",
@@ -49,7 +49,7 @@
     "prettier": "^3.10.1",
     "stylelint": "^18.1.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.73.0",
+    "typescript-eslint": "^8.74.0",
     "vitest": "^5.1.1"
   }
 }

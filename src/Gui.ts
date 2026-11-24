@@ -1,12 +1,14 @@
+import { NodeUpdate } from "./NodeUpdate.js";
 import { CustomiserForm } from "./CustomiserForm.js";
 import { IPresetRepository } from "./IPresetRepository.js";
 import { _throw, tryCatch } from "./utils.js";
 import { IBackendApi } from "./serverApi/IBackendApi.js";
-import { preview3D } from "./3dPreview.js";
+import { activateAccelerometer, preview3D, Preview3DViewer, replace3DModel } from "./3dPreview.js";
 
 export class Gui {
   readonly PRESET_PARM_NAME: string = "p";
-  readonly changeTimeout = 2000;
+  readonly changeTimeout = 100;
+  viewer: Preview3DViewer;
   private lastFormChanged = 0;
   private customiserForm: CustomiserForm;
 
@@ -52,15 +54,60 @@ export class Gui {
     this.formChanged();
   }
 
+  public async toggleAccelerometer() {
+    const accelerometer = document.getElementById("accelerometer") as HTMLInputElement;
+    await activateAccelerometer(accelerometer.checked);
+  }
+
+  public async preview() {
+    await this.getImage("preview");
+  }
+
+  public async animation() {
+    await this.getImage("animation");
+  }
+
   public async display3DModel() {
     try {
       this.setStatus("GENERATING");
+      this.show("3DViewer");
+      NodeUpdate.updateElement("preview", ``);
       const data = this.customiserForm.getFormData();
       const endpoint = "/api/openscad/model.3mf";
       const uri = `${endpoint}?${this.PRESET_PARM_NAME}=${encodeURIComponent(JSON.stringify(data))}`;
-      preview3D(uri, () => this.ready());
+      replace3DModel(this.viewer, uri, () => {
+        this.toggleAccelerometer();
+        this.ready();
+      });
     } catch (e) {
       console.error(e);
+      NodeUpdate.updateElement("preview", ``);
+    }
+  }
+
+  public async getImage(type: "preview" | "animation") {
+    try {
+      const data = this.customiserForm.getFormData();
+      const endpoint = type === "preview" ? "/api/openscad/image.png" : "/api/openscad/animation.webp";
+      const url = `${endpoint}?${this.PRESET_PARM_NAME}=${encodeURIComponent(JSON.stringify(data))}`;
+      const newImg = new Image();
+      newImg.onload = () => {
+        this.hideAnimation();
+        NodeUpdate.updateElement(
+          "preview",
+          `
+    <div class="btn3d">
+        <button onclick="gui.display3DModel()">
+            <img src="img/3D.svg" alt="display in 3D" title="display in 3D"/>
+        </button>
+    </div>
+    <img src="${url}" alt="${type}" title="${type}" />`,
+        );
+      };
+      newImg.src = url;
+    } catch (e) {
+      console.error(e);
+      NodeUpdate.updateElement("preview", ``);
     }
   }
 
@@ -76,6 +123,17 @@ export class Gui {
     }
   }
 
+  private show(status: "preview" | "3DViewer") {
+    const p = document.getElementById("preview");
+    if (p) {
+      p.style.display = status == "preview" ? "flex" : "none";
+    }
+    const v = document.getElementById("3DViewer");
+    if (v) {
+      v.style.display = status == "3DViewer" ? "flex" : "none";
+    }
+  }
+
   private async init() {
     await this.setVersion();
     const formParam = await this.backend.getParameterDefinition();
@@ -88,6 +146,7 @@ export class Gui {
     this.initForm(p ?? preset);
     this.formChanged();
     await this.initPresets(null);
+    this.viewer = preview3D("3DViewer");
   }
 
   private initForm(selectedPreset: Record<string, string> | null) {
@@ -137,9 +196,9 @@ export class Gui {
 
   private async applyChanges() {
     if (Date.now() - this.lastFormChanged > this.changeTimeout) {
-      this.hideAnimation();
       this.updateUrl();
-      await this.display3DModel();
+      this.show("preview");
+      await this.preview();
     }
   }
 

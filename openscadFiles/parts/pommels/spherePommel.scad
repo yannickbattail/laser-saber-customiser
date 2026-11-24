@@ -1,4 +1,4 @@
-use <../../util.scad>;
+use <../../lib/util.scad>;
 
 module spherePommel(confSpherePommel) {
   translate([0, 0, -8]) {
