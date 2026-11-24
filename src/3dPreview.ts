@@ -213,74 +213,101 @@ function applyHdriEnvironment(viewer: Preview3DViewer, hdriUrl: string, backgrou
   }
 }
 
-function enableDeviceOrientationControls(viewer: Preview3DViewer): void {
-  const orientationEventType =
-    "ondeviceorientationabsolute" in window ? "deviceorientationabsolute" : "deviceorientation";
+const orientationEventType =
+  "ondeviceorientationabsolute" in window ? "deviceorientationabsolute" : "deviceorientation";
 
-  let enabled = false;
-  let baselineBeta: number | null = null;
-  let baselineGamma: number | null = null;
-  const baselineSpherical = new THREE.Spherical();
-  const currentOffset = new THREE.Vector3();
-  const nextOffset = new THREE.Vector3();
+let accelerometerEnabled = false;
+let accelerometerBaselineBeta: number | null = null;
+let accelerometerBaselineGamma: number | null = null;
+const accelerometerBaselineSpherical = new THREE.Spherical();
+const accelerometerCurrentOffset = new THREE.Vector3();
+const accelerometerNextOffset = new THREE.Vector3();
+const accelerometerRotationSensitivity = 0.02;
+let accelerometerListenerAttached = false;
 
-  const rotationSensitivity = 0.02;
+function handleAccelerometerOrientation(event: DeviceOrientationEvent): void {
+  if (!accelerometerEnabled || !viewer) {
+    return;
+  }
 
-  const enable = async (): Promise<void> => {
-    if (enabled || !("DeviceOrientationEvent" in window)) {
-      return;
-    }
+  if (event.beta === null || event.gamma === null) {
+    return;
+  }
 
-    const deviceOrientationEvent = DeviceOrientationEvent as DeviceOrientationEventWithPermission;
+  accelerometerCurrentOffset.copy(viewer.camera.position).sub(viewer.controls.target);
 
-    if (typeof deviceOrientationEvent.requestPermission === "function") {
-      const permission = await deviceOrientationEvent.requestPermission();
-      if (permission !== "granted") {
-        return;
-      }
-    }
+  if (accelerometerBaselineBeta === null || accelerometerBaselineGamma === null) {
+    accelerometerBaselineBeta = event.beta;
+    accelerometerBaselineGamma = event.gamma;
+    accelerometerBaselineSpherical.setFromVector3(accelerometerCurrentOffset);
+    return;
+  }
 
-    enabled = true;
-    window.addEventListener(orientationEventType, handleOrientation, true);
-  };
+  const betaDelta = event.beta - accelerometerBaselineBeta;
+  const gammaDelta = event.gamma - accelerometerBaselineGamma;
 
-  const handleOrientation = (event: DeviceOrientationEvent): void => {
-    if (event.beta === null || event.gamma === null) {
-      return;
-    }
+  const nextSpherical = accelerometerBaselineSpherical.clone();
+  nextSpherical.radius = accelerometerCurrentOffset.length();
+  nextSpherical.theta -= gammaDelta * accelerometerRotationSensitivity;
+  nextSpherical.phi -= betaDelta * accelerometerRotationSensitivity;
+  nextSpherical.phi = Math.max(0.01, Math.min(Math.PI - 0.01, nextSpherical.phi));
 
-    currentOffset.copy(viewer.camera.position).sub(viewer.controls.target);
+  accelerometerNextOffset.setFromSpherical(nextSpherical);
+  viewer.camera.position.copy(viewer.controls.target).add(accelerometerNextOffset);
+  viewer.camera.lookAt(viewer.controls.target);
 
-    if (baselineBeta === null || baselineGamma === null) {
-      baselineBeta = event.beta;
-      baselineGamma = event.gamma;
-      baselineSpherical.setFromVector3(currentOffset);
-      return;
-    }
-
-    const betaDelta = event.beta - baselineBeta;
-    const gammaDelta = event.gamma - baselineGamma;
-
-    const nextSpherical = baselineSpherical.clone();
-    nextSpherical.radius = currentOffset.length();
-    nextSpherical.theta -= gammaDelta * rotationSensitivity;
-    nextSpherical.phi -= betaDelta * rotationSensitivity;
-    nextSpherical.phi = Math.max(0.01, Math.min(Math.PI - 0.01, nextSpherical.phi));
-
-    nextOffset.setFromSpherical(nextSpherical);
-    viewer.camera.position.copy(viewer.controls.target).add(nextOffset);
-    viewer.camera.lookAt(viewer.controls.target);
-
-    viewer.controls.update();
-    viewer.render();
-  };
-
-  viewer.container.addEventListener("pointerdown", () => void enable(), { once: true });
-  viewer.container.addEventListener("touchstart", () => void enable(), { once: true, passive: true });
-  void enable();
+  viewer.controls.update();
+  viewer.render();
 }
 
-export function activateAccelerometer(enable: boolean) {}
+async function requestAccelerometerPermission(): Promise<boolean> {
+  if (!("DeviceOrientationEvent" in window)) {
+    return false;
+  }
+
+  const deviceOrientationEvent = DeviceOrientationEvent as DeviceOrientationEventWithPermission;
+
+  if (typeof deviceOrientationEvent.requestPermission === "function") {
+    const permission = await deviceOrientationEvent.requestPermission();
+    return permission === "granted";
+  }
+
+  return true;
+}
+
+function enableDeviceOrientationControls(viewerInstance: Preview3DViewer): void {
+  viewerInstance.container.addEventListener("pointerdown", () => void activateAccelerometer(true), { once: true });
+  viewerInstance.container.addEventListener("touchstart", () => void activateAccelerometer(true), { once: true, passive: true });
+}
+
+export async function activateAccelerometer(enable: boolean): Promise<void> {
+  if (enable === accelerometerEnabled) {
+    return;
+  }
+
+  if (enable) {
+    const granted = await requestAccelerometerPermission();
+    if (!granted) {
+      return;
+    }
+
+    accelerometerEnabled = true;
+    accelerometerBaselineBeta = null;
+    accelerometerBaselineGamma = null;
+    if (!accelerometerListenerAttached) {
+      window.addEventListener(orientationEventType, handleAccelerometerOrientation, true);
+      accelerometerListenerAttached = true;
+    }
+  } else {
+    accelerometerEnabled = false;
+    accelerometerBaselineBeta = null;
+    accelerometerBaselineGamma = null;
+    if (accelerometerListenerAttached) {
+      window.removeEventListener(orientationEventType, handleAccelerometerOrientation, true);
+      accelerometerListenerAttached = false;
+    }
+  }
+}
 
 function applyMetallicMaterials(object: THREE.Object3D): void {
   object.traverse((child) => {

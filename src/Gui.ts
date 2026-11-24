@@ -53,9 +53,9 @@ export class Gui {
     this.formChanged();
   }
 
-  public toggleAccelerometer() {
+  public async toggleAccelerometer() {
     const accelerometer = document.getElementById("accelerometer") as HTMLInputElement;
-    activateAccelerometer(accelerometer.checked);
+    await activateAccelerometer(accelerometer.checked);
   }
 
   public async preview() {
@@ -74,7 +74,10 @@ export class Gui {
       const data = this.customiserForm.getFormData();
       const endpoint = "/api/openscad/model.3mf";
       const uri = `${endpoint}?${this.PRESET_PARM_NAME}=${encodeURIComponent(JSON.stringify(data))}`;
-      replace3DModel(this.viewer, uri, () => this.ready());
+      replace3DModel(this.viewer, uri, () => {
+        this.toggleAccelerometer();
+        this.ready();
+      });
     } catch (e) {
       console.error(e);
       NodeUpdate.updateElement("preview", ``);
