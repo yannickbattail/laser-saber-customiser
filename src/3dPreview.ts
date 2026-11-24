@@ -20,25 +20,27 @@ export interface Preview3DViewer {
 const panoramaImageUrl = "./img/tactical-kyber-lab-equirectangular.png";
 const hdriImageUrl = "./img/tactical-kyber-lab.hdr";
 
-export function initialize3DPreviewer(containerId = "preview"): Preview3DViewer {
+function initialize3DPreviewer(containerId: string): Preview3DViewer {
   const container = document.getElementById(containerId);
   if (!container) {
     throw new Error("Model viewer container not found");
   }
 
+  const width = 256;
+  const height = 512;
   container.innerHTML = "";
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x101722);
 
-  const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 10000);
+  const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 10000);
   camera.position.set(0, 0, 200);
 
   const renderer = new THREE.WebGLRenderer({
     antialias: true,
   });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(container.clientWidth, container.clientHeight);
+  renderer.setSize(width, height);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.0;
@@ -64,7 +66,6 @@ export function initialize3DPreviewer(containerId = "preview"): Preview3DViewer 
   renderer.domElement.addEventListener("pointerup", () => {
     renderer.domElement.style.cursor = "grab";
   });
-
   const viewer: Preview3DViewer = {
     container,
     scene,
@@ -169,11 +170,10 @@ export function replace3DModel(viewer: Preview3DViewer, file3mf: string, readyCa
 
 let viewer: Preview3DViewer | null = null;
 
-export function preview3D(file3mf: string, readyCallback: () => void): Preview3DViewer {
+export function preview3D(containerId: string): Preview3DViewer {
   if (!viewer) {
-    viewer = initialize3DPreviewer();
+    viewer = initialize3DPreviewer(containerId);
   }
-  replace3DModel(viewer, file3mf, readyCallback);
   return viewer;
 }
 function applyHdriEnvironment(viewer: Preview3DViewer, hdriUrl: string, backgroundUrl?: string): void {
@@ -279,6 +279,8 @@ function enableDeviceOrientationControls(viewer: Preview3DViewer): void {
   viewer.container.addEventListener("touchstart", () => void enable(), { once: true, passive: true });
   void enable();
 }
+
+export function activateAccelerometer(enable: boolean) {}
 
 function applyMetallicMaterials(object: THREE.Object3D): void {
   object.traverse((child) => {

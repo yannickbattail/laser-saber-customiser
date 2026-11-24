@@ -475,8 +475,8 @@ button[disabled="disabled"] {
   transform: none;
 }
 
-/* Animate Toggle Custom Control */
-.animate-toggle-wrapper {
+/* accelerometer Toggle Custom Control */
+.accelerometer-toggle-wrapper {
   display: flex;
   align-items: center;
 }
@@ -887,12 +887,20 @@ fieldset {
     inset 0 0 30px rgba(0, 240, 255, 0.05);
 }
 
-.previewImage {
-  border-radius: 4px;
-  max-width: 100%;
-  height: 100%;
-  object-fit: contain;
-  filter: drop-shadow(0 0 16px rgba(0, 229, 255, 0.35));
+#3DViewer {
+  border: 1px solid var(--border-glow);
+  border-radius: 6px;
+  width: 256px;
+  height: 512px;
+  background-color: rgba(4, 8, 18, 0.95);
+  position: relative;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow:
+    0 0 25px rgba(0, 240, 255, 0.15),
+    inset 0 0 30px rgba(0, 240, 255, 0.05);
 }
 
 .stlViewer {
@@ -1240,8 +1248,8 @@ fieldset {
   }
 }
 
-#preview canvas {
-  display: block;
+#3DViewer canvas {
+  display: inherit;
   width: 100%;
   height: 100%;
 }

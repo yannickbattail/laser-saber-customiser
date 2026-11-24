@@ -7,7 +7,10 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 ### Changed
+
+- fast image preview and 3D view on demand
 - improve pointy emitter
+
 ### Deprecated
 
 ### Removed
